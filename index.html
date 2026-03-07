@@ -47,14 +47,14 @@
             /* Flex layout removed to prevent scale/translate collisions on the app root */
         }
 
-        /* Modal Overlay for Difficulty Selection */
-        #difficultyOverlay {
+        /* Main Lobby Interface Container */
+        #lobbyOverlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: #0d0d12;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2508,10 +2508,16 @@
             document.getElementById('sfxSlider').addEventListener('change', (e) => updateSfxVolume(e.target.value)); // play test sound on release
 
             document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+                if (window.location.protocol === 'file:') {
+                    alert('보안 정책 상 구글 로그인은 내 컴퓨터(로컬 더블클릭)에서는 작동하지 않습니다! 반드시 배포된 깃허브 웹사이트 (https://petros90.github.io/chrono-link) 에 접속해서 로그인 구동 테스트를 진행해주세요.');
+                    return;
+                }
                 const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider).catch(error => {
-                    console.error("Login failed:", error);
-                    alert("구글 로그인에 실패했습니다.");
+
+                // Use Redirect instead of Popup to bypass Safari Mobile and desktop strict popup blockers
+                auth.signInWithRedirect(provider).catch(error => {
+                    console.error("Login redirect failed:", error);
+                    alert("구글 로그인 화면으로 넘어갈 수 없습니다.");
                 });
             });
 
