@@ -11,10 +11,11 @@
     <title>Chrono Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK Compat -->
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase SDK Compat with CrossOrigin to prevent COOP popup blockers -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"
+        crossorigin="anonymous"></script>
 
     <style>
         /* Base Resets & Typography */
@@ -2515,6 +2516,11 @@
                     return;
                 }
                 const provider = new firebase.auth.GoogleAuthProvider();
+
+                // Force prompt selection to bypass intelligent tracking prevention silent failures in Safari/Mobile
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
 
                 // Use Popup instead of Redirect, as Redirect requires custom domain configuration to work seamlessly on modern browsers.
                 auth.signInWithPopup(provider).catch(error => {
