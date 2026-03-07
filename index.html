@@ -1905,6 +1905,9 @@
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists && doc.data().nickname) {
                         nameSpan.innerText = doc.data().nickname;
+                        if (doc.data().lastNicknameChange) {
+                            localStorage.setItem('lastNicknameChange', doc.data().lastNicknameChange);
+                        }
                     }
                 }).catch(e => {
                     console.warn("Could not fetch user nickname (could be permission rules): ", e);
@@ -2635,6 +2638,16 @@
                     return;
                 }
 
+                // 7-day Cooldown Check
+                const lastChange = localStorage.getItem('lastNicknameChange');
+                const nowMs = new Date().getTime();
+                const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+                if (lastChange && (nowMs - parseInt(lastChange)) < sevenDaysMs) {
+                    const daysLeft = Math.ceil((sevenDaysMs - (nowMs - parseInt(lastChange))) / (1000 * 60 * 60 * 24));
+                    alert(`닉네임은 일주일에 한 번만 변경할 수 있습니다! (남은 시간: 약 ${daysLeft}일)`);
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.innerText = "확인 중...";
 
@@ -2659,12 +2672,14 @@
                     await userRef.set({
                         nickname: inputVal,
                         email: user.email,
+                        lastNicknameChange: nowMs,
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
                     // Update UI and return to My Page
+                    localStorage.setItem('lastNicknameChange', nowMs.toString());
                     document.getElementById('userDisplayName').innerText = inputVal;
-                    alert(`멋진 이름이군요! 성공적으로 등록되었습니다: ${inputVal}`);
+                    alert(`✅ 닉네임이 [${inputVal}] (으)로 확정되었습니다!`);
                     document.getElementById('nicknameSection').style.display = 'none';
                     document.getElementById('myPageSection').style.display = 'block';
 
@@ -2677,9 +2692,11 @@
                         errMsg = "서버 연결에 실패했습니다. (에러: " + (error.code || error.message) + ")";
                     }
 
-                    if (confirm(errMsg + "\n\n데이터베이스 오류를 무시하고 오프라인 임시 모드로 로비에 진입하시겠습니까? (이름이 이번 게임에만 임시로 저장됩니다)")) {
+                    if (confirm(errMsg + "\n\n데이터베이스 오류를 무시하고 오프라인 임시 모드로 통과하시겠습니까? (이번 게임에만 저장)")) {
                         localStorage.setItem('offlineNickname', inputVal);
+                        localStorage.setItem('lastNicknameChange', nowMs.toString());
                         document.getElementById('userDisplayName').innerText = inputVal;
+                        alert(`✅ 오프라인 모드: 닉네임이 [${inputVal}] (으)로 확정되었습니다!`);
                         document.getElementById('nicknameSection').style.display = 'none';
                         document.getElementById('myPageSection').style.display = 'block';
                     }
