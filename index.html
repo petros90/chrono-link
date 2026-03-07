@@ -30,8 +30,9 @@
         }
 
         .node .element-icon {
-            width: 25px;
-            height: 25px;
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
         }
 
         body,
@@ -1424,6 +1425,36 @@
             font-size: 55px;
         }
 
+        body.is-mobile .rulebook-box {
+            width: 95%;
+            max-width: none;
+            padding: 60px;
+        }
+
+        body.is-mobile .rulebook-box h2 {
+            font-size: 5rem;
+            margin-bottom: 40px;
+        }
+
+        body.is-mobile .rulebook-box h3 {
+            font-size: 3.5rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        body.is-mobile .rulebook-box p,
+        body.is-mobile .rulebook-box li {
+            font-size: 2.5rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        body.is-mobile #closeRulebookBtn {
+            font-size: 3.5rem;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
         @media (max-width: 850px) {
             /* DELETED WRAPPER FOR HORIZONTAL LOCK */
         }
@@ -1831,7 +1862,7 @@
                 rule_g5: "Gods and Prime Movers"
             },
             ko: {
-                ui_round: "Round", ui_me: "나", ui_enemy: "상대", btn_restart: "Restart",
+                ui_round: "Round", ui_me: "나", ui_enemy: "상대방", btn_restart: "Restart",
                 ui_diff_title: "난이도 선택",
                 ui_diff_beginner: "5장 덱 / 3선승제",
                 ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
