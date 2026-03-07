@@ -1132,7 +1132,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100vw;
+            width: 3000px;
             height: 1.5em;
             background: rgba(0, 0, 0, 0.7);
             z-index: -1;
@@ -1993,11 +1993,7 @@
             const localCenterY = ((btnZone.top - appBox.top) / currentScale) + ((btnZone.height / currentScale) / 2);
             const localCenterX = ((btnZone.left - appBox.left) / currentScale) + ((btnZone.width / currentScale) / 2);
 
-            // Viewport coordinates for fixed position elements (effects/popups on body)
-            const vCenterY = btnZone.top + btnZone.height / 2;
-            const vCenterX = btnZone.left + btnZone.width / 2;
-            clashEffect.style.top = vCenterY + 'px';
-            clashEffect.style.left = vCenterX + 'px';
+            // Viewport coordinates logic removed because effects now render naturally via CSS or App coordinates
 
             // Place both at the exact center for translation (130x183 are the unscaled logical sizes)
             const centerLeft = localCenterX - (130 / 2);
@@ -2123,9 +2119,9 @@
             const popup = document.createElement('div');
             popup.className = `damage-popup ${popClass}`;
             popup.innerText = popTxt;
-            popup.style.top = vCenterY + 'px';
-            popup.style.left = vCenterX + 'px';
-            document.body.appendChild(popup);
+            popup.style.top = localCenterY + 'px';
+            popup.style.left = localCenterX + 'px';
+            appContainer.appendChild(popup);
 
             await sleep(1000); // Reduced from 2000 to give user just enough time to see shatter
 
