@@ -58,25 +58,29 @@
 
         .diff-box {
             background: #1a1a24;
-            padding: 40px;
+            padding: 100px;
             border-radius: 15px;
             text-align: center;
             border: 2px solid #555;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 1200px;
+            /* Big space on mobile */
         }
 
         .diff-box h2 {
-            margin-bottom: 30px;
-            font-size: 2.5rem;
+            margin-bottom: 70px;
+            font-size: 6rem;
             color: #00ffd9;
         }
 
         .diff-btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+            padding: 40px;
+            margin-bottom: 30px;
+            font-size: 3.5rem;
+            border-width: 4px;
             font-family: 'Jua', sans-serif;
             border: 2px solid #333;
             border-radius: 8px;
@@ -92,19 +96,19 @@
         }
 
         .diff-desc {
-            font-size: 1rem;
+            font-size: 2.2rem;
             color: #aaa;
             margin-top: -10px;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             font-family: 'Gowun Dodum', sans-serif;
         }
 
         #btnRulebook {
             display: block;
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 1.2rem;
+            padding: 25px;
+            margin-top: 25px;
+            font-size: 2.5rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #aaa;
             border-radius: 8px;
@@ -425,15 +429,15 @@
         }
 
         #headerRow h1 {
-            font-size: 3.9rem;
+            font-size: 5rem;
             color: #00ffd9;
             text-shadow: 0 0 5px #00ffd9;
             margin-right: 15px;
         }
 
         #startBtn {
-            padding: 10px 20px;
-            font-size: 31px;
+            padding: 15px 30px;
+            font-size: 40px;
             border: 1px solid #00ffd9;
             border-radius: 4px;
             background: transparent;
@@ -451,12 +455,13 @@
 
         .header-buttons {
             display: flex;
-            gap: 15px;
+            gap: 20px;
+            align-items: center;
         }
 
         #settingsBtn {
-            padding: 8px 12px;
-            font-size: 31px;
+            padding: 12px 18px;
+            font-size: 40px;
             border: 1px solid #aaa;
             border-radius: 4px;
             background: transparent;
@@ -472,17 +477,18 @@
 
         .score-board {
             display: flex;
-            gap: 30px;
-            font-size: 2.08rem;
+            gap: 40px;
+            font-size: 2.5rem;
             color: #aaa;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
         }
 
         .score-board span {
             color: #fff;
             font-weight: bold;
-            font-size: 2.6rem;
+            font-size: 3.5rem;
         }
 
         #appContainer {
@@ -1230,9 +1236,9 @@
         }
 
         #restartBtn {
-            margin-top: 39px;
-            padding: 15px 52px;
-            font-size: 42px;
+            margin-top: 50px;
+            padding: 20px 65px;
+            font-size: 55px;
             font-family: 'Jua';
             background: #fff;
             color: #000;
@@ -1269,59 +1275,6 @@
                 letter-spacing: -0.5px;
             }
 
-            /* --- MOBILE SPECIFIC: Enlarged Rulebook & Difficulty Modals +80% (massive scale) --- */
-            .diff-box {
-                padding: 70px;
-            }
-
-            .diff-box h2 {
-                font-size: 4.5rem;
-                margin-bottom: 50px;
-            }
-
-            .diff-btn {
-                padding: 25px;
-                font-size: 2.8rem;
-                margin-bottom: 25px;
-                border-width: 4px;
-            }
-
-            .diff-desc {
-                font-size: 1.8rem;
-                margin-bottom: 40px;
-            }
-
-            #btnRulebook {
-                padding: 20px;
-                font-size: 2.2rem;
-                margin-top: 20px;
-                border-width: 3px;
-            }
-
-            .rulebook-box {
-                padding: 40px;
-                max-width: 95%;
-            }
-
-            .rulebook-box h2 {
-                font-size: 2.5rem;
-            }
-
-            .rulebook-box h3 {
-                font-size: 1.8rem;
-            }
-
-            .rulebook-box p,
-            .rulebook-box ul,
-            .rulebook-box ol {
-                font-size: 1.35rem;
-                line-height: +1.6;
-            }
-
-            .rulebook-box li img.element-icon {
-                width: 26px;
-                height: 26px;
-            }
         }
 
         @media (max-width: 850px) {
