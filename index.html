@@ -55,7 +55,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0d0d12;
+            background: linear-gradient(rgba(13, 13, 18, 0.5), rgba(0, 0, 0, 0.95)), url('images/%EA%B4%91%EA%B0%9C%ED%86%A0%EB%8C%80%EC%99%95.jpg') center/cover;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -64,12 +64,14 @@
         }
 
         .diff-box {
-            background: #1a1a24;
-            padding: 52px;
-            border-radius: 15px;
+            background: rgba(20, 20, 30, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            border-radius: 20px;
             text-align: center;
-            border: 2px solid #555;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 217, 0.4);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 255, 217, 0.1);
         }
 
         .diff-box h2 {
@@ -1453,10 +1455,14 @@
             <div class="diff-box">
                 <!-- Section 1: Login Gate -->
                 <div id="loginSection">
-                    <h2 style="font-size: 4rem; margin-bottom: 20px; color: #fff;">Chrono Link</h2>
+                    <h2
+                        style="font-size: 5rem; margin-bottom: 20px; color: #00ffd9; text-shadow: 0 0 20px rgba(0,255,217,0.7), 0 0 5px #fff; letter-spacing: 2px; font-family: 'Jua', sans-serif;">
+                        Chrono Link</h2>
                     <p
-                        style="font-size: 1.5rem; color: #aaa; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
-                        게임 플레이를 위해 먼저 로그인이 필요합니다.</p>
+                        style="font-size: 1.8rem; color: #ddd; margin-bottom: 50px; font-family: 'Gowun Dodum', sans-serif; text-shadow: 2px 2px 4px #000; line-height: 1.5;">
+                        시공간을 초월한 영웅들의 위대한 배틀<br>
+                        <span style="font-size: 1.3rem; color: #aaa;">게임을 시작하려면 구글 계정으로 로그인하세요</span>
+                    </p>
                     <button id="btnGoogleLogin">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
                         <span data-i18n="btn_google_login">Google 로그인</span>
