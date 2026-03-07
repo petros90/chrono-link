@@ -780,24 +780,22 @@
             font-size: 24px;
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 10px #000, 0 0 20px #000;
+            text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000;
             z-index: 9999;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
             white-space: nowrap;
-            top: calc(50% - 240px);
-            transform: translateX(-50%);
+            /* JS will explicitly assign top/left relative to appContainer */
+            transform: translate(-50%, -50%);
         }
 
         .battle-label-static.p-label {
             color: #00ffd9;
-            left: calc(50% - 194.5px);
         }
 
         .battle-label-static.c-label {
             color: #ff0055;
-            left: calc(50% + 194.5px);
         }
 
         body.show-labels .battle-label-static {
@@ -807,18 +805,16 @@
         /* Clash Explosion Effect */
         .clash-effect {
             position: absolute;
-            left: 50%;
-            top: 50%;
             transform: translate(-50%, -50%) scale(0);
             width: 150px;
             height: 150px;
-            /* starburst shape using radial gradients */
-            background: radial-gradient(circle, #fff 0%, #ffff00 20%, #ff8800 60%, rgba(255, 0, 0, 0) 80%);
+            /* starburst shape using radial gradients. Bright colors instead of mix-blend to avoid hardware bug. */
+            background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 0, 0.8) 20%, rgba(255, 136, 0, 0.8) 50%, rgba(255, 0, 0, 0) 80%);
             border-radius: 50%;
-            mix-blend-mode: screen;
             pointer-events: none;
             z-index: 105;
             opacity: 0;
+            box-shadow: 0 0 40px 10px rgba(255, 136, 0, 0.4);
         }
 
         @keyframes clashBoom {
@@ -1992,7 +1988,21 @@
             const localCenterY = ((btnZone.top - appBox.top) / currentScale) + ((btnZone.height / currentScale) / 2);
             const localCenterX = ((btnZone.left - appBox.left) / currentScale) + ((btnZone.width / currentScale) / 2);
 
-            // Viewport coordinates logic removed because effects now render naturally via CSS or App coordinates
+            // Dynamically position static labels matching expected card visual shifts to fix alignment bugs
+            const pLabel = document.querySelector('.p-label');
+            const cLabel = document.querySelector('.c-label');
+            appContainer.appendChild(pLabel);
+            appContainer.appendChild(cLabel);
+            appContainer.appendChild(clashEffect);
+
+            pLabel.style.left = (localCenterX - 194.5) + 'px';
+            pLabel.style.top = (localCenterY - 200) + 'px';
+
+            cLabel.style.left = (localCenterX + 194.5) + 'px';
+            cLabel.style.top = (localCenterY - 200) + 'px';
+
+            clashEffect.style.left = localCenterX + 'px';
+            clashEffect.style.top = localCenterY + 'px';
 
             // Place both at the exact center for translation (130x183 are the unscaled logical sizes)
             const centerLeft = localCenterX - (130 / 2);
