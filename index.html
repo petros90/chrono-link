@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=2000, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=1400">
     <meta property="og:title" content="Chrono Link">
     <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
     <meta property="og:image"
@@ -59,7 +58,7 @@
 
         .diff-box {
             background: #1a1a24;
-            padding: 67px;
+            padding: 40px;
             border-radius: 15px;
             text-align: center;
             border: 2px solid #555;
@@ -67,17 +66,17 @@
         }
 
         .diff-box h2 {
-            margin-bottom: 50px;
-            font-size: 4.2rem;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
             color: #00ffd9;
         }
 
         .diff-btn {
             display: block;
             width: 100%;
-            padding: 24px;
-            margin-bottom: 24px;
-            font-size: 2.5rem;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #333;
             border-radius: 8px;
@@ -93,19 +92,19 @@
         }
 
         .diff-desc {
-            font-size: 1.69rem;
+            font-size: 1rem;
             color: #aaa;
             margin-top: -10px;
-            margin-bottom: 33px;
+            margin-bottom: 20px;
             font-family: 'Gowun Dodum', sans-serif;
         }
 
         #btnRulebook {
             display: block;
             width: 100%;
-            padding: 17px;
-            margin-top: 17px;
-            font-size: 2.02rem;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 1.2rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #aaa;
             border-radius: 8px;
@@ -426,7 +425,7 @@
         }
 
         #headerRow h1 {
-            font-size: 3.9rem;
+            font-size: 3rem;
             color: #00ffd9;
             text-shadow: 0 0 5px #00ffd9;
             margin-right: 15px;
@@ -434,7 +433,7 @@
 
         #startBtn {
             padding: 8px 16px;
-            font-size: 31px;
+            font-size: 24px;
             border: 1px solid #00ffd9;
             border-radius: 4px;
             background: transparent;
@@ -452,12 +451,12 @@
 
         .header-buttons {
             display: flex;
-            gap: 13px;
+            gap: 10px;
         }
 
         #settingsBtn {
             padding: 8px 12px;
-            font-size: 31px;
+            font-size: 24px;
             border: 1px solid #aaa;
             border-radius: 4px;
             background: transparent;
@@ -473,8 +472,8 @@
 
         .score-board {
             display: flex;
-            gap: 26px;
-            font-size: 2.08rem;
+            gap: 20px;
+            font-size: 1.6rem;
             color: #aaa;
             flex-wrap: wrap;
             justify-content: center;
@@ -483,11 +482,11 @@
         .score-board span {
             color: #fff;
             font-weight: bold;
-            font-size: 2.6rem;
+            font-size: 2.0rem;
         }
 
         #appContainer {
-            width: 2000px;
+            width: 1800px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -1131,7 +1130,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 2000px;
+            width: 1800px;
             height: 1.5em;
             background: rgba(0, 0, 0, 0.7);
             z-index: -1;
@@ -1231,9 +1230,9 @@
         }
 
         #restartBtn {
-            margin-top: 39px;
-            padding: 15px 52px;
-            font-size: 42px;
+            margin-top: 30px;
+            padding: 12px 40px;
+            font-size: 32px;
             font-family: 'Jua';
             background: #fff;
             color: #000;
@@ -1268,6 +1267,58 @@
             .card-grade {
                 font-size: 0.6rem;
                 letter-spacing: -0.5px;
+            }
+
+            /* --- MOBILE SPECIFIC: Enlarged Rulebook & Difficulty Modals +35% --- */
+            .diff-box {
+                padding: 55px;
+            }
+
+            .diff-box h2 {
+                font-size: 3.5rem;
+                margin-bottom: 40px;
+            }
+
+            .diff-btn {
+                padding: 20px;
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+
+            .diff-desc {
+                font-size: 1.3rem;
+                margin-bottom: 30px;
+            }
+
+            #btnRulebook {
+                padding: 15px;
+                font-size: 1.6rem;
+                margin-top: 15px;
+            }
+
+            .rulebook-box {
+                padding: 40px;
+                max-width: 95%;
+            }
+
+            .rulebook-box h2 {
+                font-size: 2.5rem;
+            }
+
+            .rulebook-box h3 {
+                font-size: 1.8rem;
+            }
+
+            .rulebook-box p,
+            .rulebook-box ul,
+            .rulebook-box ol {
+                font-size: 1.35rem;
+                line-height: +1.6;
+            }
+
+            .rulebook-box li img.element-icon {
+                width: 26px;
+                height: 26px;
             }
         }
 
@@ -2009,7 +2060,7 @@
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation (191x271 are the unscaled logical sizes, +~10% of 174)
+            // Place both at the exact center for translation (191x271 are the unscaled logical sizes, +~10%)
             const centerLeft = localCenterX - (191 / 2);
             const centerTop = localCenterY - (271 / 2);
 
@@ -2248,14 +2299,14 @@
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
             // Use Math.min to ensure it fits entirely on screen
-            const scale = Math.min(logicalWidth / 2000, logicalHeight / 800);
+            const scale = Math.min(logicalWidth / 1800, logicalHeight / 800);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
 
-            const scaledWidth = 2000 * finalScale;
+            const scaledWidth = 1800 * finalScale;
             layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
 
             if (finalScale < 1) {
