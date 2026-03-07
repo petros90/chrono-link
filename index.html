@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1400">
+    <meta name="viewport"
+        content="width=2000, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta property="og:title" content="Chrono Link">
     <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
     <meta property="og:image"
@@ -58,7 +59,7 @@
 
         .diff-box {
             background: #1a1a24;
-            padding: 52px;
+            padding: 67px;
             border-radius: 15px;
             text-align: center;
             border: 2px solid #555;
@@ -66,17 +67,17 @@
         }
 
         .diff-box h2 {
-            margin-bottom: 39px;
-            font-size: 3.25rem;
+            margin-bottom: 50px;
+            font-size: 4.2rem;
             color: #00ffd9;
         }
 
         .diff-btn {
             display: block;
             width: 100%;
-            padding: 19px;
-            margin-bottom: 19px;
-            font-size: 1.95rem;
+            padding: 24px;
+            margin-bottom: 24px;
+            font-size: 2.5rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #333;
             border-radius: 8px;
@@ -92,19 +93,19 @@
         }
 
         .diff-desc {
-            font-size: 1.3rem;
+            font-size: 1.69rem;
             color: #aaa;
             margin-top: -10px;
-            margin-bottom: 26px;
+            margin-bottom: 33px;
             font-family: 'Gowun Dodum', sans-serif;
         }
 
         #btnRulebook {
             display: block;
             width: 100%;
-            padding: 13px;
-            margin-top: 13px;
-            font-size: 1.56rem;
+            padding: 17px;
+            margin-top: 17px;
+            font-size: 2.02rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #aaa;
             border-radius: 8px;
@@ -486,7 +487,7 @@
         }
 
         #appContainer {
-            width: 1800px;
+            width: 2000px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -591,64 +592,64 @@
         /* Circular SVG Chart */
         .chart-container {
             position: relative;
-            width: 286px;
-            height: 286px;
-            margin: 13px auto;
+            width: 220px;
+            height: 220px;
+            margin: 10px auto;
         }
 
         .node {
             position: absolute;
-            width: 65px;
-            height: 65px;
+            width: 50px;
+            height: 50px;
             background: #222;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 2.08rem;
+            font-size: 1.6rem;
             border: 2px solid;
             user-select: none;
             z-index: 2;
-            box-shadow: 0 0 13px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .node span {
-            font-size: 3.12rem;
+            font-size: 2.4rem;
         }
 
         /* Circle Layout */
         #n-fire {
-            top: 13px;
-            left: 111px;
+            top: 10px;
+            left: 85px;
             border-color: #ff4444;
             color: #ff4444;
         }
 
         #n-earth {
-            top: 91px;
-            left: 208px;
+            top: 70px;
+            left: 160px;
             border-color: #dd8833;
             color: #dd8833;
         }
 
         #n-metal {
-            top: 202px;
-            left: 176px;
+            top: 155px;
+            left: 135px;
             border-color: #aaaaaa;
             color: #aaaaaa;
         }
 
         #n-water {
-            top: 202px;
-            left: 46px;
+            top: 155px;
+            left: 35px;
             border-color: #4488ff;
             color: #4488ff;
         }
 
         #n-wood {
-            top: 91px;
-            left: 13px;
+            top: 70px;
+            left: 10px;
             border-color: #22cc22;
             color: #22cc22;
         }
@@ -685,11 +686,11 @@
 
         .chart-text-row {
             display: grid;
-            grid-template-columns: 35px 30px 35px;
+            grid-template-columns: 45px 40px 45px;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.56rem;
         }
 
         .chart-text-row .win-tag {
@@ -876,7 +877,7 @@
         .card-slot {
             flex: 1 1 0;
             min-width: 90px;
-            max-width: 216px;
+            max-width: 238px;
             aspect-ratio: 140 / 198;
             height: auto;
             position: relative;
@@ -1130,7 +1131,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 1800px;
+            width: 2000px;
             height: 1.5em;
             background: rgba(0, 0, 0, 0.7);
             z-index: -1;
@@ -1998,19 +1999,19 @@
             appContainer.appendChild(cLabel);
             appContainer.appendChild(clashEffect);
 
-            // 174px wide * 1.76 scale * 0.85 translation = 260px offset from center
-            pLabel.style.left = (localCenterX - 260) + 'px';
-            pLabel.style.top = (localCenterY - 265) + 'px';
+            // 191px wide * 1.76 scale * 0.85 = ~285px offset
+            pLabel.style.left = (localCenterX - 285) + 'px';
+            pLabel.style.top = (localCenterY - 290) + 'px';
 
-            cLabel.style.left = (localCenterX + 260) + 'px';
-            cLabel.style.top = (localCenterY - 265) + 'px';
+            cLabel.style.left = (localCenterX + 285) + 'px';
+            cLabel.style.top = (localCenterY - 290) + 'px';
 
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation (174x246 are the unscaled logical sizes, +~20%)
-            const centerLeft = localCenterX - (174 / 2);
-            const centerTop = localCenterY - (246 / 2);
+            // Place both at the exact center for translation (191x271 are the unscaled logical sizes, +~10% of 174)
+            const centerLeft = localCenterX - (191 / 2);
+            const centerTop = localCenterY - (271 / 2);
 
             // Enter focus mode
             document.body.classList.add('battling-mode');
@@ -2020,11 +2021,11 @@
             pDomCard.classList.add('battling');
             cDomCard.classList.add('battling');
 
-            // Force fixed base dimensions
-            pDomCard.style.width = '174px';
-            pDomCard.style.height = '246px';
-            cDomCard.style.width = '174px';
-            cDomCard.style.height = '246px';
+            // Force fixed base dimensions (+10% of 174x246)
+            pDomCard.style.width = '191px';
+            pDomCard.style.height = '271px';
+            cDomCard.style.width = '191px';
+            cDomCard.style.height = '271px';
 
             await sleep(10); // small DOM ticket
 
@@ -2247,14 +2248,14 @@
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
             // Use Math.min to ensure it fits entirely on screen
-            const scale = Math.min(logicalWidth / 1800, logicalHeight / 800);
+            const scale = Math.min(logicalWidth / 2000, logicalHeight / 800);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
 
-            const scaledWidth = 1800 * finalScale;
+            const scaledWidth = 2000 * finalScale;
             layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
 
             if (finalScale < 1) {
