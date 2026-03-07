@@ -152,6 +152,15 @@
             width: 300px;
         }
 
+        .zone-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            margin-top: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
         .settings-box h2 {
             margin-bottom: 20px;
             font-size: 2rem;
@@ -1824,7 +1833,7 @@
                 rule_g5: "Gods and Prime Movers"
             },
             ko: {
-                ui_round: "Round", ui_me: "나", ui_enemy: "적", btn_restart: "Restart",
+                ui_round: "Round", ui_me: "플레이어", ui_enemy: "적군", btn_restart: "Restart",
                 ui_diff_title: "난이도 선택",
                 ui_diff_beginner: "5장 덱 / 3선승제",
                 ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
@@ -1915,21 +1924,43 @@
                 pvpSection.style.display = 'none';
                 document.getElementById('userInfoBox').style.display = 'flex';
 
-                // Attempt to fetch custom nickname from DB, otherwise fall back to Google Name
+                // Attempt to fetch custom nickname from DB (Force server fetch first to break cross-device cache sync failure)
                 nameSpan.innerText = user.displayName;
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().nickname) {
-                        nameSpan.innerText = doc.data().nickname;
-                        if (doc.data().lastNicknameChange) {
-                            localStorage.setItem('lastNicknameChange', doc.data().lastNicknameChange);
+
+                const fetchProfile = async () => {
+                    try {
+                        // Race against a 3-second timeout to prevent indefinite hangs
+                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 3000));
+                        const doc = await Promise.race([
+                            db.collection('users').doc(user.uid).get({ source: 'server' }),
+                            timeoutPromise
+                        ]);
+
+                        if (doc.exists && doc.data().nickname) {
+                            nameSpan.innerText = doc.data().nickname;
+                            if (doc.data().lastNicknameChange) {
+                                localStorage.setItem('lastNicknameChange', doc.data().lastNicknameChange);
+                            }
+                            localStorage.setItem('offlineNickname', doc.data().nickname);
+                        }
+                    } catch (e) {
+                        console.warn("Could not fetch user nickname from server (Timeout or Rules): ", e);
+                        // Fallback to cache or local storage
+                        try {
+                            const cachedDoc = await db.collection('users').doc(user.uid).get({ source: 'cache' });
+                            if (cachedDoc.exists && cachedDoc.data().nickname) {
+                                nameSpan.innerText = cachedDoc.data().nickname;
+                            } else if (localStorage.getItem('offlineNickname')) {
+                                nameSpan.innerText = localStorage.getItem('offlineNickname');
+                            }
+                        } catch (cacheErr) {
+                            if (localStorage.getItem('offlineNickname')) {
+                                nameSpan.innerText = localStorage.getItem('offlineNickname');
+                            }
                         }
                     }
-                }).catch(e => {
-                    console.warn("Could not fetch user nickname (could be permission rules): ", e);
-                    if (localStorage.getItem('offlineNickname')) {
-                        nameSpan.innerText = localStorage.getItem('offlineNickname');
-                    }
-                });
+                };
+                fetchProfile();
 
             } else {
                 // Not logged in: Show Login gatekeeper only
