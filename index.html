@@ -2514,10 +2514,10 @@
                 }
                 const provider = new firebase.auth.GoogleAuthProvider();
 
-                // Use Redirect instead of Popup to bypass Safari Mobile and desktop strict popup blockers
-                auth.signInWithRedirect(provider).catch(error => {
-                    console.error("Login redirect failed:", error);
-                    alert("구글 로그인 화면으로 넘어갈 수 없습니다.");
+                // Use Popup instead of Redirect, as Redirect requires custom domain configuration to work seamlessly on modern browsers.
+                auth.signInWithPopup(provider).catch(error => {
+                    console.error("Login popup failed:", error);
+                    alert("구글 로그인 팝업을 열 수 없습니다. 팝업 차단이 설정되어 있다면 해제해주세요.");
                 });
             });
 
