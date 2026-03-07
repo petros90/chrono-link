@@ -1630,8 +1630,8 @@
                 <div class="toggle-row">
                     <span data-i18n="ui_bgm">배경 음악</span>
                     <div class="slider-container">
-                        <input type="range" id="bgmSlider" min="0" max="100" value="100">
-                        <span class="vol-text" id="bgmVolText">100%</span>
+                        <input type="range" id="bgmSlider" min="0" max="100" value="50">
+                        <span class="vol-text" id="bgmVolText">50%</span>
                     </div>
                 </div>
                 <div class="toggle-row">
@@ -2005,7 +2005,7 @@
 
         /* Audio Settings State */
         let sfxVolume = 1.0;
-        let bgmVolume = 1.0;
+        let bgmVolume = 0.5;
 
         /* Synth Audio - 100% Zero-Dependency Sounds */
         const audioCtx = new (window.AudioContext || window.AudioContext)();
