@@ -561,6 +561,10 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
+            position: absolute;
+            /* Force it into the center regardless of flex items */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .score-board span {
@@ -1441,14 +1445,20 @@
     <!-- Global Scale Container -->
     <div id="appContainer">
 
-        <div id="headerRow">
+        <div id="headerRow" style="position: relative;">
+            <!-- Left side empty to balance flex, or can hold future items -->
+            <div></div>
+
+            <!-- Absolute centered Score Board -->
             <div class="score-board">
                 <div><span data-i18n="ui_round">Round</span> <span id="roundUi">1</span>/<span id="maxRoundsUi">5</span>
                 </div>
                 <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
                 <div><span data-i18n="ui_enemy">적</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
-            <div class="header-buttons" style="display: flex; align-items: center;">
+
+            <!-- Right side Header Buttons -->
+            <div class="header-buttons" style="display: flex; align-items: center; margin-left: auto;">
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
