@@ -58,29 +58,25 @@
 
         .diff-box {
             background: #1a1a24;
-            padding: 100px;
+            padding: 52px;
             border-radius: 15px;
             text-align: center;
             border: 2px solid #555;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            width: 90%;
-            max-width: 1200px;
-            /* Big space on mobile */
         }
 
         .diff-box h2 {
-            margin-bottom: 70px;
-            font-size: 6rem;
+            margin-bottom: 39px;
+            font-size: 3.25rem;
             color: #00ffd9;
         }
 
         .diff-btn {
             display: block;
             width: 100%;
-            padding: 40px;
-            margin-bottom: 30px;
-            font-size: 3.5rem;
-            border-width: 4px;
+            padding: 19px;
+            margin-bottom: 19px;
+            font-size: 1.95rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #333;
             border-radius: 8px;
@@ -96,19 +92,19 @@
         }
 
         .diff-desc {
-            font-size: 2.2rem;
+            font-size: 1.3rem;
             color: #aaa;
             margin-top: -10px;
-            margin-bottom: 40px;
+            margin-bottom: 26px;
             font-family: 'Gowun Dodum', sans-serif;
         }
 
         #btnRulebook {
             display: block;
             width: 100%;
-            padding: 25px;
-            margin-top: 25px;
-            font-size: 2.5rem;
+            padding: 13px;
+            margin-top: 13px;
+            font-size: 1.56rem;
             font-family: 'Jua', sans-serif;
             border: 2px solid #aaa;
             border-radius: 8px;
@@ -429,15 +425,15 @@
         }
 
         #headerRow h1 {
-            font-size: 5rem;
+            font-size: 3rem;
             color: #00ffd9;
             text-shadow: 0 0 5px #00ffd9;
             margin-right: 15px;
         }
 
         #startBtn {
-            padding: 15px 30px;
-            font-size: 40px;
+            padding: 8px 16px;
+            font-size: 24px;
             border: 1px solid #00ffd9;
             border-radius: 4px;
             background: transparent;
@@ -455,13 +451,13 @@
 
         .header-buttons {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             align-items: center;
         }
 
         #settingsBtn {
-            padding: 12px 18px;
-            font-size: 40px;
+            padding: 8px 12px;
+            font-size: 24px;
             border: 1px solid #aaa;
             border-radius: 4px;
             background: transparent;
@@ -477,8 +473,8 @@
 
         .score-board {
             display: flex;
-            gap: 40px;
-            font-size: 2.5rem;
+            gap: 20px;
+            font-size: 1.6rem;
             color: #aaa;
             flex-wrap: wrap;
             justify-content: center;
@@ -488,7 +484,7 @@
         .score-board span {
             color: #fff;
             font-weight: bold;
-            font-size: 3.5rem;
+            font-size: 2.0rem;
         }
 
         #appContainer {
@@ -1236,9 +1232,9 @@
         }
 
         #restartBtn {
-            margin-top: 50px;
-            padding: 20px 65px;
-            font-size: 55px;
+            margin-top: 30px;
+            padding: 12px 40px;
+            font-size: 32px;
             font-family: 'Jua';
             background: #fff;
             color: #000;
@@ -1273,6 +1269,65 @@
             .card-grade {
                 font-size: 0.6rem;
                 letter-spacing: -0.5px;
+            }
+
+            /* --- MOBILE-DEVICE ONLY JS-DETECTED MASSIVE SIZES --- */
+            body.is-mobile .diff-box {
+                padding: 100px;
+                width: 90%;
+                max-width: 1200px;
+            }
+
+            body.is-mobile .diff-box h2 {
+                font-size: 6rem;
+                margin-bottom: 70px;
+            }
+
+            body.is-mobile .diff-btn {
+                padding: 40px;
+                font-size: 3.5rem;
+                border-width: 4px;
+                margin-bottom: 30px;
+            }
+
+            body.is-mobile .diff-desc {
+                font-size: 2.2rem;
+                margin-bottom: 40px;
+            }
+
+            body.is-mobile #btnRulebook {
+                padding: 25px;
+                font-size: 2.5rem;
+                margin-top: 25px;
+            }
+
+            body.is-mobile #headerRow h1 {
+                font-size: 5rem;
+            }
+
+            body.is-mobile #startBtn {
+                padding: 15px 30px;
+                font-size: 40px;
+            }
+
+            body.is-mobile #settingsBtn {
+                padding: 12px 18px;
+                font-size: 40px;
+            }
+
+            body.is-mobile .score-board {
+                gap: 40px;
+                font-size: 2.5rem;
+            }
+
+            body.is-mobile .score-board span {
+                font-size: 3.5rem;
+            }
+
+            body.is-mobile #restartBtn {
+                margin-top: 50px;
+                padding: 20px 65px;
+                font-size: 55px;
             }
 
         }
@@ -2217,6 +2272,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+
+            // Detect mobile device purely via User-Agent to apply massive fonts despite base 1800 viewport logic
+            if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                document.body.classList.add('is-mobile');
+            }
+
             document.getElementById('startBtn').addEventListener('click', showDifficultyModal);
             document.getElementById('restartBtn').addEventListener('click', showDifficultyModal);
 
