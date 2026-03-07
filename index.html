@@ -1483,6 +1483,8 @@
                         <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                     </div>
 
+                    <button class="diff-btn" id="btnMenuMyPage"
+                        style="border-color:#fff; color:#fff; margin-bottom: 20px;">⚙️ 마이페이지 (My Page)</button>
                     <button class="diff-btn" id="btnMenuRulebook"
                         style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
                     <button class="diff-btn" id="btnMenuTutorial"
@@ -1520,6 +1522,37 @@
                     <button class="diff-btn" id="btnBackFromPvp"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
+                </div>
+
+                <!-- Section 5: My Page -->
+                <div id="myPageSection" style="display: none;">
+                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
+                    <br>
+                    <button class="diff-btn" id="btnChangeNickname"
+                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
+                    <button class="diff-btn" id="btnDeckSettings"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                    <button class="diff-btn" id="btnBackFromMyPage"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 6: Nickname Registration -->
+                <div id="nicknameSection" style="display: none;">
+                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
+                        사령관 이름 등록</h2>
+                    <p
+                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
+                        전장에서 사용할 멋진 닉네임을 정해주세요.</p>
+                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
+                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                        등록</button>
+                    <button class="diff-btn" id="btnBackFromNickname"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        취소</button>
                 </div>
             </div>
         </div>
@@ -1831,6 +1864,13 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // CRITICAL SAFARI FIX: Force long-polling to bypass WebSocket/ITP "client is offline" errors
+        db.settings({
+            experimentalForceLongPolling: true,
+            useFetchStreams: false
+        });
 
         // Check Auth State
         auth.onAuthStateChanged(user => {
@@ -1848,7 +1888,15 @@
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
 
+                // Attempt to fetch custom nickname from DB, otherwise fall back to Google Name
                 nameSpan.innerText = user.displayName;
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().nickname) {
+                        nameSpan.innerText = doc.data().nickname;
+                    }
+                }).catch(e => {
+                    console.warn("Could not fetch user nickname (could be permission rules): ", e);
+                });
 
             } else {
                 // Not logged in: Show Login gatekeeper only
@@ -2499,6 +2547,27 @@
                 document.getElementById('mainMenuSection').style.display = 'block';
             });
 
+            // My Page Handlers
+            document.getElementById('btnMenuMyPage').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('myPageSection').style.display = 'block';
+            });
+            document.getElementById('btnBackFromMyPage').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            // Nickname UI Handlers
+            document.getElementById('btnChangeNickname').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('nicknameSection').style.display = 'block';
+                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
+            });
+            document.getElementById('btnBackFromNickname').addEventListener('click', () => {
+                document.getElementById('nicknameSection').style.display = 'none';
+                document.getElementById('myPageSection').style.display = 'block';
+            });
+
             document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
             document.getElementById('btnPvpRandom').addEventListener('click', () => alert("PVP 랜덤 덱 모드는 준비 중입니다!"));
 
@@ -2540,6 +2609,52 @@
 
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
             document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
+
+            document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
+                const inputVal = document.getElementById('nicknameInput').value.trim();
+                const btn = document.getElementById('btnSubmitNickname');
+
+                if (inputVal.length < 2) {
+                    alert("닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "확인 중...";
+
+                try {
+                    // Check for duplicates
+                    const snapshot = await db.collection('users').where('nickname', '==', inputVal).get();
+                    if (!snapshot.empty) {
+                        alert("앗! 이미 누군가 사용 중인 닉네임입니다 😭 다른 멋진 이름을 생각해보세요!");
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        return;
+                    }
+
+                    // Save nickname to user profile
+                    const user = auth.currentUser;
+                    const userRef = db.collection('users').doc(user.uid);
+                    await userRef.set({
+                        nickname: inputVal,
+                        email: user.email,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    // Update UI and return to My Page
+                    document.getElementById('userDisplayName').innerText = inputVal;
+                    alert(`멋진 이름이군요! 성공적으로 등록되었습니다: ${inputVal}`);
+                    document.getElementById('nicknameSection').style.display = 'none';
+                    document.getElementById('myPageSection').style.display = 'block';
+
+                } catch (error) {
+                    console.error("Nickname reg error:", error);
+                    alert("서버 연결에 실패했습니다. 파이어베이스 [Firestore 규칙(Rules)]이 열려있는지 확인해주세요! (에러코드: " + error.code + ")");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "중복 확인 및 등록";
+                }
+            });
 
             showLobbyModal();
         });
