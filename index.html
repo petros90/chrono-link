@@ -55,21 +55,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0d0d12;
+            background-color: #0d0d12;
+            background-image: url('images/lobby_bg.png');
+            background-size: cover;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            z-index: 300;
+            z-index: 200;
         }
 
         .diff-box {
-            background: rgba(20, 20, 30, 0.65);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 60px 40px;
-            border-radius: 20px;
-            text-align: center;
+            background: rgba(10, 10, 12, 0.88);
+            backdrop-filter: blur(8px);
             border: 2px solid rgba(0, 255, 217, 0.4);
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 255, 217, 0.1);
         }
@@ -1442,7 +1440,8 @@
     <div id="appContainer">
 
         <div id="headerRow">
-            <h1>Chrono Link</h1>
+            <img src="images/chronolinklogo.png" style="height: 50px; object-fit: contain; margin-right: 20px;"
+                alt="Chrono Link Logo">
             <div class="score-board">
                 <div><span data-i18n="ui_round">Round</span> <span id="roundUi">1</span>/<span id="maxRoundsUi">5</span>
                 </div>
@@ -1464,9 +1463,9 @@
             <div class="diff-box">
                 <!-- Section 1: Login Gate -->
                 <div id="loginSection">
-                    <h2
-                        style="font-size: 5rem; margin-bottom: 20px; color: #00ffd9; text-shadow: 0 0 20px rgba(0,255,217,0.7), 0 0 5px #fff; letter-spacing: 2px; font-family: 'Jua', sans-serif;">
-                        Chrono Link</h2>
+                    <img src="images/chronolinklogo.png"
+                        style="height: 120px; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.5));"
+                        alt="Chrono Link Logo">
                     <p
                         style="font-size: 1.8rem; color: #ddd; margin-bottom: 50px; font-family: 'Gowun Dodum', sans-serif; text-shadow: 2px 2px 4px #000; line-height: 1.5;">
                         시공간을 초월한 영웅들의 위대한 배틀<br>
@@ -1493,7 +1492,7 @@
                     <button class="diff-btn" id="btnMenuRulebook"
                         style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
                     <button class="diff-btn" id="btnMenuTutorial"
-                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">🎓 게임하기 (Tutorial)</button>
+                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">🎓 튜토리얼 (Tutorial)</button>
                     <button class="diff-btn" id="btnMenuPvp" style="border-color:#ff0055; color:#ff0055;">⚔️ PVP 매치 (PVP
                         Mode)</button>
                 </div>
@@ -1531,6 +1530,9 @@
 
                 <!-- Section 5: My Page -->
                 <div id="myPageSection" style="display: none;">
+                    <img src="images/chronolinklogo.png" style="height: 80px; object-fit: contain; margin-bottom: 20px;"
+                        alt="Chrono Link Logo">
+                    <br>
                     <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
                     <br>
                     <button class="diff-btn" id="btnChangeNickname"
