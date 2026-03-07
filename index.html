@@ -2318,8 +2318,8 @@
             const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
-            // Vertical bounds must be at least 950 to fit the huge +10% enlarged player cards without overlapping!
-            const scale = Math.min(logicalWidth / 1800, logicalHeight / 950);
+            // Vertical bounds must be at least 1050 to safely fit the enlarged player cards, Safari UI bars, and padding!
+            const scale = Math.min(logicalWidth / 1800, logicalHeight / 1050);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
