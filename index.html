@@ -1527,6 +1527,8 @@
                         </div>
                     </div>
 
+                    <button class="diff-btn" id="btnMenuMyPage"
+                        style="border-color:#fff; color:#fff; margin-bottom: 20px;">⚙️ 마이페이지 (My Page)</button>
                     <button class="diff-btn" id="btnMenuRulebook"
                         style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
                     <button class="diff-btn" id="btnMenuTutorial"
@@ -1562,6 +1564,21 @@
                             style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 5: My Page -->
+                <div id="myPageSection" style="display: none;">
+                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
+                    <br>
+                    <button class="diff-btn" id="btnChangeNickname"
+                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 변경</button>
+                    <button class="diff-btn" id="btnDeckSettings"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                    <button class="diff-btn" id="btnBackFromMyPage"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
                 </div>
@@ -1922,7 +1939,10 @@
                         pvpSection.style.display = 'none';
                         nicknameSection.style.display = 'block';
                     }
-                }).catch(err => console.error("Error fetching user data:", err));
+                }).catch(err => {
+                    console.error("Error fetching user data:", err);
+                    alert("데이터베이스 권한 에러 (파이어베이스 설정 문제): " + err.message);
+                });
 
             } else {
                 // Not logged in: Show Login gatekeeper only
@@ -2674,6 +2694,38 @@
 
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
             document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
+
+            document.getElementById('btnMenuTutorial').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('tutorialSection').style.display = 'block';
+            });
+            document.getElementById('btnBackFromTutorial').addEventListener('click', () => {
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'flex';
+            });
+
+            document.getElementById('btnMenuPvp').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'block';
+            });
+            document.getElementById('btnBackFromPvp').addEventListener('click', () => {
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'flex';
+            });
+
+            document.getElementById('btnMenuMyPage').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('myPageSection').style.display = 'block';
+            });
+            document.getElementById('btnBackFromMyPage').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'flex';
+            });
+            document.getElementById('btnChangeNickname').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('nicknameSection').style.display = 'block';
+                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
+            });
 
             showLobbyModal();
         });
