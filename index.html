@@ -307,37 +307,20 @@
 
         #userInfoBox {
             display: none;
-            background: rgba(20, 20, 30, 0.8);
-            border: 2px solid #00ffd9;
-            padding: 20px;
-            border-radius: 12px;
+            background: rgba(0, 255, 217, 0.1);
+            border: 1px solid #00ffd9;
+            padding: 10px;
+            border-radius: 8px;
             margin-bottom: 30px;
             font-size: 1.5rem;
-            color: #ddd;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: inset 0 0 15px rgba(0, 255, 217, 0.2);
-        }
-
-        .profile-row {
-            display: flex;
+            color: #00ffd9;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
-        }
-
-        .profile-badges {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.2rem;
-            color: #ff0055;
-            text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
         }
 
         body.is-mobile #userInfoBox {
-            font-size: 2rem;
-            padding: 25px;
+            font-size: 2.2rem;
+            padding: 20px;
         }
 
         #btnLogout {
@@ -1493,42 +1476,13 @@
                     </button>
                 </div>
 
-                <!-- Section 1.5: Nickname Registration -->
-                <div id="nicknameSection" style="display: none;">
-                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
-                        사령관 이름 등록</h2>
-                    <p
-                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
-                        전장에서 사용할 멋진 닉네임을 정해주세요.</p>
-                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
-                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
-                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
-                        등록</button>
-                </div>
-
                 <!-- Section 2: Main Menu -->
                 <div id="mainMenuSection" style="display: none;">
                     <div id="userInfoBox">
-                        <div class="profile-row">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="font-size: 2.5rem;">👨‍🚀</div>
-                                <div style="display:flex; flex-direction:column; text-align:left;">
-                                    <span id="userDisplayName"
-                                        style="color: #00ffd9; font-weight: bold; font-family: 'Jua', sans-serif;">User
-                                        Name</span>
-                                    <span id="userRankText" style="font-size: 1rem; color: #aaa;">사령관 (Rank 1)</span>
-                                </div>
-                            </div>
-                            <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
-                        </div>
-                        <div class="profile-row profile-badges">
-                            <span>🏆 누적 승리:</span>
-                            <span id="userWinsDisplay" style="font-size: 1.8rem; font-weight: bold;">0 승</span>
-                        </div>
+                        <span id="userDisplayName">User Name</span>
+                        <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                     </div>
 
-                    <button class="diff-btn" id="btnMenuMyPage"
-                        style="border-color:#fff; color:#fff; margin-bottom: 20px;">⚙️ 마이페이지 (My Page)</button>
                     <button class="diff-btn" id="btnMenuRulebook"
                         style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
                     <button class="diff-btn" id="btnMenuTutorial"
@@ -1564,21 +1518,6 @@
                             style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
-                        뒤로 가기</button>
-                </div>
-
-                <!-- Section 5: My Page -->
-                <div id="myPageSection" style="display: none;">
-                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
-                    <br>
-                    <button class="diff-btn" id="btnChangeNickname"
-                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 변경</button>
-                    <button class="diff-btn" id="btnDeckSettings"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
-
-                    <button class="diff-btn" id="btnBackFromMyPage"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
                 </div>
@@ -1894,69 +1833,30 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // CRITICAL SAFARI FIX: Force long-polling to bypass WebSocket/ITP "client is offline" errors
-        db.settings({
-            experimentalForceLongPolling: true,
-            useFetchStreams: false
-        });
-
-        // Catch redirect errors when returning from Google login screen
-        auth.getRedirectResult().catch(error => {
-            console.error("Redirect login error:", error);
-            if (error.code !== 'auth/redirect-cancelled-by-user') {
-                alert("로그인 복귀 중 에러 발생: " + error.message);
-            }
-        });
-
-        // Global profile data
-        let globalUserWins = 0;
-
         // Check Auth State
         auth.onAuthStateChanged(user => {
             const loginSection = document.getElementById('loginSection');
             const menuSection = document.getElementById('mainMenuSection');
             const tutorialSection = document.getElementById('tutorialSection');
             const pvpSection = document.getElementById('pvpSection');
-            const nicknameSection = document.getElementById('nicknameSection');
 
             const nameSpan = document.getElementById('userDisplayName');
-            const winsSpan = document.getElementById('userWinsDisplay');
 
             if (user) {
-                // Initialize or fetch user document
-                const userRef = db.collection('users').doc(user.uid);
+                // Logged in: Hide login section, show main menu
+                loginSection.style.display = 'none';
+                menuSection.style.display = 'block';
+                tutorialSection.style.display = 'none';
+                pvpSection.style.display = 'none';
 
-                userRef.get().then((doc) => {
-                    if (doc.exists && doc.data().nickname) {
-                        // User exists and has a configured nickname
-                        loginSection.style.display = 'none';
-                        nicknameSection.style.display = 'none';
-                        menuSection.style.display = 'flex';
-                        menuSection.style.flexDirection = 'column';
-                        tutorialSection.style.display = 'none';
-                        pvpSection.style.display = 'none';
+                nameSpan.innerText = user.displayName;
 
-                        const data = doc.data();
-                        globalUserWins = data.wins || 0;
-                        nameSpan.innerText = data.nickname;
-                        winsSpan.innerText = `${globalUserWins} 승`;
-
-                        // Update last login
-                        userRef.update({
-                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    } else {
-                        // New user or existing user who never set a nickname
-                        loginSection.style.display = 'none';
-                        menuSection.style.display = 'none';
-                        tutorialSection.style.display = 'none';
-                        pvpSection.style.display = 'none';
-                        nicknameSection.style.display = 'block';
-                    }
-                }).catch(err => {
-                    console.error("Error fetching user data:", err);
-                    alert("데이터베이스 권한 에러 (파이어베이스 설정 문제): " + err.message);
-                });
+                // Initialize user document if not exists
+                db.collection('users').doc(user.uid).set({
+                    name: user.displayName,
+                    email: user.email,
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
 
             } else {
                 // Not logged in: Show Login gatekeeper only
@@ -1964,8 +1864,6 @@
                 menuSection.style.display = 'none';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
-                if (nicknameSection) nicknameSection.style.display = 'none';
-                globalUserWins = 0;
             }
         });
 
@@ -2519,14 +2417,6 @@
             render();
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
-                // Sync wins to Firebase if player won a match
-                if (pWin >= maxWins && auth.currentUser) {
-                    globalUserWins += 1;
-                    db.collection('users').doc(auth.currentUser.uid).update({
-                        wins: firebase.firestore.FieldValue.increment(1)
-                    });
-                    document.getElementById('userWinsDisplay').innerText = `${globalUserWins} 승`;
-                }
                 checkGameEnd();
             } else {
                 isBattling = false;
@@ -2645,10 +2535,10 @@
                     prompt: 'select_account'
                 });
 
-                // Use Redirect instead of Popup to bypass strict Safari/Mobile popup blockers that cause offline ITP errors.
-                auth.signInWithRedirect(provider).catch(error => {
-                    console.error("Login redirect failed:", error);
-                    alert("리다이렉트 에러: " + error.code + "\\n" + error.message);
+                // Use Popup instead of Redirect, as Redirect requires custom domain configuration to work seamlessly on modern browsers.
+                auth.signInWithPopup(provider).catch(error => {
+                    console.error("Login popup failed:", error);
+                    alert("에러 원인 추적: " + error.code + "\\n" + error.message);
                 });
             });
 
@@ -2656,90 +2546,8 @@
                 auth.signOut();
             });
 
-            document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
-                const inputVal = document.getElementById('nicknameInput').value.trim();
-                const btn = document.getElementById('btnSubmitNickname');
-
-                if (inputVal.length < 2) {
-                    alert("닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).");
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.innerText = "확인 중...";
-
-                // Duplicate check via Firestore querying
-                try {
-                    const snapshot = await db.collection('users').where('nickname', '==', inputVal).get();
-                    if (!snapshot.empty) {
-                        alert("앗! 이미 누군가 사용 중인 닉네임입니다 😭 다른 멋진 이름을 생각해보세요!");
-                        btn.disabled = false;
-                        btn.innerText = "중복 확인 및 등록";
-                        return;
-                    }
-
-                    // Proceed to save the nickname
-                    const user = auth.currentUser;
-                    const userRef = db.collection('users').doc(user.uid);
-                    await userRef.set({
-                        nickname: inputVal,
-                        email: user.email,
-                        wins: 0, // baseline for new users
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-
-                    // Shift UI directly to Main Menu
-                    document.getElementById('nicknameSection').style.display = 'none';
-                    document.getElementById('mainMenuSection').style.display = 'flex';
-                    document.getElementById('userDisplayName').innerText = inputVal;
-                    document.getElementById('userWinsDisplay').innerText = `0 승`;
-                    globalUserWins = 0;
-
-                    alert(`가입 완료! 환영합니다, ${inputVal} 사령관님! 🔥`);
-
-                } catch (error) {
-                    console.error("Nickname registration failed", error);
-                    alert("닉네임 등록 중 서버 에러가 발생했습니다.");
-                    btn.disabled = false;
-                    btn.innerText = "중복 확인 및 등록";
-                }
-            });
-
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
             document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
-
-            document.getElementById('btnMenuTutorial').addEventListener('click', () => {
-                document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('tutorialSection').style.display = 'block';
-            });
-            document.getElementById('btnBackFromTutorial').addEventListener('click', () => {
-                document.getElementById('tutorialSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'flex';
-            });
-
-            document.getElementById('btnMenuPvp').addEventListener('click', () => {
-                document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('pvpSection').style.display = 'block';
-            });
-            document.getElementById('btnBackFromPvp').addEventListener('click', () => {
-                document.getElementById('pvpSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'flex';
-            });
-
-            document.getElementById('btnMenuMyPage').addEventListener('click', () => {
-                document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('myPageSection').style.display = 'block';
-            });
-            document.getElementById('btnBackFromMyPage').addEventListener('click', () => {
-                document.getElementById('myPageSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'flex';
-            });
-            document.getElementById('btnChangeNickname').addEventListener('click', () => {
-                document.getElementById('myPageSection').style.display = 'none';
-                document.getElementById('nicknameSection').style.display = 'block';
-                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
-            });
 
             showLobbyModal();
         });
