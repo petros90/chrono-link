@@ -486,7 +486,7 @@
         }
 
         #appContainer {
-            width: 1400px;
+            width: 1800px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -758,7 +758,7 @@
             position: relative;
             overflow: visible;
             margin: 5px;
-            min-height: 220px;
+            min-height: 150px;
             padding: 0px;
             /* Removed borders and background to fix [ ] visual issue */
         }
@@ -1127,7 +1127,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 1200px;
+            width: 1800px;
             height: 1.5em;
             background: rgba(0, 0, 0, 0.7);
             z-index: -1;
@@ -2243,14 +2243,14 @@
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
             // Use Math.min to ensure it fits entirely on screen
-            const scale = Math.min(logicalWidth / 1400, logicalHeight / 800);
+            const scale = Math.min(logicalWidth / 1800, logicalHeight / 800);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
 
-            const scaledWidth = 1400 * finalScale;
+            const scaledWidth = 1800 * finalScale;
             layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
 
             if (finalScale < 1) {
