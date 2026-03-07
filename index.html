@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200">
+    <meta name="viewport" content="width=1400">
     <meta property="og:title" content="Chrono Link">
     <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
     <meta property="og:image"
@@ -486,7 +486,7 @@
         }
 
         #appContainer {
-            width: 1200px;
+            width: 1400px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -516,7 +516,7 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 160px;
+            flex: 0 0 240px;
             background: #111116;
             border-right: 1px solid #333;
             display: flex;
@@ -527,7 +527,7 @@
         }
 
         #chartPanel {
-            flex: 0 0 160px;
+            flex: 0 0 240px;
             border-right: none;
             align-items: center;
         }
@@ -2243,14 +2243,14 @@
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
             // Use Math.min to ensure it fits entirely on screen
-            const scale = Math.min(logicalWidth / 1200, logicalHeight / 800);
+            const scale = Math.min(logicalWidth / 1400, logicalHeight / 800);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
 
-            const scaledWidth = 1200 * finalScale;
+            const scaledWidth = 1400 * finalScale;
             layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
 
             if (finalScale < 1) {
