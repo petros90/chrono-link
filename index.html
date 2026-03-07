@@ -1831,7 +1831,6 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
 
         // Check Auth State
         auth.onAuthStateChanged(user => {
@@ -1850,13 +1849,6 @@
                 pvpSection.style.display = 'none';
 
                 nameSpan.innerText = user.displayName;
-
-                // Initialize user document if not exists
-                db.collection('users').doc(user.uid).set({
-                    name: user.displayName,
-                    email: user.email,
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
 
             } else {
                 // Not logged in: Show Login gatekeeper only
