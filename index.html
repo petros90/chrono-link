@@ -10,6 +10,12 @@
         content="https://petros90.github.io/chrono-link/images/%EA%B4%91%EA%B0%9C%ED%86%A0%EB%8C%80%EC%99%95.jpg">
     <title>Chrono Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
     <style>
         /* Base Resets & Typography */
         * {
@@ -262,7 +268,73 @@
 
         h1,
         h2,
-        h3 {
+        #btnGoogleLogin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-family: 'Jua', sans-serif;
+            border: 2px solid #aaa;
+            border-radius: 8px;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #btnGoogleLogin img {
+            width: 30px;
+            height: 30px;
+        }
+
+        body.is-mobile #btnGoogleLogin {
+            padding: 25px;
+            font-size: 3rem;
+        }
+
+        #userInfoBox {
+            display: none;
+            background: rgba(0, 255, 217, 0.1);
+            border: 1px solid #00ffd9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            color: #00ffd9;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.is-mobile #userInfoBox {
+            font-size: 2.2rem;
+            padding: 20px;
+        }
+
+        #btnLogout {
+            background: transparent;
+            border: 1px solid #aaa;
+            color: #aaa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+        }
+
+        #btnLogout:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        body.is-mobile #btnLogout {
+            padding: 10px 20px;
+            font-size: 2rem;
+        }
+
+        h2 {
             font-family: 'Jua', sans-serif;
             margin: 0;
             color: #ddd;
@@ -1376,8 +1448,15 @@
         <!-- Difficulty Overlay -->
         <div id="difficultyOverlay">
             <div class="diff-box">
-                <button id="btnRulebook" data-i18n="btn_rulebook" style="margin-bottom: 15px;">📖 룰북 (How to
-                    Play)</button>
+                <button id="btnGoogleLogin">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
+                    <span data-i18n="btn_google_login">Google 로그인</span>
+                </button>
+                <div id="userInfoBox">
+                    <span id="userDisplayName">User Name</span>
+                    <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                </div>
+
                 <h2 data-i18n="ui_diff_title">난이도 선택</h2>
                 <button class="diff-btn" id="btnBeginner">Beginner</button>
                 <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
@@ -1682,12 +1761,53 @@
         }
         function t(key) { return i18n[currentLang][key] || key; }
 
+        // --- FIREBASE INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqzvPVD6LOdIKczq-nDyuUHzHvHk7VBjI",
+            authDomain: "chrono-link-4b3d0.firebaseapp.com",
+            projectId: "chrono-link-4b3d0",
+            storageBucket: "chrono-link-4b3d0.firebasestorage.app",
+            messagingSenderId: "426167667260",
+            appId: "1:426167667260:web:6f0ff7e26e64d1c6551139"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Check Auth State
+        auth.onAuthStateChanged(user => {
+            const btnLogin = document.getElementById('btnGoogleLogin');
+            const infoBox = document.getElementById('userInfoBox');
+            const nameSpan = document.getElementById('userDisplayName');
+
+            if (user) {
+                // Logged in
+                btnLogin.style.display = 'none';
+                infoBox.style.display = 'flex';
+                nameSpan.innerText = user.displayName;
+
+                // Initialize user document if not exists
+                db.collection('users').doc(user.uid).set({
+                    name: user.displayName,
+                    email: user.email,
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+            } else {
+                // Not logged in
+                btnLogin.style.display = 'flex';
+                infoBox.style.display = 'none';
+            }
+        });
+
+        // -----------------------------------------------------
+
         /* Audio Settings State */
         let sfxVolume = 1.0;
         let bgmVolume = 1.0;
 
         /* Synth Audio - 100% Zero-Dependency Sounds */
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioCtx = new (window.AudioContext || window.AudioContext)();
 
         // SFX Generator
         function playTone(freq, type, duration, vol = 0.1) {
@@ -2305,6 +2425,18 @@
             document.getElementById('bgmSlider').addEventListener('input', (e) => updateBgmVolume(e.target.value));
             document.getElementById('sfxSlider').addEventListener('input', (e) => updateSfxVolume(e.target.value));
             document.getElementById('sfxSlider').addEventListener('change', (e) => updateSfxVolume(e.target.value)); // play test sound on release
+
+            document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider).catch(error => {
+                    console.error("Login failed:", error);
+                    alert("구글 로그인에 실패했습니다.");
+                });
+            });
+
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                auth.signOut();
+            });
 
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
             document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
