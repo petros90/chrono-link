@@ -554,7 +554,7 @@
             padding: 10px;
             border-radius: 8px;
             border-left: 4px solid #666;
-            font-size: 1rem;
+            font-size: 2rem;
             line-height: 1.5;
             animation: slideInLeft 0.3s ease-out;
         }
@@ -603,7 +603,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 0.8rem;
+            font-size: 1.6rem;
             border: 2px solid;
             user-select: none;
             z-index: 2;
@@ -611,7 +611,7 @@
         }
 
         .node span {
-            font-size: 1.2rem;
+            font-size: 2.4rem;
         }
 
         /* Circle Layout */
@@ -777,7 +777,7 @@
         /* Fixed Labels in Battle Zone */
         .battle-label-static {
             position: absolute;
-            font-size: 24px;
+            font-size: 48px;
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000;
@@ -873,7 +873,7 @@
         .card-slot {
             flex: 1 1 0;
             min-width: 90px;
-            max-width: 180px;
+            max-width: 216px;
             aspect-ratio: 140 / 198;
             height: auto;
             position: relative;
@@ -932,20 +932,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
+            font-size: 1.6rem;
             z-index: 2;
         }
 
         .card-grade {
             font-weight: bold;
             margin-left: 3px;
-            font-size: 0.7rem;
+            font-size: 1.4rem;
             letter-spacing: -0.3px;
             white-space: nowrap;
         }
 
         .card-element {
-            font-size: 1.1rem;
+            font-size: 2.2rem;
             margin-right: 5px;
         }
 
@@ -969,7 +969,7 @@
             background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 100%);
             padding: 6px 2px;
             font-family: 'Jua';
-            font-size: 1rem;
+            font-size: 2.0rem;
             z-index: 2;
             white-space: normal;
             word-wrap: break-word;
@@ -1995,18 +1995,19 @@
             appContainer.appendChild(cLabel);
             appContainer.appendChild(clashEffect);
 
-            pLabel.style.left = (localCenterX - 217) + 'px';
-            pLabel.style.top = (localCenterY - 225) + 'px';
+            // 174px wide * 1.76 scale * 0.85 translation = 260px offset from center
+            pLabel.style.left = (localCenterX - 260) + 'px';
+            pLabel.style.top = (localCenterY - 265) + 'px';
 
-            cLabel.style.left = (localCenterX + 217) + 'px';
-            cLabel.style.top = (localCenterY - 225) + 'px';
+            cLabel.style.left = (localCenterX + 260) + 'px';
+            cLabel.style.top = (localCenterY - 265) + 'px';
 
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation (145x205 are the unscaled logical sizes, +~10%)
-            const centerLeft = localCenterX - (145 / 2);
-            const centerTop = localCenterY - (205 / 2);
+            // Place both at the exact center for translation (174x246 are the unscaled logical sizes, +~20%)
+            const centerLeft = localCenterX - (174 / 2);
+            const centerTop = localCenterY - (246 / 2);
 
             // Enter focus mode
             document.body.classList.add('battling-mode');
@@ -2017,10 +2018,10 @@
             cDomCard.classList.add('battling');
 
             // Force fixed base dimensions
-            pDomCard.style.width = '145px';
-            pDomCard.style.height = '205px';
-            cDomCard.style.width = '145px';
-            cDomCard.style.height = '205px';
+            pDomCard.style.width = '174px';
+            pDomCard.style.height = '246px';
+            cDomCard.style.width = '174px';
+            cDomCard.style.height = '246px';
 
             await sleep(10); // small DOM ticket
 
