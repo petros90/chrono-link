@@ -56,9 +56,6 @@
             width: 100%;
             height: 100%;
             background-color: #0d0d12;
-            background-image: url('images/lobby_bg.png');
-            background-size: cover;
-            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1440,8 +1437,6 @@
     <div id="appContainer">
 
         <div id="headerRow">
-            <img src="images/chronolinklogo.png" style="height: 50px; object-fit: contain; margin-right: 20px;"
-                alt="Chrono Link Logo">
             <div class="score-board">
                 <div><span data-i18n="ui_round">Round</span> <span id="roundUi">1</span>/<span id="maxRoundsUi">5</span>
                 </div>
@@ -1464,7 +1459,7 @@
                 <!-- Section 1: Login Gate -->
                 <div id="loginSection">
                     <img src="images/chronolinklogo.png"
-                        style="height: 120px; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.5));"
+                        style="height: 360px; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.5));"
                         alt="Chrono Link Logo">
                     <p
                         style="font-size: 1.8rem; color: #ddd; margin-bottom: 50px; font-family: 'Gowun Dodum', sans-serif; text-shadow: 2px 2px 4px #000; line-height: 1.5;">
@@ -1530,8 +1525,8 @@
 
                 <!-- Section 5: My Page -->
                 <div id="myPageSection" style="display: none;">
-                    <img src="images/chronolinklogo.png" style="height: 80px; object-fit: contain; margin-bottom: 20px;"
-                        alt="Chrono Link Logo">
+                    <img src="images/chronolinklogo.png"
+                        style="height: 240px; object-fit: contain; margin-bottom: 20px;" alt="Chrono Link Logo">
                     <br>
                     <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
                     <br>
@@ -1664,6 +1659,9 @@
 
         <div id="mainLayout">
             <div class="side-panel" id="logPanel">
+                <img src="images/chronolinklogo.png"
+                    style="width: 100%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
+                    alt="Chrono Link Logo">
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
                 <ul class="log-list" id="roundLog"></ul>
             </div>
