@@ -1542,10 +1542,10 @@
                 <!-- Section 6: Nickname Registration -->
                 <div id="nicknameSection" style="display: none;">
                     <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
-                        사령관 이름 등록</h2>
+                        닉네임 등록</h2>
                     <p
                         style="font-size: 1.5rem; color: #ddd; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
-                        전장에서 사용할 멋진 닉네임을 정해주세요.</p>
+                        게임에서 사용할 멋진 닉네임을 정해주세요.</p>
                     <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
                         style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
                     <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
@@ -2623,8 +2623,13 @@
                 btn.innerText = "확인 중...";
 
                 try {
-                    // Check for duplicates
-                    const snapshot = await db.collection('users').where('nickname', '==', inputVal).get();
+                    // Check for duplicates with a 5-second timeout to prevent infinite hang on silent Network/Rule errors
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000));
+                    const snapshot = await Promise.race([
+                        db.collection('users').where('nickname', '==', inputVal).get(),
+                        timeoutPromise
+                    ]);
+
                     if (!snapshot.empty) {
                         alert("앗! 이미 누군가 사용 중인 닉네임입니다 😭 다른 멋진 이름을 생각해보세요!");
                         btn.disabled = false;
@@ -2649,7 +2654,11 @@
 
                 } catch (error) {
                     console.error("Nickname reg error:", error);
-                    alert("서버 연결에 실패했습니다. 파이어베이스 [Firestore 규칙(Rules)]이 열려있는지 확인해주세요! (에러코드: " + error.code + ")");
+                    if (error.message === "TIMEOUT") {
+                        alert("서버 응답이 멈췄습니다! 게임과 파이어베이스 간의 통신이 방해받고 있습니다. 사파리/아이폰의 경우 브라우저 보안 정책일 수 있으며, 혹은 데이터베이스 보안 규칙이 잠겨있을 수 있습니다.");
+                    } else {
+                        alert("서버 연결에 실패했습니다. (에러코드: " + error.code + ")");
+                    }
                 } finally {
                     btn.disabled = false;
                     btn.innerText = "중복 확인 및 등록";
