@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=1400">
     <meta property="og:title" content="Chrono Link">
     <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
-    <meta property="og:image"
-        content="https://petros90.github.io/chrono-link/images/%EA%B4%91%EA%B0%9C%ED%86%A0%EB%8C%80%EC%99%95.jpg">
+    <meta property="og:image" content="https://petros90.github.io/chrono-link/images/chronolinklogo.png">
     <title>Chrono Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
 
@@ -1428,12 +1427,12 @@
                 width: 100vh;
                 height: 100vw;
                 /* Rotate the entire body to mimic landscape mode */
-                transform: rotate(90deg);
-                transform-origin: left top;
+                transform: rotate(90deg) translateY(-100%);
+                transform-origin: top left;
                 /* Shift the body so it aligns with the screen edge after rotation */
                 position: absolute;
                 top: 0;
-                left: 100vw;
+                left: 0;
                 overflow: hidden;
             }
         }
@@ -2748,6 +2747,15 @@
             const isForcedLandscape = window.matchMedia("(pointer: coarse) and (orientation: portrait)").matches;
             const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
+
+            // Force physical body sizes to bypass unpredictable CSS 100vh/100vw mobile bugs
+            if (isForcedLandscape) {
+                document.body.style.width = logicalWidth + 'px';
+                document.body.style.height = logicalHeight + 'px';
+            } else {
+                document.body.style.width = '100%';
+                document.body.style.height = '100%';
+            }
 
             // Vertical bounds must be at least 1050 to safely fit the enlarged player cards, Safari UI bars, and padding!
             const scale = Math.min(logicalWidth / 1800, logicalHeight / 1050);
