@@ -2053,6 +2053,11 @@
             cDomCard.style.top = cLocalY + 'px';
             cDomCard.style.left = cLocalX + 'px';
 
+            const isMobileBattle = document.body.classList.contains('is-mobile');
+            const baseW = isMobileBattle ? 191 * 1.3 : 191; // ~248
+            const baseH = isMobileBattle ? 271 * 1.3 : 271; // ~352
+            const clashOffset = baseW * 1.76 * 0.85; // dynamically calculate offset distance
+
             // Dynamically position static labels matching expected card visual shifts to fix alignment bugs
             const pLabel = document.querySelector('.p-label');
             const cLabel = document.querySelector('.c-label');
@@ -2060,19 +2065,18 @@
             appContainer.appendChild(cLabel);
             appContainer.appendChild(clashEffect);
 
-            // 191px wide * 1.76 scale * 0.85 = ~285px offset
-            pLabel.style.left = (localCenterX - 285) + 'px';
-            pLabel.style.top = (localCenterY - 290) + 'px';
+            pLabel.style.left = (localCenterX - clashOffset) + 'px';
+            pLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
 
-            cLabel.style.left = (localCenterX + 285) + 'px';
-            cLabel.style.top = (localCenterY - 290) + 'px';
+            cLabel.style.left = (localCenterX + clashOffset) + 'px';
+            cLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
 
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation (191x271 are the unscaled logical sizes, +~10%)
-            const centerLeft = localCenterX - (191 / 2);
-            const centerTop = localCenterY - (271 / 2);
+            // Place both at the exact center for translation
+            const centerLeft = localCenterX - (baseW / 2);
+            const centerTop = localCenterY - (baseH / 2);
 
             // Enter focus mode
             document.body.classList.add('battling-mode');
@@ -2082,11 +2086,11 @@
             pDomCard.classList.add('battling');
             cDomCard.classList.add('battling');
 
-            // Force fixed base dimensions (+10% of 174x246)
-            pDomCard.style.width = '191px';
-            pDomCard.style.height = '271px';
-            cDomCard.style.width = '191px';
-            cDomCard.style.height = '271px';
+            // Force fixed base dimensions
+            pDomCard.style.width = baseW + 'px';
+            pDomCard.style.height = baseH + 'px';
+            cDomCard.style.width = baseW + 'px';
+            cDomCard.style.height = baseH + 'px';
 
             await sleep(10); // small DOM ticket
 
