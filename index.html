@@ -307,20 +307,29 @@
 
         #userInfoBox {
             display: none;
-            background: rgba(0, 255, 217, 0.1);
-            border: 1px solid #00ffd9;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            /* Changed to 'flex' by JS */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #00ffd9;
+            padding: 10px 20px;
+            border-radius: 12px;
             font-size: 1.5rem;
             color: #00ffd9;
             align-items: center;
-            justify-content: space-between;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            font-family: 'Jua', sans-serif;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
         }
 
         body.is-mobile #userInfoBox {
             font-size: 2.2rem;
-            padding: 20px;
+            padding: 15px 25px;
+            gap: 20px;
         }
 
         #btnLogout {
@@ -1436,6 +1445,12 @@
     <!-- Global Scale Container -->
     <div id="appContainer">
 
+        <!-- Global User Info Overlay (Top Right) -->
+        <div id="userInfoBox">
+            <span id="userDisplayName">User Name</span>
+            <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+        </div>
+
         <div id="headerRow">
             <h1>Chrono Link</h1>
             <div class="score-board">
@@ -1478,11 +1493,7 @@
 
                 <!-- Section 2: Main Menu -->
                 <div id="mainMenuSection" style="display: none;">
-                    <div id="userInfoBox">
-                        <span id="userDisplayName">User Name</span>
-                        <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
-                    </div>
-
+                    <br>
                     <button class="diff-btn" id="btnMenuMyPage"
                         style="border-color:#fff; color:#fff; margin-bottom: 20px;">⚙️ 마이페이지 (My Page)</button>
                     <button class="diff-btn" id="btnMenuRulebook"
@@ -1887,6 +1898,7 @@
                 menuSection.style.display = 'block';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
+                document.getElementById('userInfoBox').style.display = 'flex';
 
                 // Attempt to fetch custom nickname from DB, otherwise fall back to Google Name
                 nameSpan.innerText = user.displayName;
@@ -1907,6 +1919,7 @@
                 menuSection.style.display = 'none';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
+                document.getElementById('userInfoBox').style.display = 'none';
             }
         });
 
