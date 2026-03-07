@@ -1894,6 +1894,14 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Catch redirect errors when returning from Google login screen
+        auth.getRedirectResult().catch(error => {
+            console.error("Redirect login error:", error);
+            if (error.code !== 'auth/redirect-cancelled-by-user') {
+                alert("로그인 복귀 중 에러 발생: " + error.message);
+            }
+        });
+
         // Global profile data
         let globalUserWins = 0;
 
@@ -2631,10 +2639,10 @@
                     prompt: 'select_account'
                 });
 
-                // Use Popup. Now that the domain is authorized, the popup will not instantly close.
-                auth.signInWithPopup(provider).catch(error => {
-                    console.error("Login popup failed:", error);
-                    alert("팝업 로그인 에러: " + error.code + "\\n" + error.message);
+                // Use Redirect instead of Popup to bypass strict Safari/Mobile popup blockers that cause offline ITP errors.
+                auth.signInWithRedirect(provider).catch(error => {
+                    console.error("Login redirect failed:", error);
+                    alert("리다이렉트 에러: " + error.code + "\\n" + error.message);
                 });
             });
 
