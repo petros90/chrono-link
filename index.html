@@ -2656,10 +2656,15 @@
                 btn.innerText = "확인 중...";
 
                 try {
-                    // Check for duplicates with a 5-second timeout to prevent infinite hang on silent Network/Rule errors
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000));
+                    // Check for duplicates with a 3-second timeout to prevent infinite hang on silent Network/Rule errors
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 3000));
+
+                    // Firestore handles offline requests via cache natively, but we must race it aggressively 
+                    // because if it is purely offline but with an empty cache, `.get()` will never resolve.
+                    const getPromise = db.collection('users').where('nickname', '==', inputVal).get({ source: 'server' });
+
                     const snapshot = await Promise.race([
-                        db.collection('users').where('nickname', '==', inputVal).get(),
+                        getPromise,
                         timeoutPromise
                     ]);
 
@@ -2690,8 +2695,8 @@
                 } catch (error) {
                     console.error("Nickname reg error:", error);
                     let errMsg = "서버 에러입니다.";
-                    if (error.message === "TIMEOUT") {
-                        errMsg = "서버 응답이 멈췄습니다! 게임과 파이어베이스 통신이 방해받고 있습니다. 사파리/아이폰 브라우저 보안 정책이거나, 파이어베이스 데이터베이스 규칙이 잠겨있을 수 있습니다.";
+                    if (error.message === "TIMEOUT" || error.code === "unavailable") {
+                        errMsg = "서버 응답이 멈췄습니다! 파이어베이스 데이터베이스 통신이 원활하지 않습니다 (오프라인 상태이거나 보안 규칙이 잠겨있을 수 있습니다).";
                     } else {
                         errMsg = "서버 연결에 실패했습니다. (에러: " + (error.code || error.message) + ")";
                     }
