@@ -1493,6 +1493,19 @@
                     </button>
                 </div>
 
+                <!-- Section 1.5: Nickname Registration -->
+                <div id="nicknameSection" style="display: none;">
+                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
+                        사령관 이름 등록</h2>
+                    <p
+                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
+                        전장에서 사용할 멋진 닉네임을 정해주세요.</p>
+                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
+                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                        등록</button>
+                </div>
+
                 <!-- Section 2: Main Menu -->
                 <div id="mainMenuSection" style="display: none;">
                     <div id="userInfoBox">
@@ -1873,28 +1886,28 @@
             const menuSection = document.getElementById('mainMenuSection');
             const tutorialSection = document.getElementById('tutorialSection');
             const pvpSection = document.getElementById('pvpSection');
+            const nicknameSection = document.getElementById('nicknameSection');
 
             const nameSpan = document.getElementById('userDisplayName');
             const winsSpan = document.getElementById('userWinsDisplay');
 
             if (user) {
-                // Logged in: Hide login section, show main menu
-                loginSection.style.display = 'none';
-                menuSection.style.display = 'flex'; // Changed to flex to match profile layout
-                menuSection.style.flexDirection = 'column';
-                tutorialSection.style.display = 'none';
-                pvpSection.style.display = 'none';
-
-                nameSpan.innerText = user.displayName;
-
                 // Initialize or fetch user document
                 const userRef = db.collection('users').doc(user.uid);
 
                 userRef.get().then((doc) => {
-                    if (doc.exists) {
-                        // User exists, pull stats
+                    if (doc.exists && doc.data().nickname) {
+                        // User exists and has a configured nickname
+                        loginSection.style.display = 'none';
+                        nicknameSection.style.display = 'none';
+                        menuSection.style.display = 'flex';
+                        menuSection.style.flexDirection = 'column';
+                        tutorialSection.style.display = 'none';
+                        pvpSection.style.display = 'none';
+
                         const data = doc.data();
                         globalUserWins = data.wins || 0;
+                        nameSpan.innerText = data.nickname;
                         winsSpan.innerText = `${globalUserWins} 승`;
 
                         // Update last login
@@ -1902,16 +1915,12 @@
                             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     } else {
-                        // New user, create DB entry
-                        globalUserWins = 0;
-                        winsSpan.innerText = `0 승`;
-                        userRef.set({
-                            name: user.displayName,
-                            email: user.email,
-                            wins: 0,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        // New user or existing user who never set a nickname
+                        loginSection.style.display = 'none';
+                        menuSection.style.display = 'none';
+                        tutorialSection.style.display = 'none';
+                        pvpSection.style.display = 'none';
+                        nicknameSection.style.display = 'block';
                     }
                 }).catch(err => console.error("Error fetching user data:", err));
 
@@ -1921,6 +1930,7 @@
                 menuSection.style.display = 'none';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
+                if (nicknameSection) nicknameSection.style.display = 'none';
                 globalUserWins = 0;
             }
         });
@@ -2610,6 +2620,56 @@
 
             document.getElementById('btnLogout').addEventListener('click', () => {
                 auth.signOut();
+            });
+
+            document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
+                const inputVal = document.getElementById('nicknameInput').value.trim();
+                const btn = document.getElementById('btnSubmitNickname');
+
+                if (inputVal.length < 2) {
+                    alert("닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "확인 중...";
+
+                // Duplicate check via Firestore querying
+                try {
+                    const snapshot = await db.collection('users').where('nickname', '==', inputVal).get();
+                    if (!snapshot.empty) {
+                        alert("앗! 이미 누군가 사용 중인 닉네임입니다 😭 다른 멋진 이름을 생각해보세요!");
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        return;
+                    }
+
+                    // Proceed to save the nickname
+                    const user = auth.currentUser;
+                    const userRef = db.collection('users').doc(user.uid);
+                    await userRef.set({
+                        nickname: inputVal,
+                        email: user.email,
+                        wins: 0, // baseline for new users
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    // Shift UI directly to Main Menu
+                    document.getElementById('nicknameSection').style.display = 'none';
+                    document.getElementById('mainMenuSection').style.display = 'flex';
+                    document.getElementById('userDisplayName').innerText = inputVal;
+                    document.getElementById('userWinsDisplay').innerText = `0 승`;
+                    globalUserWins = 0;
+
+                    alert(`가입 완료! 환영합니다, ${inputVal} 사령관님! 🔥`);
+
+                } catch (error) {
+                    console.error("Nickname registration failed", error);
+                    alert("닉네임 등록 중 서버 에러가 발생했습니다.");
+                    btn.disabled = false;
+                    btn.innerText = "중복 확인 및 등록";
+                }
             });
 
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
