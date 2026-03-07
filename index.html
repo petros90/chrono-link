@@ -1894,6 +1894,12 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // CRITICAL SAFARI FIX: Force long-polling to bypass WebSocket/ITP "client is offline" errors
+        db.settings({
+            experimentalForceLongPolling: true,
+            useFetchStreams: false
+        });
+
         // Catch redirect errors when returning from Google login screen
         auth.getRedirectResult().catch(error => {
             console.error("Redirect login error:", error);
