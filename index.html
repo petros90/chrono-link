@@ -560,8 +560,9 @@
             justify-content: center;
             align-items: center;
             position: absolute;
-            /* Force it into the center regardless of flex items */
             left: 50%;
+            top: 20px;
+            /* Explicitly pull down from top edge to prevent cropping */
             transform: translateX(-50%);
         }
 
@@ -1687,6 +1688,9 @@
             </div>
 
             <div class="side-panel" id="chartPanel">
+                <!-- Invisible duplicate logo for perfect vertical baseline alignment with the left log panel -->
+                <img src="images/chronolinklogo.png"
+                    style="width: 100%; object-fit: contain; margin-bottom: 15px; visibility: hidden;" alt="Spacer">
                 <h3 data-i18n="ui_element_table">오행 상성</h3>
                 <div class="chart-container">
                     <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
@@ -2758,23 +2762,22 @@
             }
 
             // Vertical bounds must be at least 1050 to safely fit the enlarged player cards, Safari UI bars, and padding!
-            const scale = Math.min(logicalWidth / 1800, logicalHeight / 1050);
+            const BASE_HEIGHT = 1050;
+            const BASE_WIDTH = 1800;
+            const scale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
+            layout.style.width = BASE_WIDTH + 'px';
+            layout.style.height = BASE_HEIGHT + 'px';
 
-            const scaledWidth = 1800 * finalScale;
+            const scaledWidth = BASE_WIDTH * finalScale;
+            const scaledHeight = BASE_HEIGHT * finalScale;
+
             layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
-
-            if (finalScale < 1) {
-                layout.style.height = (logicalHeight / finalScale) + 'px';
-                layout.style.top = '0px';
-            } else {
-                layout.style.height = logicalHeight + 'px';
-                layout.style.top = '0px';
-            }
+            layout.style.top = ((logicalHeight - scaledHeight) / 2) + 'px';
         }
         window.addEventListener('resize', updateScale);
         updateScale(); // Initial call
