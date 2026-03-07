@@ -573,7 +573,7 @@
         }
 
         #appContainer {
-            width: 1800px;
+            width: 2100px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -1459,7 +1459,7 @@
 
             <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
             <div class="header-buttons"
-                style="display: flex; align-items: center; position: absolute; right: 30px; top: 10px; gap: 15px;">
+                style="display: flex; align-items: center; position: absolute; right: 10px; top: 10px; gap: 15px;">
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
@@ -2764,10 +2764,10 @@
 
             // Vertical bounds must be at least 1050 to safely fit the enlarged player cards, Safari UI bars, and padding!
             const BASE_HEIGHT = 1050;
-            const BASE_WIDTH = 1800;
-            const scale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
+            const BASE_WIDTH = 2100;
+            const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
-            window.currentAppScale = scale <= 1 ? scale : 1;
+            window.currentAppScale = MathScale <= 1 ? MathScale : 1;
             const finalScale = window.currentAppScale;
 
             layout.style.transform = `scale(${finalScale})`;
