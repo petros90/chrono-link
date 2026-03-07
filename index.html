@@ -488,9 +488,7 @@
         #appContainer {
             width: 1200px;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform-origin: center center;
+            transform-origin: top left;
             display: flex;
             flex-direction: column;
             margin: 0;
@@ -2237,16 +2235,20 @@
             // Use Math.min to ensure it fits entirely on screen
             const scale = Math.min(logicalWidth / 1200, logicalHeight / 800);
 
-            window.currentAppScale = scale < 1 ? scale : 1;
+            window.currentAppScale = scale <= 1 ? scale : 1;
+            const finalScale = window.currentAppScale;
 
-            if (scale < 1) {
-                // Preserve the exact scale while allowing absolute CSS to center the layout
-                layout.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                // Ensure physical height continues to match exactly with flex panel growth
-                layout.style.height = (logicalHeight / scale) + 'px';
+            layout.style.transform = `scale(${finalScale})`;
+
+            const scaledWidth = 1200 * finalScale;
+            layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
+
+            if (finalScale < 1) {
+                layout.style.height = (logicalHeight / finalScale) + 'px';
+                layout.style.top = '0px';
             } else {
-                layout.style.transform = `translate(-50%, -50%) scale(1)`;
                 layout.style.height = logicalHeight + 'px';
+                layout.style.top = '0px';
             }
         }
         window.addEventListener('resize', updateScale);
