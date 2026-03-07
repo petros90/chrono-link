@@ -425,15 +425,15 @@
         }
 
         #headerRow h1 {
-            font-size: 3rem;
+            font-size: 3.9rem;
             color: #00ffd9;
             text-shadow: 0 0 5px #00ffd9;
             margin-right: 15px;
         }
 
         #startBtn {
-            padding: 8px 16px;
-            font-size: 24px;
+            padding: 10px 20px;
+            font-size: 31px;
             border: 1px solid #00ffd9;
             border-radius: 4px;
             background: transparent;
@@ -451,12 +451,12 @@
 
         .header-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
         #settingsBtn {
             padding: 8px 12px;
-            font-size: 24px;
+            font-size: 31px;
             border: 1px solid #aaa;
             border-radius: 4px;
             background: transparent;
@@ -472,8 +472,8 @@
 
         .score-board {
             display: flex;
-            gap: 20px;
-            font-size: 1.6rem;
+            gap: 30px;
+            font-size: 2.08rem;
             color: #aaa;
             flex-wrap: wrap;
             justify-content: center;
@@ -482,7 +482,7 @@
         .score-board span {
             color: #fff;
             font-weight: bold;
-            font-size: 2.0rem;
+            font-size: 2.6rem;
         }
 
         #appContainer {
@@ -1230,9 +1230,9 @@
         }
 
         #restartBtn {
-            margin-top: 30px;
-            padding: 12px 40px;
-            font-size: 32px;
+            margin-top: 39px;
+            padding: 15px 52px;
+            font-size: 42px;
             font-family: 'Jua';
             background: #fff;
             color: #000;
@@ -1269,31 +1269,33 @@
                 letter-spacing: -0.5px;
             }
 
-            /* --- MOBILE SPECIFIC: Enlarged Rulebook & Difficulty Modals +35% --- */
+            /* --- MOBILE SPECIFIC: Enlarged Rulebook & Difficulty Modals +80% (massive scale) --- */
             .diff-box {
-                padding: 55px;
+                padding: 70px;
             }
 
             .diff-box h2 {
-                font-size: 3.5rem;
-                margin-bottom: 40px;
+                font-size: 4.5rem;
+                margin-bottom: 50px;
             }
 
             .diff-btn {
-                padding: 20px;
-                font-size: 2rem;
-                margin-bottom: 20px;
+                padding: 25px;
+                font-size: 2.8rem;
+                margin-bottom: 25px;
+                border-width: 4px;
             }
 
             .diff-desc {
-                font-size: 1.3rem;
-                margin-bottom: 30px;
+                font-size: 1.8rem;
+                margin-bottom: 40px;
             }
 
             #btnRulebook {
-                padding: 15px;
-                font-size: 1.6rem;
-                margin-top: 15px;
+                padding: 20px;
+                font-size: 2.2rem;
+                margin-top: 20px;
+                border-width: 3px;
             }
 
             .rulebook-box {
@@ -2018,8 +2020,13 @@
             const cRect = cDomCard.getBoundingClientRect();
 
             // Set transition for initial flight (none, instant appear) to prevent phantom flying ghost visuals
-            pDomCard.style.transition = 'none';
-            cDomCard.style.transition = 'none';
+            // Bypass rotated getBoundingClientRect coordinates by strictly using app-relative DOM offset math
+            const bz = document.getElementById('battleZone');
+            const gb = document.getElementById('gameBoard');
+
+            // Calculate center of battle zone purely via logical offsets inside the container
+            const localCenterX = gb.offsetLeft + bz.offsetLeft + (bz.offsetWidth / 2);
+            const localCenterY = gb.offsetTop + bz.offsetTop + (bz.offsetHeight / 2);
 
             const appContainer = document.getElementById('appContainer');
             const appBox = appContainer.getBoundingClientRect();
@@ -2038,10 +2045,6 @@
             appContainer.appendChild(cDomCard);
             cDomCard.style.top = cLocalY + 'px';
             cDomCard.style.left = cLocalX + 'px';
-
-            const btnZone = document.getElementById('battleZone').getBoundingClientRect();
-            const localCenterY = ((btnZone.top - appBox.top) / currentScale) + ((btnZone.height / currentScale) / 2);
-            const localCenterX = ((btnZone.left - appBox.left) / currentScale) + ((btnZone.width / currentScale) / 2);
 
             // Dynamically position static labels matching expected card visual shifts to fix alignment bugs
             const pLabel = document.querySelector('.p-label');
@@ -2298,8 +2301,8 @@
             const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
             const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
 
-            // Use Math.min to ensure it fits entirely on screen
-            const scale = Math.min(logicalWidth / 1800, logicalHeight / 800);
+            // Vertical bounds must be at least 950 to fit the huge +10% enlarged player cards without overlapping!
+            const scale = Math.min(logicalWidth / 1800, logicalHeight / 950);
 
             window.currentAppScale = scale <= 1 ? scale : 1;
             const finalScale = window.currentAppScale;
