@@ -786,7 +786,7 @@
             transition: opacity 0.3s;
             pointer-events: none;
             white-space: nowrap;
-            top: calc(50% - 195px);
+            top: calc(50% - 240px);
             transform: translateX(-50%);
         }
 
@@ -2053,11 +2053,11 @@
                 void clashEffect.offsetWidth; // trigger reflow
                 clashEffect.classList.add('active');
 
-                document.body.classList.add('shake');
+                document.getElementById('mainLayout').classList.add('shake');
                 playSound('hit');
 
                 await sleep(150);
-                document.body.classList.remove('shake');
+                document.getElementById('mainLayout').classList.remove('shake');
 
                 if (hit < 3) await sleep(100); // brief pause before pulling back again
             }
