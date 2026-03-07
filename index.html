@@ -149,7 +149,7 @@
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            border: 2px solid #555;
+            border: none;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             width: 300px;
         }
@@ -179,7 +179,7 @@
             background: #1a1a24;
             padding: 30px;
             border-radius: 15px;
-            border: 2px solid #555;
+            border: none;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             width: 90%;
             max-width: 600px;
@@ -574,7 +574,8 @@
         }
 
         #appContainer {
-            width: 1800px;
+            width: 2100px;
+            /* Expanded for more horizontal breathing room and prevent header overlap */
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -1457,8 +1458,9 @@
                 <div><span data-i18n="ui_enemy">적</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
 
-            <!-- Right side Header Buttons -->
-            <div class="header-buttons" style="display: flex; align-items: center; margin-left: auto;">
+            <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
+            <div class="header-buttons"
+                style="display: flex; align-items: center; position: absolute; right: 30px; top: 10px; gap: 15px;">
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
