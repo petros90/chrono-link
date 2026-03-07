@@ -1973,10 +1973,8 @@
 
             const appContainer = document.getElementById('appContainer');
             const appBox = appContainer.getBoundingClientRect();
-            // In CSS forced rotation (portrait), window.innerHeight acts as the 'width' of the game.
-            const isForcedLandscape = window.innerWidth <= 850 && window.innerHeight > window.innerWidth;
-            const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
-            const currentScale = logicalWidth < 1200 ? logicalWidth / 1200 : 1;
+
+            const currentScale = window.currentAppScale || 1;
 
             const pLocalX = (pRect.left - appBox.left) / currentScale;
             const pLocalY = (pRect.top - appBox.top) / currentScale;
@@ -2242,14 +2240,16 @@
             // Use Math.min to ensure it fits entirely on screen
             const scale = Math.min(logicalWidth / 1200, logicalHeight / 800);
 
+            window.currentAppScale = scale < 1 ? scale : 1;
+
             if (scale < 1) {
-                // Preserve the translate(-50%, -50%) which keeps the container centered!
-                layout.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                // No need to awkwardly bind layout height anymore! The container remains 800px high logically.
-                layout.style.height = '800px';
+                // Preserve the exact scale while allowing CSS flex properties to center the layout
+                layout.style.transform = `scale(${scale})`;
+                // Ensure physical height continues to match exactly with flex panel growth
+                layout.style.height = (logicalHeight / scale) + 'px';
             } else {
-                layout.style.transform = `translate(-50%, -50%) scale(1)`;
-                layout.style.height = '800px';
+                layout.style.transform = `scale(1)`;
+                layout.style.height = '100vh';
             }
         }
         window.addEventListener('resize', updateScale);
