@@ -1445,23 +1445,66 @@
             </div>
         </div>
 
-        <!-- Difficulty Overlay -->
-        <div id="difficultyOverlay">
+        <!-- Lobby Overlay -->
+        <div id="lobbyOverlay">
             <div class="diff-box">
-                <button id="btnGoogleLogin">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
-                    <span data-i18n="btn_google_login">Google 로그인</span>
-                </button>
-                <div id="userInfoBox">
-                    <span id="userDisplayName">User Name</span>
-                    <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                <!-- Section 1: Login Gate -->
+                <div id="loginSection">
+                    <h2 style="font-size: 4rem; margin-bottom: 20px; color: #fff;">Chrono Link</h2>
+                    <p
+                        style="font-size: 1.5rem; color: #aaa; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
+                        게임 플레이를 위해 먼저 로그인이 필요합니다.</p>
+                    <button id="btnGoogleLogin">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
+                        <span data-i18n="btn_google_login">Google 로그인</span>
+                    </button>
                 </div>
 
-                <h2 data-i18n="ui_diff_title">난이도 선택</h2>
-                <button class="diff-btn" id="btnBeginner">Beginner</button>
-                <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
-                <button class="diff-btn" style="border-color:#ff0055; color:#ff0055;" id="btnExpert">Expert</button>
-                <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
+                <!-- Section 2: Main Menu -->
+                <div id="mainMenuSection" style="display: none;">
+                    <div id="userInfoBox">
+                        <span id="userDisplayName">User Name</span>
+                        <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                    </div>
+
+                    <button class="diff-btn" id="btnMenuRulebook"
+                        style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
+                    <button class="diff-btn" id="btnMenuTutorial"
+                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">🎓 게임하기 (Tutorial)</button>
+                    <button class="diff-btn" id="btnMenuPvp" style="border-color:#ff0055; color:#ff0055;">⚔️ PVP 매치 (PVP
+                        Mode)</button>
+                </div>
+
+                <!-- Section 3: Tutorial Sub Menu -->
+                <div id="tutorialSection" style="display: none;">
+                    <h2 data-i18n="ui_diff_title">난이도 선택</h2>
+                    <button class="diff-btn" id="btnBeginner">Beginner (초보자)</button>
+                    <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
+
+                    <button class="diff-btn" style="border-color:#ff0055; color:#ff0055;" id="btnExpert">Expert
+                        (숙련자)</button>
+                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
+
+                    <button class="diff-btn" id="btnBackFromTutorial"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 4: PVP Sub Menu -->
+                <div id="pvpSection" style="display: none;">
+                    <h2 style="color: #ff0055;">PVP 매치</h2>
+                    <br>
+                    <button class="diff-btn" id="btnPvpCustom"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+                    <button class="diff-btn" id="btnPvpRandom"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">랜덤 카드 (Random Deck)<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                    <button class="diff-btn" id="btnBackFromPvp"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
             </div>
         </div>
 
@@ -1776,14 +1819,20 @@
 
         // Check Auth State
         auth.onAuthStateChanged(user => {
-            const btnLogin = document.getElementById('btnGoogleLogin');
-            const infoBox = document.getElementById('userInfoBox');
+            const loginSection = document.getElementById('loginSection');
+            const menuSection = document.getElementById('mainMenuSection');
+            const tutorialSection = document.getElementById('tutorialSection');
+            const pvpSection = document.getElementById('pvpSection');
+
             const nameSpan = document.getElementById('userDisplayName');
 
             if (user) {
-                // Logged in
-                btnLogin.style.display = 'none';
-                infoBox.style.display = 'flex';
+                // Logged in: Hide login section, show main menu
+                loginSection.style.display = 'none';
+                menuSection.style.display = 'block';
+                tutorialSection.style.display = 'none';
+                pvpSection.style.display = 'none';
+
                 nameSpan.innerText = user.displayName;
 
                 // Initialize user document if not exists
@@ -1794,9 +1843,11 @@
                 }, { merge: true });
 
             } else {
-                // Not logged in
-                btnLogin.style.display = 'flex';
-                infoBox.style.display = 'none';
+                // Not logged in: Show Login gatekeeper only
+                loginSection.style.display = 'block';
+                menuSection.style.display = 'none';
+                tutorialSection.style.display = 'none';
+                pvpSection.style.display = 'none';
             }
         });
 
@@ -2359,7 +2410,7 @@
         function startGame(mode) {
             currentMode = mode;
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            document.getElementById('difficultyOverlay').style.display = 'none';
+            document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
             if (mode === 'Expert') {
@@ -2382,11 +2433,18 @@
             startBgm('bgm_game');
         }
 
-        function showDifficultyModal() {
+        function showLobbyModal() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             document.getElementById('finalOverlay').style.display = 'none';
             document.getElementById('settingsOverlay').style.display = 'none';
-            document.getElementById('difficultyOverlay').style.display = 'flex';
+            document.getElementById('lobbyOverlay').style.display = 'flex';
+
+            // Reset to main menu view conditionally if logged in (auth listener handles login gate)
+            if (auth.currentUser) {
+                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'none';
+            }
             startBgm('bgm_lobby');
         }
 
@@ -2401,17 +2459,40 @@
                 document.body.classList.add('is-mobile');
             }
 
-            document.getElementById('startBtn').addEventListener('click', showDifficultyModal);
-            document.getElementById('restartBtn').addEventListener('click', showDifficultyModal);
+            document.getElementById('startBtn').addEventListener('click', showLobbyModal);
+            document.getElementById('restartBtn').addEventListener('click', showLobbyModal);
 
-            // Rulebook Events
-            document.getElementById('btnRulebook').addEventListener('click', () => {
+            // Lobby Navigation Events
+            document.getElementById('btnMenuRulebook').addEventListener('click', () => {
                 document.getElementById('rulebookOverlay').style.display = 'flex';
                 if (audioCtx.state === 'suspended') audioCtx.resume();
             });
             document.getElementById('closeRulebookBtn').addEventListener('click', () => {
                 document.getElementById('rulebookOverlay').style.display = 'none';
             });
+
+            document.getElementById('btnMenuTutorial').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('tutorialSection').style.display = 'block';
+            });
+
+            document.getElementById('btnMenuPvp').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'block';
+            });
+
+            document.getElementById('btnBackFromTutorial').addEventListener('click', () => {
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            document.getElementById('btnBackFromPvp').addEventListener('click', () => {
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
+            document.getElementById('btnPvpRandom').addEventListener('click', () => alert("PVP 랜덤 덱 모드는 준비 중입니다!"));
 
             // Settings Slider events
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
@@ -2441,7 +2522,7 @@
             document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
             document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
 
-            showDifficultyModal();
+            showLobbyModal();
         });
         function updateScale() {
             const layout = document.getElementById('appContainer');
