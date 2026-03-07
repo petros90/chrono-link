@@ -63,15 +63,14 @@
         }
 
         .diff-box {
-            background: rgba(10, 10, 12, 0.88);
-            backdrop-filter: blur(8px);
+            background: transparent;
             padding: 60px 40px;
             border-radius: 20px;
             text-align: center;
             width: 90%;
             max-width: 800px;
             border: none;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+            box-shadow: none;
         }
 
         .diff-box h2 {
@@ -574,8 +573,7 @@
         }
 
         #appContainer {
-            width: 2100px;
-            /* Expanded for more horizontal breathing room and prevent header overlap */
+            width: 1800px;
             position: absolute;
             transform-origin: top left;
             display: flex;
