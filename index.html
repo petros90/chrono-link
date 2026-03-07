@@ -1562,10 +1562,16 @@
                         ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
                     <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
                         style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+
+                    <!-- Feedback message area to replace annoying browser popups -->
+                    <div id="nicknameFeedback"
+                        style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
+                    </div>
+
                     <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
                         등록</button>
                     <button class="diff-btn" id="btnBackFromNickname"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
                         취소</button>
                 </div>
             </div>
@@ -2636,9 +2642,13 @@
             document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
                 const inputVal = document.getElementById('nicknameInput').value.trim();
                 const btn = document.getElementById('btnSubmitNickname');
+                const feedback = document.getElementById('nicknameFeedback');
+
+                feedback.style.color = '#ff5555'; // Default error color
+                feedback.innerHTML = '';
 
                 if (inputVal.length < 2) {
-                    alert("닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).");
+                    feedback.innerText = "❌ 닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).";
                     return;
                 }
 
@@ -2648,7 +2658,7 @@
                 const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
                 if (lastChange && (nowMs - parseInt(lastChange)) < sevenDaysMs) {
                     const daysLeft = Math.ceil((sevenDaysMs - (nowMs - parseInt(lastChange))) / (1000 * 60 * 60 * 24));
-                    alert(`닉네임은 일주일에 한 번만 변경할 수 있습니다! (남은 시간: 약 ${daysLeft}일)`);
+                    feedback.innerHTML = `❌ 닉네임은 일주일에 한 번만 변경할 수 있습니다!<br><span style="color:#aaa; font-size:1.1rem;">(남은 시간: 약 ${daysLeft}일)</span>`;
                     return;
                 }
 
@@ -2669,7 +2679,7 @@
                     ]);
 
                     if (!snapshot.empty) {
-                        alert("앗! 이미 누군가 사용 중인 닉네임입니다 😭 다른 멋진 이름을 생각해보세요!\n\n(참고: 중복 없는 닉네임을 등록하면 향후 7일 동안은 변경할 수 없습니다!)");
+                        feedback.innerHTML = `❌ 이미 사용 중인 닉네임입니다.<br><span style="color:#aaa; font-size:1.1rem;">※ 중복 없는 닉네임을 등록하면 7일 동안 변경할 수 없습니다.</span>`;
                         btn.disabled = false;
                         btn.innerText = "중복 확인 및 등록";
                         return;
@@ -2685,33 +2695,47 @@
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
-                    // Update UI and return to My Page
+                    // Update UI and return to My Page Seamlessly
                     localStorage.setItem('lastNicknameChange', nowMs.toString());
                     document.getElementById('userDisplayName').innerText = inputVal;
-                    alert(`✅ 닉네임이 [${inputVal}] (으)로 확정되었습니다!`);
-                    document.getElementById('nicknameSection').style.display = 'none';
-                    document.getElementById('myPageSection').style.display = 'block';
+
+                    feedback.style.color = '#00ffd9';
+                    feedback.innerText = `✅ 닉네임이 [${inputVal}] (으)로 확정되었습니다!`;
+                    btn.innerText = "등록 완료!";
+
+                    setTimeout(() => {
+                        document.getElementById('nicknameSection').style.display = 'none';
+                        document.getElementById('myPageSection').style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        feedback.innerText = "";
+                        document.getElementById('nicknameInput').value = "";
+                    }, 1500);
 
                 } catch (error) {
                     console.error("Nickname reg error:", error);
                     let errMsg = "서버 에러입니다.";
                     if (error.message === "TIMEOUT" || error.code === "unavailable") {
-                        errMsg = "서버 응답이 멈췄습니다! 파이어베이스 데이터베이스 통신이 원활하지 않습니다 (오프라인 상태이거나 보안 규칙이 잠겨있을 수 있습니다).";
+                        errMsg = "서버 통신 지연! 데이터베이스 캐시를 우회합니다.";
                     } else {
-                        errMsg = "서버 연결에 실패했습니다. (에러: " + (error.code || error.message) + ")";
+                        errMsg = "연결 실패: " + (error.code || error.message);
                     }
 
-                    if (confirm(errMsg + "\n\n데이터베이스 오류를 무시하고 오프라인 임시 모드로 통과하시겠습니까? (이번 게임에만 저장)")) {
+                    feedback.style.color = '#ffaa00';
+                    feedback.innerHTML = `⚠️ ${errMsg}<br>오프라인 임시 모드로 자동 저장합니다...`;
+
+                    setTimeout(() => {
                         localStorage.setItem('offlineNickname', inputVal);
                         localStorage.setItem('lastNicknameChange', nowMs.toString());
                         document.getElementById('userDisplayName').innerText = inputVal;
-                        alert(`✅ 오프라인 모드: 닉네임이 [${inputVal}] (으)로 확정되었습니다!`);
+
                         document.getElementById('nicknameSection').style.display = 'none';
                         document.getElementById('myPageSection').style.display = 'block';
-                    }
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = "중복 확인 및 등록";
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        feedback.innerText = "";
+                        document.getElementById('nicknameInput').value = "";
+                    }, 2000);
                 }
             });
 
