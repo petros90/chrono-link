@@ -516,7 +516,7 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 clamp(200px, 20%, 300px);
+            flex: 0 0 160px;
             background: #111116;
             border-right: 1px solid #333;
             display: flex;
@@ -527,7 +527,7 @@
         }
 
         #chartPanel {
-            flex: 0 0 clamp(240px, 20%, 300px);
+            flex: 0 0 160px;
             border-right: none;
             align-items: center;
         }
@@ -742,13 +742,13 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            /* Center everything vertically */
+            justify-content: space-evenly;
+            /* Center everything vertically and evenly distribute spaces */
             align-items: center;
             position: relative;
             gap: 0;
             /* Remove gap */
-            padding: 0;
+            padding: 10px 0;
         }
 
         #battleZone {
@@ -758,7 +758,7 @@
             position: relative;
             overflow: visible;
             margin: 5px;
-            min-height: 50px;
+            min-height: 220px;
             padding: 0px;
             /* Removed borders and background to fix [ ] visual issue */
         }
@@ -873,7 +873,7 @@
         .card-slot {
             flex: 1 1 0;
             min-width: 90px;
-            max-width: 155px;
+            max-width: 180px;
             aspect-ratio: 140 / 198;
             height: auto;
             position: relative;
@@ -1995,18 +1995,18 @@
             appContainer.appendChild(cLabel);
             appContainer.appendChild(clashEffect);
 
-            pLabel.style.left = (localCenterX - 194.5) + 'px';
-            pLabel.style.top = (localCenterY - 200) + 'px';
+            pLabel.style.left = (localCenterX - 217) + 'px';
+            pLabel.style.top = (localCenterY - 225) + 'px';
 
-            cLabel.style.left = (localCenterX + 194.5) + 'px';
-            cLabel.style.top = (localCenterY - 200) + 'px';
+            cLabel.style.left = (localCenterX + 217) + 'px';
+            cLabel.style.top = (localCenterY - 225) + 'px';
 
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation (130x183 are the unscaled logical sizes)
-            const centerLeft = localCenterX - (130 / 2);
-            const centerTop = localCenterY - (183 / 2);
+            // Place both at the exact center for translation (145x205 are the unscaled logical sizes, +~10%)
+            const centerLeft = localCenterX - (145 / 2);
+            const centerTop = localCenterY - (205 / 2);
 
             // Enter focus mode
             document.body.classList.add('battling-mode');
@@ -2017,10 +2017,10 @@
             cDomCard.classList.add('battling');
 
             // Force fixed base dimensions
-            pDomCard.style.width = '130px';
-            pDomCard.style.height = '183px';
-            cDomCard.style.width = '130px';
-            cDomCard.style.height = '183px';
+            pDomCard.style.width = '145px';
+            pDomCard.style.height = '205px';
+            cDomCard.style.width = '145px';
+            cDomCard.style.height = '205px';
 
             await sleep(10); // small DOM ticket
 
