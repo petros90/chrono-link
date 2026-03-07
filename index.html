@@ -307,20 +307,37 @@
 
         #userInfoBox {
             display: none;
-            background: rgba(0, 255, 217, 0.1);
-            border: 1px solid #00ffd9;
-            padding: 10px;
-            border-radius: 8px;
+            background: rgba(20, 20, 30, 0.8);
+            border: 2px solid #00ffd9;
+            padding: 20px;
+            border-radius: 12px;
             margin-bottom: 30px;
             font-size: 1.5rem;
-            color: #00ffd9;
+            color: #ddd;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: inset 0 0 15px rgba(0, 255, 217, 0.2);
+        }
+
+        .profile-row {
+            display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
+        }
+
+        .profile-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: #ff0055;
+            text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
         }
 
         body.is-mobile #userInfoBox {
-            font-size: 2.2rem;
-            padding: 20px;
+            font-size: 2rem;
+            padding: 25px;
         }
 
         #btnLogout {
@@ -1479,8 +1496,22 @@
                 <!-- Section 2: Main Menu -->
                 <div id="mainMenuSection" style="display: none;">
                     <div id="userInfoBox">
-                        <span id="userDisplayName">User Name</span>
-                        <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                        <div class="profile-row">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="font-size: 2.5rem;">👨‍🚀</div>
+                                <div style="display:flex; flex-direction:column; text-align:left;">
+                                    <span id="userDisplayName"
+                                        style="color: #00ffd9; font-weight: bold; font-family: 'Jua', sans-serif;">User
+                                        Name</span>
+                                    <span id="userRankText" style="font-size: 1rem; color: #aaa;">사령관 (Rank 1)</span>
+                                </div>
+                            </div>
+                            <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                        </div>
+                        <div class="profile-row profile-badges">
+                            <span>🏆 누적 승리:</span>
+                            <span id="userWinsDisplay" style="font-size: 1.8rem; font-weight: bold;">0 승</span>
+                        </div>
                     </div>
 
                     <button class="diff-btn" id="btnMenuRulebook"
@@ -1833,6 +1864,9 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Global profile data
+        let globalUserWins = 0;
+
         // Check Auth State
         auth.onAuthStateChanged(user => {
             const loginSection = document.getElementById('loginSection');
@@ -1841,22 +1875,45 @@
             const pvpSection = document.getElementById('pvpSection');
 
             const nameSpan = document.getElementById('userDisplayName');
+            const winsSpan = document.getElementById('userWinsDisplay');
 
             if (user) {
                 // Logged in: Hide login section, show main menu
                 loginSection.style.display = 'none';
-                menuSection.style.display = 'block';
+                menuSection.style.display = 'flex'; // Changed to flex to match profile layout
+                menuSection.style.flexDirection = 'column';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
 
                 nameSpan.innerText = user.displayName;
 
-                // Initialize user document if not exists
-                db.collection('users').doc(user.uid).set({
-                    name: user.displayName,
-                    email: user.email,
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                // Initialize or fetch user document
+                const userRef = db.collection('users').doc(user.uid);
+
+                userRef.get().then((doc) => {
+                    if (doc.exists) {
+                        // User exists, pull stats
+                        const data = doc.data();
+                        globalUserWins = data.wins || 0;
+                        winsSpan.innerText = `${globalUserWins} 승`;
+
+                        // Update last login
+                        userRef.update({
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } else {
+                        // New user, create DB entry
+                        globalUserWins = 0;
+                        winsSpan.innerText = `0 승`;
+                        userRef.set({
+                            name: user.displayName,
+                            email: user.email,
+                            wins: 0,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }).catch(err => console.error("Error fetching user data:", err));
 
             } else {
                 // Not logged in: Show Login gatekeeper only
@@ -1864,6 +1921,7 @@
                 menuSection.style.display = 'none';
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
+                globalUserWins = 0;
             }
         });
 
@@ -2417,6 +2475,14 @@
             render();
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
+                // Sync wins to Firebase if player won a match
+                if (pWin >= maxWins && auth.currentUser) {
+                    globalUserWins += 1;
+                    db.collection('users').doc(auth.currentUser.uid).update({
+                        wins: firebase.firestore.FieldValue.increment(1)
+                    });
+                    document.getElementById('userWinsDisplay').innerText = `${globalUserWins} 승`;
+                }
                 checkGameEnd();
             } else {
                 isBattling = false;
