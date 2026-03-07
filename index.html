@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1200">
+    <meta property="og:title" content="Chrono Link">
+    <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
+    <meta property="og:image"
+        content="https://petros90.github.io/chrono-link/images/%EA%B4%91%EA%B0%9C%ED%86%A0%EB%8C%80%EC%99%95.jpg">
     <title>Chrono Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
     <style>
@@ -1273,7 +1277,8 @@
         }
 
         /* Force Landscape Mode on Mobile */
-        @media screen and (max-width: 850px) and (orientation: portrait) {
+        /* Use pointer: coarse to target touch devices since viewport width is always 1200px */
+        @media screen and (pointer: coarse) and (orientation: portrait) {
             body {
                 /* Swap width and height to force landscape dimensions */
                 width: 100vh;
@@ -1286,10 +1291,6 @@
                 top: 0;
                 left: 100vw;
                 overflow: hidden;
-            }
-
-            #appContainer {
-                transform: scale(var(--scale-factor)) !important;
             }
         }
     </style>
@@ -2233,13 +2234,22 @@
         });
         function updateScale() {
             const layout = document.getElementById('appContainer');
-            const scale = window.innerWidth / 1200;
+            /* In portrait mode with a rotated body, the perceived width is window.innerHeight */
+            const isForcedLandscape = window.innerHeight > window.innerWidth;
+            const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
+            const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
+
+            // Use Math.min to ensure it fits entirely on screen
+            const scale = Math.min(logicalWidth / 1200, logicalHeight / 800);
+
             if (scale < 1) {
-                layout.style.transform = `scale(${scale})`;
-                layout.style.height = (window.innerHeight / scale) + 'px';
+                // Preserve the translate(-50%, -50%) which keeps the container centered!
+                layout.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                // No need to awkwardly bind layout height anymore! The container remains 800px high logically.
+                layout.style.height = '800px';
             } else {
-                layout.style.transform = `scale(1)`;
-                layout.style.height = '100vh';
+                layout.style.transform = `translate(-50%, -50%) scale(1)`;
+                layout.style.height = '800px';
             }
         }
         window.addEventListener('resize', updateScale);
