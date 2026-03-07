@@ -308,27 +308,23 @@
         #userInfoBox {
             display: none;
             /* Changed to 'flex' by JS */
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
             background: rgba(0, 0, 0, 0.75);
             border: 2px solid #00ffd9;
-            padding: 10px 20px;
+            padding: 5px 15px;
             border-radius: 12px;
             font-size: 1.5rem;
             color: #00ffd9;
             align-items: center;
             gap: 15px;
             backdrop-filter: blur(5px);
-            pointer-events: auto;
             font-family: 'Jua', sans-serif;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            margin-right: 20px;
         }
 
         body.is-mobile #userInfoBox {
             font-size: 2.2rem;
-            padding: 15px 25px;
+            padding: 10px 20px;
             gap: 20px;
         }
 
@@ -1445,12 +1441,6 @@
     <!-- Global Scale Container -->
     <div id="appContainer">
 
-        <!-- Global User Info Overlay (Top Right) -->
-        <div id="userInfoBox">
-            <span id="userDisplayName">User Name</span>
-            <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
-        </div>
-
         <div id="headerRow">
             <h1>Chrono Link</h1>
             <div class="score-board">
@@ -1459,7 +1449,11 @@
                 <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
                 <div><span data-i18n="ui_enemy">적</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
-            <div class="header-buttons">
+            <div class="header-buttons" style="display: flex; align-items: center;">
+                <div id="userInfoBox">
+                    <span id="userDisplayName">User Name</span>
+                    <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                </div>
                 <button id="startBtn" data-i18n="btn_restart">Restart</button>
                 <button id="settingsBtn">⚙️</button>
             </div>
