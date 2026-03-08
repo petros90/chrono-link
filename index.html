@@ -1415,6 +1415,10 @@
             font-size: 2.5rem;
         }
 
+        body.is-mobile #roundImage {
+            height: 90px !important;
+        }
+
         body.is-mobile .score-board span {
             font-size: 3.5rem;
         }
@@ -1488,11 +1492,10 @@
             <div></div>
 
             <!-- Absolute centered Score Board -->
-            <div class="score-board">
-                <div><span data-i18n="ui_round">Round</span> <span id="roundUi">1</span>/<span id="maxRoundsUi">5</span>
-                </div>
-                <div><span data-i18n="ui_me">플레이어</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div><span data-i18n="ui_enemy">적군</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
+            <div class="score-board" style="align-items: center;">
+                <img id="roundImage" src="images/round1.jpg" style="height: 50px; border-radius: 8px;">
+                <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
+                <div><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
 
             <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
@@ -1502,7 +1505,9 @@
                     <span id="userDisplayName">User Name</span>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                 </div>
-                <button id="startBtn" data-i18n="btn_restart">Restart</button>
+                <button id="startBtn" style="background: transparent; border: none; padding: 0; cursor: pointer;">
+                    <img src="images/Restart버튼.jpg" alt="Restart" style="height: 50px; border-radius: 8px;">
+                </button>
                 <button id="settingsBtn">⚙️</button>
             </div>
         </div>
@@ -1532,13 +1537,17 @@
                         style="width: 100%; max-height: 240px; object-fit: contain; margin-bottom: 30px;"
                         alt="Chrono Link Logo">
                     <button class="diff-btn" id="btnMenuMyPage"
-                        style="border-color:#fff; color:#fff; margin-bottom: 20px;">⚙️ 마이페이지 (My Page)</button>
+                        style="background: url('images/마이페이지 버튼.png') center/100% 100% no-repeat; border: none; color: #fff; text-shadow: 2px 2px 8px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-bottom: 20px;">⚙️
+                        마이페이지 (My Page)</button>
                     <button class="diff-btn" id="btnMenuRulebook"
-                        style="border-color:#aaa; color:#ddd; margin-bottom: 20px;">📖 룰북 (Rulebook)</button>
+                        style="background: url('images/룰북 버튼.png') center/100% 100% no-repeat; border: none; color: #fff; text-shadow: 2px 2px 8px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-bottom: 20px;">📖
+                        룰북 (Rulebook)</button>
                     <button class="diff-btn" id="btnMenuTutorial"
-                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">🎓 튜토리얼 (Tutorial)</button>
-                    <button class="diff-btn" id="btnMenuPvp" style="border-color:#ff0055; color:#ff0055;">⚔️ PVP 매치 (PVP
-                        Mode)</button>
+                        style="background: url('images/튜토리얼 버튼.png') center/100% 100% no-repeat; border: none; color: #fff; text-shadow: 2px 2px 8px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-bottom: 20px;">🎓
+                        튜토리얼 (Tutorial)</button>
+                    <button class="diff-btn" id="btnMenuPvp"
+                        style="background: url('images/PVP버튼.png') center/100% 100% no-repeat; border: none; color: #fff; text-shadow: 2px 2px 8px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">⚔️
+                        PVP 매치 (PVP Mode)</button>
                 </div>
 
                 <!-- Section 3: Tutorial Sub Menu -->
@@ -2288,8 +2297,8 @@
 
             document.getElementById('playerScoreUi').innerText = pWin;
             document.getElementById('cpuScoreUi').innerText = cWin;
-            document.getElementById('roundUi').innerText = round;
-            document.getElementById('maxRoundsUi').innerText = maxRounds;
+            const safeRound = Math.min(round, 7);
+            document.getElementById('roundImage').src = `images/round${safeRound}.jpg`;
         }
 
         function compare(a, b) {
