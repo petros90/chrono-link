@@ -554,8 +554,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background: linear-gradient(180deg, #1a1a24 0%, #0a0a0c 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: #000;
+            /* Replaced gradient layout that triggered artifacts */
+            box-shadow: none;
+            /* Removed shadow acting like a white line border */
             z-index: 10;
         }
 
@@ -771,38 +773,48 @@
             font-size: 3.6rem;
         }
 
-        /* Circle Layout */
+        /* Circle Layout Scaled for 286px Base (+30%) */
         #n-fire {
-            top: 10px;
-            left: 85px;
+            top: 13px;
+            /* 10 * 1.3 */
+            left: 110px;
+            /* 85 * 1.3 */
             border-color: #ff4444;
             color: #ff4444;
         }
 
         #n-earth {
-            top: 70px;
-            left: 160px;
+            top: 91px;
+            /* 70 * 1.3 */
+            left: 208px;
+            /* 160 * 1.3 */
             border-color: #dd8833;
             color: #dd8833;
         }
 
         #n-metal {
-            top: 155px;
-            left: 135px;
+            top: 201px;
+            /* 155 * 1.3 */
+            left: 175px;
+            /* 135 * 1.3 */
             border-color: #aaaaaa;
             color: #aaaaaa;
         }
 
         #n-water {
-            top: 155px;
-            left: 35px;
+            top: 201px;
+            /* 155 * 1.3 */
+            left: 45px;
+            /* 35 * 1.3 */
             border-color: #4488ff;
             color: #4488ff;
         }
 
         #n-wood {
-            top: 70px;
-            left: 10px;
+            top: 91px;
+            /* 70 * 1.3 */
+            left: 13px;
+            /* 10 * 1.3 */
             border-color: #22cc22;
             color: #22cc22;
         }
@@ -1818,11 +1830,7 @@
 
         <div id="mainLayout">
             <div class="side-panel" id="logPanel">
-                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 25px;">
-                    <img src="images/chronolinklogo.png"
-                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transform: scale(0.84);"
-                        alt="Chrono Link Logo">
-                </div>
+                <!-- User requested complete removal of the in-game Logo here -->
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
                 <ul class="log-list" id="roundLog"></ul>
             </div>
@@ -1842,9 +1850,6 @@
             </div>
 
             <div class="side-panel" id="chartPanel">
-                <!-- Invisible duplicate logo for perfect vertical baseline alignment with the left log panel -->
-                <img src="images/chronolinklogo.png"
-                    style="width: 100%; object-fit: contain; margin-bottom: 15px; visibility: hidden;" alt="Spacer">
                 <h3 data-i18n="ui_element_table">오행 상성</h3>
                 <div class="chart-container">
                     <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
@@ -1872,20 +1877,22 @@
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
                             </marker>
                         </defs>
-                        <!-- F(110,35) to M(160,180). Target top-left border ~ (150,152) -->
-                        <line x1="117" y1="60" x2="150" y2="151" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+                        <!-- Chart scaled by 1.3x from original 220px to 286px -->
 
-                        <!-- M(160,180) to Wo(35,95). Target bottom-right border ~ (60,112) -->
-                        <line x1="135" y1="165" x2="60" y2="112" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+                        <!-- F(143,45) to M(208,234). -->
+                        <line x1="152" y1="78" x2="195" y2="196" stroke="#ff4444" marker-end="url(#arrow-fire)" />
 
-                        <!-- Wo(35,95) to E(185,95). Target left border ~ (155,95) -->
-                        <line x1="65" y1="95" x2="155" y2="95" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+                        <!-- M(208,234) to Wo(45,123). -->
+                        <line x1="175" y1="214" x2="78" y2="145" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
 
-                        <!-- E(185,95) to Wa(60,180). Target top-right border ~ (85,163) -->
-                        <line x1="160" y1="112" x2="85" y2="163" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+                        <!-- Wo(45,123) to E(240,123). -->
+                        <line x1="84" y1="123" x2="201" y2="123" stroke="#22cc22" marker-end="url(#arrow-wood)" />
 
-                        <!-- Wa(60,180) to F(110,35). Target bottom-left border ~ (100,63) -->
-                        <line x1="70" y1="151" x2="100" y2="63" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                        <!-- E(240,123) to Wa(78,234). -->
+                        <line x1="208" y1="145" x2="110" y2="212" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+
+                        <!-- Wa(78,234) to F(143,45). -->
+                        <line x1="91" y1="196" x2="134" y2="78" stroke="#4488ff" marker-end="url(#arrow-water)" />
                     </svg>
 
                     <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
