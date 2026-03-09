@@ -589,6 +589,12 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            position: absolute;
+            right: 295px;
+            /* Exactly center over the 590px right #chartPanel */
+            transform: translateX(50%);
+            top: 40px;
+            /* Aligned vertically */
         }
 
         #settingsBtn {
@@ -633,7 +639,10 @@
         .score-board span {
             color: #fff;
             font-weight: bold;
-            font-size: 2.0rem;
+            font-size: 3.9rem;
+            /* Unified PC Size */
+            display: flex;
+            align-items: center;
         }
 
         /* --- BASE CONTAINER SCALING --- */
@@ -771,41 +780,62 @@
         }
 
         .node span {
-            font-size: 3.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
 
-        /* Circle Layout Scaled for 286px Base (+30% precisely centered) */
+        .node .element-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0;
+            display: block;
+        }
+
+        /* Circle Layout (R=100 centered at 143,143. Nodes are 48x48) */
         #n-fire {
-            top: 10px;
+            top: 19px;
+            /* 43 - 24 */
             left: 119px;
+            /* 143 - 24 */
             border-color: #ff4444;
             color: #ff4444;
         }
 
         #n-earth {
-            top: 85px;
-            left: 223px;
+            top: 88px;
+            /* 112 - 24 */
+            left: 214px;
+            /* 238 - 24 */
             border-color: #dd8833;
             color: #dd8833;
         }
 
         #n-metal {
-            top: 207px;
-            left: 183px;
+            top: 200px;
+            /* 224 - 24 */
+            left: 178px;
+            /* 202 - 24 */
             border-color: #aaaaaa;
             color: #aaaaaa;
         }
 
         #n-water {
-            top: 207px;
-            left: 55px;
+            top: 200px;
+            /* 224 - 24 */
+            left: 60px;
+            /* 84 - 24 */
             border-color: #4488ff;
             color: #4488ff;
         }
 
         #n-wood {
-            top: 85px;
-            left: 15px;
+            top: 88px;
+            /* 112 - 24 */
+            left: 24px;
+            /* 48 - 24 */
             border-color: #22cc22;
             color: #22cc22;
         }
@@ -1598,23 +1628,23 @@
 
             <!-- Centered Score Board with Flexbox (PC BASE +30%) -->
             <div class="score-board"
-                style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
+                style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; height: 104px;">
                 <img id="roundImage" src="images/round1.png?v=3"
-                    style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
-                <div style="font-size: 3.9rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
-                        style="color:#00ffd9">0</span></div>
-                <div style="font-size: 3.9rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
-                        style="color:#ff0055">0</span></div>
+                    style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
+                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
+                        data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
+                        data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
 
-            <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
-            <div class="header-buttons"
-                style="display: flex; align-items: center; position: absolute; right: 10px; top: 10px; gap: 15px;">
-                <div id="userInfoBox">
-                    <span id="userDisplayName">User Name</span>
+            <!-- Right side Header Buttons perfectly centered over 590px chartPanel -->
+            <div class="header-buttons">
+                <div id="userInfoBox" style="display: flex; align-items: center; gap: 10px;">
+                    <span id="userDisplayName" style="font-size: 2rem;">User Name</span>
                     <button id="settingsBtn"
                         style="position: static; padding: 10px 15px; font-size: 3rem; margin: 0 5px;">⚙️</button>
-                    <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                    <button id="btnLogout" data-i18n="btn_logout"
+                        style="padding: 10px 20px; font-size: 2rem;">로그아웃</button>
                 </div>
             </div>
         </div>
@@ -1868,22 +1898,22 @@
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
                             </marker>
                         </defs>
-                        <!-- Chart perfectly modeled as Regular Pentagon (Radius 109px around center 143,143) -->
+                        <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
 
                         <!-- F to M -->
-                        <line x1="150" y1="56" x2="199" y2="206" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+                        <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
 
                         <!-- M to Wo -->
-                        <line x1="188" y1="217" x2="60" y2="124" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+                        <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
 
                         <!-- Wo to E -->
-                        <line x1="63" y1="109" x2="220" y2="109" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+                        <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
 
                         <!-- E to Wa -->
-                        <line x1="228" y1="123" x2="100" y2="216" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+                        <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
 
                         <!-- Wa to F -->
-                        <line x1="86" y1="209" x2="135" y2="59" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                        <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
                     </svg>
 
                     <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
