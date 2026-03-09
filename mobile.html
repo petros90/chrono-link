@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1400">
+    <meta property="og:title" content="Chrono Link">
+    <meta property="og:description" content="미래 기술로 소환된 위인들의 시공간 초월 카드 배틀!">
+    <meta property="og:image" content="https://petros90.github.io/chrono-link/images/chronolinklogo.png">
+    <title>Chrono Link</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK Compat with CrossOrigin to prevent COOP popup blockers -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* Base Resets & Typography */
+        * {
+            box-sizing: border-box;
+        }
+
+        .element-icon {
+            width: 1.2em;
+            height: 1.2em;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .node .element-icon {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0d0d12;
+            color: #ddd;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Flex layout removed to prevent scale/translate collisions on the app root */
+        }
+
+        /* Main Lobby Interface Container */
+        #lobbyOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0d0d12;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .diff-box {
+            background: transparent;
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            border: none;
+            box-shadow: none;
+        }
+
+        .diff-box h2 {
+            margin-bottom: 39px;
+            font-size: 3.25rem;
+            color: #00ffd9;
+        }
+
+        .diff-btn {
+            display: block;
+            width: 100%;
+            padding: 19px;
+            margin-bottom: 19px;
+            font-size: 1.95rem;
+            font-family: 'Jua', sans-serif;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #222;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .diff-btn:hover {
+            border-color: #00ffd9;
+            background: #2a2a36;
+        }
+
+        .menu-img-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-top: -15%;
+            /* Drastically increased to overlap the massive transparent gaps */
+            margin-bottom: -15%;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
+            display: block;
+        }
+
+        .menu-img-btn:first-of-type {
+            margin-top: 10px;
+        }
+
+        .menu-img-btn:last-of-type {
+            margin-bottom: 10px;
+        }
+
+        .menu-img-btn:hover {
+            transform: scale(1.05);
+            /* Soft glow that respects the PNG transparency shape instead of a square box */
+            filter: brightness(1.2) drop-shadow(0 0 15px rgba(0, 255, 217, 0.4));
+        }
+
+        .menu-img-btn:active {
+            transform: scale(0.95);
+            filter: brightness(0.9);
+        }
+
+        .menu-img-btn img {
+            width: 100%;
+            display: block;
+            pointer-events: none;
+        }
+
+        .diff-desc {
+            font-size: 1.3rem;
+            color: #aaa;
+            margin-top: -10px;
+            margin-bottom: 26px;
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        #btnRulebook {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            margin-top: 13px;
+            font-size: 1.56rem;
+            font-family: 'Jua', sans-serif;
+            border: 2px solid #aaa;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #btnRulebook:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* Settings Modal */
+        #settingsOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 350;
+        }
+
+        .settings-box {
+            background: #1a1a24;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            width: 300px;
+        }
+
+        .zone-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            margin-top: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .settings-box h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #00ffd9;
+        }
+
+        /* Rulebook Modal */
+        #rulebookOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 380;
+        }
+
+        .rulebook-box {
+            background: #1a1a24;
+            padding: 30px;
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #ddd;
+            font-family: 'Gowun Dodum', sans-serif;
+            text-align: left;
+        }
+
+        .rulebook-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #00ffd9;
+        }
+
+        .rulebook-box h3 {
+            color: #fff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .rulebook-box p,
+        .rulebook-box li {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .rulebook-box ul {
+            padding-left: 20px;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            font-family: 'Jua', sans-serif;
+            text-align: left;
+        }
+
+        .toggle-row>span {
+            width: 120px;
+        }
+
+        .slider-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type=range] {
+            flex: 1;
+            accent-color: #00ffd9;
+            cursor: pointer;
+        }
+
+        .vol-text {
+            width: 45px;
+            text-align: right;
+            font-size: 1rem;
+            color: #00ffd9;
+        }
+
+        .close-settings {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-family: 'Jua', sans-serif;
+            border: 2px solid #ff0055;
+            border-radius: 8px;
+            background: #222;
+            color: #ff0055;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-settings:hover {
+            background: rgba(255, 0, 85, 0.2);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Jua', sans-serif;
+            margin: 0;
+            color: #ddd;
+        }
+
+        #btnGoogleLogin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-family: 'Jua', sans-serif;
+            border: 2px solid #aaa;
+            border-radius: 8px;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #btnGoogleLogin img {
+            width: 30px;
+            height: 30px;
+        }
+
+        body.is-mobile #btnGoogleLogin {
+            padding: 25px;
+            font-size: 3rem;
+        }
+
+        #userInfoBox {
+            display: none;
+            /* Changed to 'flex' by JS */
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #00ffd9;
+            padding: 5px 15px;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            color: #00ffd9;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+            font-family: 'Jua', sans-serif;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            margin-right: 20px;
+        }
+
+        body.is-mobile #userInfoBox {
+            font-size: 2.2rem;
+            padding: 10px 20px;
+            gap: 20px;
+        }
+
+        #btnLogout {
+            background: transparent;
+            border: 1px solid #aaa;
+            color: #aaa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+        }
+
+        #btnLogout:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        body.is-mobile #btnLogout {
+            padding: 10px 20px;
+            font-size: 2rem;
+        }
+
+        /* Removed duplicate h2 block to clean up CSS */
+
+        /* Screen Shake Animation */
+        @keyframes shake {
+            0% {
+                transform: translate(2px, 2px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-2px, -4px) rotate(-2deg);
+            }
+
+            20% {
+                transform: translate(-6px, 0px) rotate(2deg);
+            }
+
+            30% {
+                transform: translate(6px, 4px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(2px, -2px) rotate(2deg);
+            }
+
+            50% {
+                transform: translate(-2px, 4px) rotate(-2deg);
+            }
+
+            60% {
+                transform: translate(-6px, 2px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(6px, 2px) rotate(-2deg);
+            }
+
+            80% {
+                transform: translate(-2px, -2px) rotate(2deg);
+            }
+
+            90% {
+                transform: translate(2px, 4px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(2px, -4px) rotate(-2deg);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        /* Crack/Shatter Effect */
+        @keyframes shatter-c {
+            0% {
+                transform: scale(1.76) translateX(85%);
+                filter: grayscale(1);
+            }
+
+            20% {
+                transform: scale(1.76) translateX(90%) rotate(5deg);
+                filter: grayscale(1);
+            }
+
+            40% {
+                transform: scale(1.76) translateX(80%) rotate(-5deg);
+                filter: grayscale(1);
+            }
+
+            60% {
+                transform: scale(1.76) translateX(88%) rotate(3deg);
+                filter: grayscale(1);
+            }
+
+            80% {
+                transform: scale(1.76) translateX(83%) rotate(-3deg);
+                filter: grayscale(1);
+            }
+
+            100% {
+                transform: scale(1.76) translateX(85%);
+                filter: grayscale(1);
+            }
+        }
+
+        @keyframes shatter-p {
+            0% {
+                transform: scale(1.76) translateX(-85%);
+                filter: grayscale(1);
+            }
+
+            20% {
+                transform: scale(1.76) translateX(-90%) rotate(5deg);
+                filter: grayscale(1);
+            }
+
+            40% {
+                transform: scale(1.76) translateX(-80%) rotate(-5deg);
+                filter: grayscale(1);
+            }
+
+            60% {
+                transform: scale(1.76) translateX(-88%) rotate(3deg);
+                filter: grayscale(1);
+            }
+
+            80% {
+                transform: scale(1.76) translateX(-83%) rotate(-3deg);
+                filter: grayscale(1);
+            }
+
+            100% {
+                transform: scale(1.76) translateX(-85%);
+                filter: grayscale(1);
+            }
+        }
+
+        /* --- BATTLE FOCUS MODE --- */
+        #playerZone,
+        #computerZone {
+            transition: opacity 0s;
+        }
+
+        #playerZone.focus-mode,
+        #computerZone.focus-mode {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .zone-title,
+        .score-board,
+        .header-buttons,
+        .side-panel,
+        .chart-container {
+            transition: opacity 0s;
+        }
+
+        body.battling-mode .zone-title,
+        body.battling-mode .score-board,
+        body.battling-mode .header-buttons,
+        body.battling-mode .side-panel,
+        body.battling-mode .chart-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Header */
+        #headerRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: linear-gradient(180deg, #1a1a24 0%, #0a0a0c 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        #headerRow h1 {
+            font-size: 3rem;
+            color: #00ffd9;
+            text-shadow: 0 0 5px #00ffd9;
+            margin-right: 15px;
+        }
+
+        #startBtn {
+            padding: 8px 16px;
+            font-size: 24px;
+            border: 1px solid #00ffd9;
+            border-radius: 4px;
+            background: transparent;
+            color: #00ffd9;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+            white-space: nowrap;
+        }
+
+        #startBtn:active {
+            background: #00ffd9;
+            color: #000;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #settingsBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 8px 12px;
+            font-size: 24px;
+            border: 2px solid #00ffd9;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(0, 255, 217, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        #settingsBtn:hover {
+            color: #00ffd9;
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .score-board {
+            display: flex;
+            gap: 20px;
+            font-size: 1.6rem;
+            color: #aaa;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            /* Explicitly pull down from top edge to prevent cropping */
+            transform: translateX(-50%);
+        }
+
+        .score-board span {
+            color: #fff;
+            font-weight: bold;
+            font-size: 2.0rem;
+        }
+
+        #appContainer {
+            width: 2100px;
+            position: absolute;
+            transform-origin: top left;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #mainLayout {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Side Panels */
+        .side-panel {
+            background: #111;
+            border-right: 1px solid #333;
+            border-left: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        /* LEFT PANEL WIDER */
+        #logPanel {
+            flex: 0 0 290px;
+            background: #111116;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-y: auto;
+            border-left: none;
+        }
+
+        #chartPanel {
+            flex: 0 0 290px;
+            border-right: none;
+            align-items: center;
+        }
+
+        .side-panel h3 {
+            border-bottom: 1px solid #444;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        /* Logs */
+        #roundLog {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border-left: 4px solid #666;
+            font-size: 1.2rem;
+            line-height: 1.3;
+            animation: slideInLeft 0.3s ease-out;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .log-entry.win {
+            border-left-color: #00ffd9;
+            background: rgba(0, 255, 217, 0.05);
+        }
+
+        .log-entry.lose {
+            border-left-color: #ff0055;
+            background: rgba(255, 0, 85, 0.05);
+        }
+
+        .log-entry.draw {
+            border-left-color: #aaa;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Circular SVG Chart */
+        .chart-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 10px auto;
+        }
+
+        .node {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            background: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .node span {
+            font-size: 3.6rem;
+        }
+
+        /* Circle Layout */
+        #n-fire {
+            top: 10px;
+            left: 85px;
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        #n-earth {
+            top: 70px;
+            left: 160px;
+            border-color: #dd8833;
+            color: #dd8833;
+        }
+
+        #n-metal {
+            top: 155px;
+            left: 135px;
+            border-color: #aaaaaa;
+            color: #aaaaaa;
+        }
+
+        #n-water {
+            top: 155px;
+            left: 35px;
+            border-color: #4488ff;
+            color: #4488ff;
+        }
+
+        #n-wood {
+            top: 70px;
+            left: 10px;
+            border-color: #22cc22;
+            color: #22cc22;
+        }
+
+        /* Fix SVG arrows being hidden */
+        #chartSvg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        line {
+            stroke-width: 2;
+            stroke-dasharray: 4;
+        }
+
+        marker {
+            fill: currentcolor;
+        }
+
+        .chart-text-list {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-text-row {
+            display: grid;
+            grid-template-columns: 55px 50px 55px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 2.34rem;
+        }
+
+        .chart-text-row .win-tag {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .chart-text-row .lose-tag {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .chart-text-row .arrow-tag {
+            color: #ccc;
+        }
+
+        /* Center panel: Game Board */
+
+
+        .zone-title {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .zone-title.player {
+            color: #00ffd9;
+            text-shadow: 0 0 5px rgba(0, 255, 217, 0.5);
+        }
+
+        .zone-title.cpu {
+            color: #ff0055;
+            text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
+        }
+
+        /* LINEAR LAYOUT */
+        #computerZone,
+        #playerZone {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+            width: 100%;
+            gap: 1.5%;
+            padding: 10px;
+            min-height: 120px;
+            perspective: 1000px;
+        }
+
+        #gameBoard {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Pack rows tightly into the center */
+            align-items: center;
+            position: relative;
+            gap: 10px;
+            /* Remove gap */
+            padding: 10px 0;
+        }
+
+        #battleZone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: visible;
+            margin: 0;
+            min-height: 120px;
+            padding: 0px;
+            /* Removed borders and background to fix [ ] visual issue */
+        }
+
+        .card-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            height: auto;
+            min-height: 180px;
+            padding: 10px;
+            flex-wrap: nowrap;
+        }
+
+        /* Fixed Labels in Battle Zone */
+        .battle-label-static {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            /* JS will explicitly assign top/left relative to appContainer */
+            transform: translate(-50%, -50%);
+        }
+
+        .battle-label-static.p-label {
+            color: #00ffd9;
+        }
+
+        .battle-label-static.c-label {
+            color: #ff0055;
+        }
+
+        body.show-labels .battle-label-static {
+            opacity: 1;
+        }
+
+        /* Clash Explosion Effect */
+        .clash-effect {
+            position: absolute;
+            transform: translate(-50%, -50%) scale(0);
+            width: 150px;
+            height: 150px;
+            /* starburst shape using radial gradients. Bright colors instead of mix-blend to avoid hardware bug. */
+            background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 0, 0.8) 20%, rgba(255, 136, 0, 0.8) 50%, rgba(255, 0, 0, 0) 80%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 105;
+            opacity: 0;
+            box-shadow: 0 0 40px 10px rgba(255, 136, 0, 0.4);
+        }
+
+        @keyframes clashBoom {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+
+            20% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .clash-effect.active {
+            animation: clashBoom 0.4s ease-out forwards;
+        }
+
+        /* 배틀존 텍스트 레이블 (내 카드 / 상대 카드) */
+        .battle-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 4px #000, 0 0 8px #000;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .battle-label.p-label {
+            color: #00ffd9;
+            text-shadow: 0 0 3px #00ffd9, 0 0 6px #000;
+        }
+
+        .battle-label.c-label {
+            color: #ff0055;
+            text-shadow: 0 0 3px #ff0055, 0 0 6px #000;
+        }
+
+        .battling .battle-label {
+            opacity: 1;
+        }
+
+        /* --- ENLARGED HERO CARDS (140x198 base, auto-shrink with container %) --- */
+        .card-slot {
+            flex: 1 1 0;
+            min-width: 90px;
+            max-width: 238px;
+            aspect-ratio: 140 / 198;
+            height: auto;
+            position: relative;
+        }
+
+        .card-wrapper {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            user-select: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: center center;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
+            border: 2px solid #555;
+            overflow: visible;
+            /* changed from hidden for glows */
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .card-header {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 6px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .card-grade {
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 1.1rem;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+
+        .card-element {
+            font-size: 2.2rem;
+            margin-right: 5px;
+        }
+
+        .card-image-container {
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            background: #222;
+        }
+
+        .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: top center;
+        }
+
+        .card-footer {
+            width: 100%;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 100%);
+            padding: 8px 4px;
+            font-family: 'Jua';
+            font-size: 1.4rem;
+            z-index: 2;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #playerZone .card-wrapper:hover {
+            transform: translateY(-20px) scale(1.05);
+            z-index: 10;
+        }
+
+        .used {
+            filter: brightness(0.2) grayscale(1);
+            pointer-events: none;
+        }
+
+        .placeholder {
+            border: 2px dashed #444;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 1rem;
+            border-radius: 10px;
+            width: 120px;
+            height: 170px;
+        }
+
+        /* New Grades & Mythos Hologram */
+        @keyframes mythosShimmer {
+            0% {
+                background-position: -150% -150%;
+            }
+
+            100% {
+                background-position: 250% 250%;
+            }
+        }
+
+        .hologram-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 8px;
+            mix-blend-mode: color-dodge;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3;
+        }
+
+        /* GRADES (Colors & Glows) */
+        .card-origin::before {
+            box-shadow: inset 0 0 0 2px #555;
+        }
+
+        .card-hero::before {
+            box-shadow: inset 0 0 0 2px #3399ff, 0 0 10px rgba(51, 153, 255, 0.6);
+        }
+
+        .card-epic::before {
+            box-shadow: inset 0 0 0 2px #9900ff, 0 0 15px rgba(153, 0, 255, 0.7);
+        }
+
+        .card-legendary::before {
+            box-shadow: inset 0 0 0 2px #ffaa00, 0 0 20px rgba(255, 170, 0, 0.8);
+        }
+
+        .card-mythos::before {
+            box-shadow: inset 0 0 0 2px #ff0055, 0 0 25px rgba(255, 0, 85, 0.9);
+            animation: mythosPulse 2s infinite alternate;
+        }
+
+        @keyframes mythosPulse {
+            0% {
+                box-shadow: inset 0 0 0 2px #ff0055, 0 0 15px rgba(255, 0, 85, 0.7);
+            }
+
+            100% {
+                box-shadow: inset 0 0 0 2px #ff33aa, 0 0 35px rgba(255, 51, 170, 1);
+            }
+        }
+
+        .card-mythos .hologram-overlay {
+            opacity: 0.9;
+            background: linear-gradient(135deg, rgba(176, 64, 255, 0) 20%, rgba(200, 150, 255, 0.9) 45%, rgba(255, 0, 255, 0.8) 55%, rgba(176, 64, 255, 0) 80%);
+            background-size: 250% 250%;
+            animation: mythosShimmer 8s infinite linear;
+        }
+
+        /* Match font color to grade border and glow */
+        .card-origin .card-grade,
+        .card-origin .card-footer {
+            color: #aaaaaa;
+        }
+
+        .card-hero .card-grade,
+        .card-hero .card-footer {
+            color: #55aaff;
+            text-shadow: 0 0 5px rgba(51, 153, 255, 0.3);
+        }
+
+        .card-epic .card-grade,
+        .card-epic .card-footer {
+            color: #d077ff;
+            text-shadow: 0 0 5px rgba(153, 0, 255, 0.3);
+        }
+
+        .card-legendary .card-grade,
+        .card-legendary .card-footer {
+            color: #ffaa00;
+            text-shadow: 0 0 5px rgba(255, 170, 0, 0.3);
+        }
+
+        .card-mythos .card-grade,
+        .card-mythos .card-footer {
+            color: #ff3377;
+            text-shadow: 0 0 5px rgba(255, 0, 85, 0.3);
+        }
+
+        .card.battling {
+            position: fixed;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Damage popups */
+        .damage-popup {
+            position: absolute;
+            color: white;
+            font-family: 'Jua', sans-serif;
+            font-size: 3rem;
+            text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            pointer-events: none;
+            z-index: 110;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: popUpFade 2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Centering for the letterbox pseudo-element */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .damage-popup::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1800px;
+            height: 1.5em;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        @keyframes popUpFade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 20px) scale(0.5);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translate(-50%, -10px) scale(1.2);
+            }
+
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -30px) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50px) scale(0.8);
+            }
+        }
+
+        .damage-win {
+            color: #00ffd9;
+            text-shadow: 0 0 15px #00ffd9, 4px 4px 0 #000;
+        }
+
+        .damage-lose {
+            color: #ff0055;
+            text-shadow: 0 0 15px #ff0055, 4px 4px 0 #000;
+        }
+
+        .damage-draw {
+            color: #ccc;
+        }
+
+        #finalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 200;
+        }
+
+        .final-box {
+            font-family: 'Jua', sans-serif;
+            font-size: 4rem;
+            text-align: center;
+            padding: 30px 60px;
+            border-radius: 20px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .final-win {
+            color: #00ffd9;
+            text-shadow: 0 0 20px #00ffd9;
+            border: 3px solid #00ffd9;
+            box-shadow: 0 0 40px #00ffd9 inset;
+            background: rgba(0, 255, 217, 0.1);
+        }
+
+        .final-lose {
+            color: #ff0055;
+            text-shadow: 0 0 20px #ff0055;
+            border: 3px solid #ff0055;
+            box-shadow: 0 0 40px #ff0055 inset;
+            background: rgba(255, 0, 85, 0.1);
+        }
+
+        .final-draw {
+            color: #aaa;
+            text-shadow: 0 0 20px #aaa;
+            border: 3px solid #aaa;
+        }
+
+        #restartBtn {
+            margin-top: 30px;
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #restartBtn:hover {
+            transform: scale(1.05);
+        }
+
+        #restartBtn img {
+            height: 120px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 1050px) {
+            .card-slot {
+                width: clamp(70px, 14vw, 144px);
+                height: auto;
+                aspect-ratio: 187/272;
+            }
+
+            .card {
+                width: clamp(70px, 14vw, 144px);
+                height: auto;
+                aspect-ratio: 187/272;
+            }
+
+            .card-footer {
+                font-size: 0.85rem;
+                padding: 4px 2px;
+            }
+
+            .card-grade {
+                font-size: 0.6rem;
+                letter-spacing: -0.5px;
+            }
+        }
+
+        /* --- MOBILE-DEVICE ONLY JS-DETECTED MASSIVE SIZES --- */
+        body.is-mobile .diff-box {
+            padding: 100px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        body.is-mobile .diff-box h2 {
+            font-size: 6rem;
+            margin-bottom: 70px;
+        }
+
+        body.is-mobile .diff-btn {
+            padding: 40px;
+            font-size: 3.5rem;
+            border-width: 4px;
+            margin-bottom: 30px;
+        }
+
+        body.is-mobile .diff-desc {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+
+        body.is-mobile #btnRulebook {
+            padding: 25px;
+            font-size: 2.5rem;
+            margin-top: 25px;
+        }
+
+        body.is-mobile #headerRow h1 {
+            font-size: 5rem;
+        }
+
+        body.is-mobile #startBtn {
+            padding: 15px 30px;
+            font-size: 40px;
+        }
+
+        body.is-mobile #settingsBtn {
+            top: 30px;
+            right: 30px;
+            padding: 12px 18px;
+            font-size: 40px;
+        }
+
+        body.is-mobile .score-board {
+            gap: 40px;
+            font-size: 2.5rem;
+        }
+
+        body.is-mobile #roundImage {
+            height: 160px !important;
+        }
+
+        body.is-mobile #headerRestartBtn img {
+            height: 160px !important;
+        }
+
+        body.is-mobile .score-board span {
+            font-size: 3.5rem;
+        }
+
+        body.is-mobile #restartBtn img {
+            height: 200px;
+        }
+
+        body.is-mobile .rulebook-box {
+            width: 95%;
+            max-width: none;
+            padding: 60px;
+        }
+
+        body.is-mobile .rulebook-box h2 {
+            font-size: 5rem;
+            margin-bottom: 40px;
+        }
+
+        body.is-mobile .rulebook-box h3 {
+            font-size: 3.5rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        body.is-mobile .rulebook-box p,
+        body.is-mobile .rulebook-box li {
+            font-size: 2.5rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        body.is-mobile #closeRulebookBtn {
+            font-size: 3.5rem;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 850px) {
+            /* DELETED WRAPPER FOR HORIZONTAL LOCK */
+        }
+
+        /* Force Landscape Mode on Mobile */
+        /* Use pointer: coarse to target touch devices since viewport width is always 1200px */
+        @media screen and (pointer: coarse) and (orientation: portrait) {
+            body {
+                /* Swap width and height to force landscape dimensions */
+                width: 100vh;
+                height: 100vw;
+                /* Rotate the entire body to mimic landscape mode */
+                transform: rotate(90deg) translateY(-100%);
+                transform-origin: top left;
+                /* Shift the body so it aligns with the screen edge after rotation */
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Global Scale Container -->
+    <div id="appContainer">
+
+        <div id="headerRow" style="position: relative;">
+            <!-- Left side empty to balance flex, or can hold future items -->
+            <div></div>
+
+            <!-- Absolute centered Score Board -->
+            <div class="score-board" style="align-items: center;">
+                <img id="roundImage" src="images/round1.jpg" style="height: 90px; border-radius: 8px;">
+                <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
+                <div><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
+            </div>
+
+            <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
+            <div class="header-buttons"
+                style="display: flex; align-items: center; position: absolute; right: 10px; top: 10px; gap: 15px;">
+                <div id="userInfoBox">
+                    <span id="userDisplayName">User Name</span>
+                    <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
+                </div>
+                <button id="headerRestartBtn"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <img src="images/btn_restart.jpg" alt="Restart" style="height: 90px; border-radius: 8px;">
+                </button>
+            </div>
+        </div>
+
+        <!-- Lobby Overlay -->
+        <div id="lobbyOverlay">
+            <div class="diff-box">
+                <!-- Section 1: Login Gate -->
+                <div id="loginSection">
+                    <img src="images/chronolinklogo.png"
+                        style="width: 100%; max-height: 350px; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.5));"
+                        alt="Chrono Link Logo">
+                    <p
+                        style="font-size: 1.8rem; color: #ddd; margin-bottom: 50px; font-family: 'Gowun Dodum', sans-serif; text-shadow: 2px 2px 4px #000; line-height: 1.5;">
+                        시공간을 초월한 영웅들의 위대한 배틀<br>
+                        <span style="font-size: 1.3rem; color: #aaa;">게임을 시작하려면 구글 계정으로 로그인하세요</span>
+                    </p>
+                    <button id="btnGoogleLogin">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
+                        <span data-i18n="btn_google_login">Google 로그인</span>
+                    </button>
+                </div>
+
+                <!-- Section 2: Main Menu -->
+                <div id="mainMenuSection" style="display: none;">
+                    <img src="images/chronolinklogo.png"
+                        style="width: 100%; max-height: 240px; object-fit: contain; margin-bottom: 30px;"
+                        alt="Chrono Link Logo">
+                    <button id="btnMenuMyPage" class="menu-img-btn">
+                        <img src="images/btn_mypage.png" alt="My Page">
+                    </button>
+                    <button id="btnMenuRulebook" class="menu-img-btn">
+                        <img src="images/btn_rulebook.png" alt="Rulebook">
+                    </button>
+                    <button id="btnMenuTutorial" class="menu-img-btn">
+                        <img src="images/btn_tutorial.png" alt="Tutorial (AI Match)">
+                    </button>
+                    <button id="btnMenuPvp" class="menu-img-btn">
+                        <img src="images/btn_pvp.png" alt="PVP Match">
+                    </button>
+                </div>
+
+                <!-- Section 3: Tutorial Sub Menu -->
+                <div id="tutorialSection" style="display: none;">
+                    <h2 data-i18n="ui_diff_title">난이도 선택</h2>
+                    <button class="diff-btn" id="btnBeginner">Beginner (초보자)</button>
+                    <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
+
+                    <button class="diff-btn" style="border-color:#ff0055; color:#ff0055;" id="btnExpert">Expert
+                        (숙련자)</button>
+                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
+
+                    <button class="diff-btn" id="btnBackFromTutorial"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 4: PVP Sub Menu -->
+                <div id="pvpSection" style="display: none;">
+                    <h2 style="color: #ff0055;">PVP 매치</h2>
+                    <br>
+                    <button class="diff-btn" id="btnPvpCustom"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+                    <button class="diff-btn" id="btnPvpRandom"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">랜덤 카드 (Random Deck)<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                    <button class="diff-btn" id="btnBackFromPvp"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 5: My Page -->
+                <div id="myPageSection" style="display: none;">
+                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
+                    <br>
+                    <button class="diff-btn" id="btnChangeNickname"
+                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
+                    <button class="diff-btn" id="btnDeckSettings"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
+                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                    <button class="diff-btn" id="btnBackFromMyPage"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        뒤로 가기</button>
+                </div>
+
+                <!-- Section 6: Nickname Registration -->
+                <div id="nicknameSection" style="display: none;">
+                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
+                        닉네임 등록</h2>
+                    <p
+                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
+                        게임에서 사용할 멋진 닉네임을 정해주세요.</p>
+                    <p
+                        style="font-size: 1.2rem; color: #ff5555; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
+                        ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
+                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
+                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+
+                    <!-- Feedback message area to replace annoying browser popups -->
+                    <div id="nicknameFeedback"
+                        style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
+                    </div>
+
+                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                        등록</button>
+                    <button class="diff-btn" id="btnBackFromNickname"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
+                        취소</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Overlay -->
+        <div id="settingsOverlay">
+            <div class="settings-box">
+                <h2 data-i18n="ui_settings_title">설정</h2>
+                <div class="toggle-row">
+                    <span data-i18n="ui_lang">언어 / Language</span>
+                    <div class="slider-container" style="justify-content: flex-end;">
+                        <button class="toggle-btn active" id="btnLangKo"
+                            style="width:50px; padding:6px; font-size:1rem;">KR</button>
+                        <button class="toggle-btn" id="btnLangEn"
+                            style="width:50px; padding:6px; font-size:1rem;">EN</button>
+                    </div>
+                </div>
+                <div class="toggle-row">
+                    <span data-i18n="ui_bgm">배경 음악</span>
+                    <div class="slider-container">
+                        <input type="range" id="bgmSlider" min="0" max="100" value="50">
+                        <span class="vol-text" id="bgmVolText">50%</span>
+                    </div>
+                </div>
+                <div class="toggle-row">
+                    <span data-i18n="ui_sfx">효과음</span>
+                    <div class="slider-container">
+                        <input type="range" id="sfxSlider" min="0" max="100" value="100">
+                        <span class="vol-text" id="sfxVolText">100%</span>
+                    </div>
+                </div>
+                <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
+            </div>
+        </div>
+
+        <!-- Rulebook Overlay -->
+        <div id="rulebookOverlay">
+            <div class="rulebook-box">
+                <h2 data-i18n="rulebook_title">게임 규칙</h2>
+
+                <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
+                <ul>
+                    <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
+                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 5번 이기면 최종 승리합니다.</li>
+                    <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
+                </ul>
+
+                <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
+                <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
+                <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
+                    <b>카드 등급(계급)</b>을 비교합니다.
+                </p>
+                <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
+                    상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
+
+                <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
+                <ul>
+                    <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
+                            src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
+                            이깁니다.</span></li>
+                    <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
+                        <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
+                            이깁니다.</span>
+                    </li>
+                    <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
+                        <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
+                    </li>
+                    <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
+                            src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
+                            이깁니다.</span></li>
+                    <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
+                        <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
+                    </li>
+                </ul>
+
+                <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
+                <ol>
+                    <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
+                            영웅</span></li>
+                    <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
+                            영웅</span></li>
+                    <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
+                            영웅</span></li>
+                    <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
+                            영웅</span></li>
+                    <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
+                            존재</span></li>
+                </ol>
+
+                <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
+            </div>
+        </div>
+
+        <div id="mainLayout">
+            <div class="side-panel" id="logPanel">
+                <img src="images/chronolinklogo.png"
+                    style="width: 100%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
+                    alt="Chrono Link Logo">
+                <h3 data-i18n="ui_log_title">전투 로그</h3>
+                <ul class="log-list" id="roundLog"></ul>
+            </div>
+
+            <!-- Center Panel: Game Board -->
+            <div id="gameBoard">
+                <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
+                <div id="computerZone"></div>
+                <div id="battleZone">
+                    <div id="clashEffect" class="clash-effect"></div>
+                    <!-- Static labels remain invisible until battle mode -->
+                    <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
+                    <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
+                </div>
+                <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
+                <div id="playerZone"></div>
+            </div>
+
+            <div class="side-panel" id="chartPanel">
+                <!-- Invisible duplicate logo for perfect vertical baseline alignment with the left log panel -->
+                <img src="images/chronolinklogo.png"
+                    style="width: 100%; object-fit: contain; margin-bottom: 15px; visibility: hidden;" alt="Spacer">
+                <h3 data-i18n="ui_element_table">오행 상성</h3>
+                <div class="chart-container">
+                    <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
+                    <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
+                    <svg id="chartSvg">
+                        <defs>
+                            <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
+                            </marker>
+                            <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
+                            </marker>
+                            <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
+                            </marker>
+                            <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
+                            </marker>
+                            <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
+                            </marker>
+                        </defs>
+                        <!-- F(110,35) to M(160,180). Target top-left border ~ (150,152) -->
+                        <line x1="117" y1="60" x2="150" y2="151" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+
+                        <!-- M(160,180) to Wo(35,95). Target bottom-right border ~ (60,112) -->
+                        <line x1="135" y1="165" x2="60" y2="112" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+
+                        <!-- Wo(35,95) to E(185,95). Target left border ~ (155,95) -->
+                        <line x1="65" y1="95" x2="155" y2="95" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+
+                        <!-- E(185,95) to Wa(60,180). Target top-right border ~ (85,163) -->
+                        <line x1="160" y1="112" x2="85" y2="163" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+
+                        <!-- Wa(60,180) to F(110,35). Target bottom-left border ~ (100,63) -->
+                        <line x1="70" y1="151" x2="100" y2="63" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                    </svg>
+
+                    <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
+                    <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
+                    <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
+                    <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
+                    <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
+                </div>
+
+                <div class="chart-text-list">
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="finalOverlay">
+            <div class="final-box" id="finalTitle">승리!</div>
+            <button id="restartBtn">
+                <img src="images/btn_restart.jpg" alt="Restart">
+            </button>
+        </div>
+
+        <button id="settingsBtn">⚙️</button>
+
+        <!-- End Global Scale Container -->
+    </div>
+
+    <script>
+        /* Localization (i18n) */
+        let currentLang = 'ko';
+        const i18n = {
+            en: {
+                ui_round: "Round", ui_me: "Me", ui_enemy: "Enemy", btn_restart: "Restart",
+                ui_diff_title: "Select Difficulty",
+                ui_diff_beginner: "5 Cards / Best of 5",
+                ui_diff_expert: "7 Cards (+2 Random) / Best of 9",
+                ui_settings_title: "Settings", ui_lang: "Language", ui_bgm: "Music", ui_sfx: "SFX", btn_close: "Close",
+                ui_log_title: "Combat Log",
+                log_p_win: "Player Win", log_e_win: "Enemy Win", log_draw: "Draw (Rollover)", log_res: "Result:",
+                ui_cpu_deck: "Enemy Deck", ui_player_deck: "My Deck", ui_element_table: "Elements",
+                el_fire: "Fire", el_earth: "Earth", el_metal: "Metal", el_water: "Water", el_wood: "Wood", btn_play_again: "Play Again",
+                '만적': 'Manjeok', '그라쿠스': 'Gracchus', '에릭슨': 'Erikson', '잭더리퍼': 'Jack the Ripper', '임호텝': 'Imhotep', '형가': 'Jing Ke', '아마쿠사': 'Amakusa', '필리피데스': 'Pheidippides',
+                '척준경': 'Cheok Jun-gyeong', '스파르타쿠스': 'Spartacus', '라그나르': 'Ragnar', '로빈후드': 'Robin Hood', '람세스2세': 'Ramesses II', '여포': 'Lu Bu', '무사시': 'Musashi', '레오니다스': 'Leonidas',
+                '광개토대왕': 'Gwanggaeto the Great', '스키피오': 'Scipio', '하랄': 'Harald', '리처드1세': 'Richard I', '살라딘': 'Saladin', '항우': 'Xiang Yu', '노부나가': 'Nobunaga', '알렉산더': 'Alexander',
+                '이순신': 'Yi Sun-sin', '아우구스투스': 'Augustus', '시구르드': 'Sigurd', '란슬롯': 'Lancelot', '스콜피온킹': 'Scorpion King', '관우': 'Guan Yu', '스사노오': 'Susanoo', '헤라클레스': 'Hercules',
+                '주몽': 'Jumong', '카이사르': 'Caesar', '토르': 'Thor', '아서왕': 'King Arthur', '라': 'Ra', '손오공': 'Sun Wukong', '아마테라스': 'Amaterasu', '제우스': 'Zeus',
+                pop_win: 'WIN', pop_lose: 'LOSE', pop_draw: 'DRAW',
+                btn_rulebook: "📖 Rulebook",
+                rulebook_title: "How to Play",
+                rulebook_h1: "1. Winning Conditions",
+                rulebook_v1: "Beginner Mode: Play 5 rounds, first to 3 wins takes the game.",
+                rulebook_v2: "Expert Mode: Play 7 rounds, first to 5 wins takes the game.",
+                rulebook_v3: "If a Draw occurs, the score rolls over and the winner of the next round takes those points too!",
+                rulebook_h2: "2. Combat Rules",
+                rulebook_b1: "When you play a card, the enemy will randomly play one too.",
+                rulebook_b2: "First, the Elements are compared. An elemental advantage guarantees victory. If elements are the same or neutral, Grades are compared.",
+                rulebook_b3: "WARNING: If a card has an elemental advantage but the opponent's Grade is 3 tiers higher, the brute strength difference overpowers the element and results in a loss! (Meaning, an elemental advantage can easily overcome up to a 2-grade difference!)",
+                rulebook_h3: "3. Elements & Match-ups",
+                rule_el_w: "Wood beats", rule_el_ea: "Earth.",
+                rule_el_ei: "Earth beats", rule_el_wa: "Water.",
+                rule_el_wi: "Water beats", rule_el_fa: "Fire.",
+                rule_el_fi: "Fire beats", rule_el_ma: "Metal.",
+                rule_el_mi: "Metal beats", rule_el_wo: "Wood.",
+                rulebook_h4: "4. Card Grades (Lowest to Highest)",
+                rule_g1: "Normal Human Heroes",
+                rule_g2: "Heroes of Great Deed",
+                rule_g3: "Heroes that Changed History",
+                rule_g4: "God-like Legendary Figures",
+                rule_g5: "Gods and Prime Movers"
+            },
+            ko: {
+                ui_round: "Round", ui_me: "나", ui_enemy: "상대방", btn_restart: "Restart",
+                ui_diff_title: "난이도 선택",
+                ui_diff_beginner: "5장 덱 / 3선승제",
+                ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
+                ui_settings_title: "설정", ui_lang: "언어 / Language", ui_bgm: "배경 음악", ui_sfx: "효과음", btn_close: "닫기",
+                ui_log_title: "전투 로그",
+                log_p_win: "플레이어 승", log_e_win: "적 승리", log_draw: "무승부 (이월)", log_res: "결과:",
+                ui_cpu_deck: "상대 카드", ui_player_deck: "내 카드", ui_element_table: "오행 상성",
+                el_fire: "화", el_earth: "토", el_metal: "금", el_water: "수", el_wood: "목", btn_play_again: "다시 하기",
+                '만적': '만적', '그라쿠스': '그라쿠스', '에릭슨': '에릭슨', '잭더리퍼': '잭더리퍼', '임호텝': '임호텝', '형가': '형가', '아마쿠사': '아마쿠사', '필리피데스': '필리피데스',
+                '척준경': '척준경', '스파르타쿠스': '스파르타쿠스', '라그나르': '라그나르', '로빈후드': '로빈후드', '람세스2세': '람세스2세', '여포': '여포', '무사시': '무사시', '레오니다스': '레오니다스',
+                '광개토대왕': '광개토대왕', '스키피오': '스키피오', '하랄': '하랄', '리처드1세': '리처드1세', '살라딘': '살라딘', '항우': '항우', '노부나가': '노부나가', '알렉산더': '알렉산더',
+                '이순신': '이순신', '아우구스투스': '아우구스투스', '시구르드': '시구르드', '란슬롯': '란슬롯', '스콜피온킹': '스콜피온킹', '관우': '관우', '스사노오': '스사노오', '헤라클레스': '헤라클레스',
+                '주몽': '주몽', '카이사르': '카이사르', '토르': '토르', '아서왕': '아서왕', '라': '라', '손오공': '손오공', '아마테라스': '아마테라스', '제우스': '제우스',
+                pop_win: '승리', pop_lose: '패배', pop_draw: 'DRAW',
+                btn_rulebook: "📖 룰북 (How to Play)",
+                rulebook_title: "게임 규칙",
+                rulebook_h1: "1. 승리 조건",
+                rulebook_v1: "Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.",
+                rulebook_v2: "Expert 모드: 총 7라운드 진행, 먼저 5번 이기면 최종 승리합니다.",
+                rulebook_v3: "동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!",
+                rulebook_h2: "2. 전투 방식",
+                rulebook_b1: "당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.",
+                rulebook_b2: "우선 오행 상성을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면 카드 등급(계급)을 비교합니다.",
+                rulebook_b3: "단, 상성상 유리하더라도 상대 카드의 등급이 3계급 이상 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉, 상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)",
+                rulebook_h3: "3. 오행 상성",
+                rule_el_w: "목(Tree)은", rule_el_ea: "토(Earth)를 이깁니다.",
+                rule_el_ei: "토(Earth)는", rule_el_wa: "수(Water)를 이깁니다.",
+                rule_el_wi: "수(Water)는", rule_el_fa: "화(Fire)를 이깁니다.",
+                rule_el_fi: "화(Fire)는", rule_el_ma: "금(Metal)을 이깁니다.",
+                rule_el_mi: "금(Metal)은", rule_el_wo: "목(Tree)을 이깁니다.",
+                rulebook_h4: "4. 등급 비교 (낮은 순 -> 높은 순)",
+                rule_g1: "평범한 인간 영웅",
+                rule_g2: "뛰어난 업적을 남긴 영웅",
+                rule_g3: "역사를 바꾼 전설의 영웅",
+                rule_g4: "신화 반열에 오른 영웅",
+                rule_g5: "신 또는 신적인 존재"
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) el.innerHTML = i18n[lang][key]; // innerHTML correctly parses the formatting if any
+            });
+            document.getElementById('btnLangKo').classList.toggle('active', lang === 'ko');
+            document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
+            // Re-render UI elements based on lang change
+            render();
+            // Re-render log history based on language
+            renderLogHistory();
+        }
+        function t(key) { return i18n[currentLang][key] || key; }
+
+        // --- FIREBASE INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqzvPVD6LOdIKczq-nDyuUHzHvHk7VBjI",
+            authDomain: "chrono-link-4b3d0.firebaseapp.com",
+            projectId: "chrono-link-4b3d0",
+            storageBucket: "chrono-link-4b3d0.firebasestorage.app",
+            messagingSenderId: "426167667260",
+            appId: "1:426167667260:web:6f0ff7e26e64d1c6551139"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // CRITICAL SAFARI FIX: Force long-polling to bypass WebSocket/ITP "client is offline" errors
+        db.settings({
+            experimentalForceLongPolling: true,
+            useFetchStreams: false
+        });
+
+        // Check Auth State
+        auth.onAuthStateChanged(user => {
+            const loginSection = document.getElementById('loginSection');
+            const menuSection = document.getElementById('mainMenuSection');
+            const tutorialSection = document.getElementById('tutorialSection');
+            const pvpSection = document.getElementById('pvpSection');
+
+            const nameSpan = document.getElementById('userDisplayName');
+
+            if (user) {
+                // Logged in: Hide login section, show main menu
+                loginSection.style.display = 'none';
+                menuSection.style.display = 'block';
+                tutorialSection.style.display = 'none';
+                pvpSection.style.display = 'none';
+                document.getElementById('userInfoBox').style.display = 'flex';
+
+                // Attempt to fetch custom nickname from DB (Force server fetch first to break cross-device cache sync failure)
+                nameSpan.innerText = user.displayName;
+
+                const fetchProfile = async () => {
+                    try {
+                        // Race against a 3-second timeout to prevent indefinite hangs
+                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 3000));
+                        const doc = await Promise.race([
+                            db.collection('users').doc(user.uid).get({ source: 'server' }),
+                            timeoutPromise
+                        ]);
+
+                        if (doc.exists && doc.data().nickname) {
+                            nameSpan.innerText = doc.data().nickname;
+                            if (doc.data().lastNicknameChange) {
+                                localStorage.setItem('lastNicknameChange', doc.data().lastNicknameChange);
+                            }
+                            localStorage.setItem('offlineNickname', doc.data().nickname);
+                        }
+                    } catch (e) {
+                        console.warn("Could not fetch user nickname from server (Timeout or Rules): ", e);
+                        // Fallback to cache or local storage
+                        try {
+                            const cachedDoc = await db.collection('users').doc(user.uid).get({ source: 'cache' });
+                            if (cachedDoc.exists && cachedDoc.data().nickname) {
+                                nameSpan.innerText = cachedDoc.data().nickname;
+                            } else if (localStorage.getItem('offlineNickname')) {
+                                nameSpan.innerText = localStorage.getItem('offlineNickname');
+                            }
+                        } catch (cacheErr) {
+                            if (localStorage.getItem('offlineNickname')) {
+                                nameSpan.innerText = localStorage.getItem('offlineNickname');
+                            }
+                        }
+                    }
+                };
+                fetchProfile();
+
+            } else {
+                // Not logged in: Show Login gatekeeper only
+                loginSection.style.display = 'block';
+                menuSection.style.display = 'none';
+                tutorialSection.style.display = 'none';
+                pvpSection.style.display = 'none';
+                document.getElementById('userInfoBox').style.display = 'none';
+            }
+        });
+
+        // -----------------------------------------------------
+
+        /* Audio Settings State */
+        let sfxVolume = 1.0;
+        let bgmVolume = 0.5;
+
+        /* Synth Audio - 100% Zero-Dependency Sounds */
+        const audioCtx = new (window.AudioContext || window.AudioContext)();
+
+        // SFX Generator
+        function playTone(freq, type, duration, vol = 0.1) {
+            if (sfxVolume <= 0) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const finalVol = vol * sfxVolume;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(finalVol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
+        const audioCache = {
+            bgm_lobby: new Audio('사운드/대기실BGM.mp3'),
+            bgm_game: new Audio('사운드/게임BGM.mp3'),
+            bgm_win: new Audio('사운드/승리BGM.mp3'),
+            bgm_lose: new Audio('사운드/패배BGM.mp3'),
+            sfx_hit: new Audio('사운드/전투 효과음.mp3'),
+            sfx_win: new Audio('사운드/승리 효과음.mp3'),
+            sfx_lose: new Audio('사운드/패배 효과음.mp3')
+        };
+
+        // Loop BGM
+        audioCache.bgm_lobby.loop = true;
+        audioCache.bgm_game.loop = true;
+        audioCache.bgm_win.loop = true;
+        audioCache.bgm_lose.loop = true;
+
+        let currentBgm = null;
+        let currentBgmType = null;
+
+        const sfx = {
+            select: () => { playTone(600, 'sine', 0.1, 0.2); setTimeout(() => playTone(800, 'sine', 0.1, 0.2), 100); },
+            draw: () => { playTone(400, 'triangle', 0.5, 0.2); setTimeout(() => playTone(400, 'triangle', 0.5, 0.2), 200); }
+        };
+
+        function playSound(type) {
+            if (sfxVolume <= 0) return;
+            let audioObj = null;
+
+            if (type === 'hit' || type.startsWith('atk_')) audioObj = audioCache.sfx_hit;
+            else if (type === 'win') audioObj = audioCache.sfx_win;
+            else if (type === 'lose') audioObj = audioCache.sfx_lose;
+
+            if (audioObj) {
+                audioObj.currentTime = 0;
+                audioObj.volume = Math.min(sfxVolume, 1.0);
+                audioObj.play().catch(e => console.log('Audio error:', e));
+            } else if (sfx[type]) {
+                sfx[type]();
+            }
+        }
+
+        function startBgm(type = 'bgm_lobby') {
+            if (currentBgm && currentBgmType !== type) {
+                currentBgm.pause();
+                currentBgm.currentTime = 0;
+            }
+            currentBgmType = type;
+            currentBgm = audioCache[type];
+            if (currentBgm && bgmVolume > 0) {
+                currentBgm.volume = Math.min(bgmVolume, 1.0);
+                currentBgm.play().catch(e => console.log('BGM error:', e));
+            }
+        }
+
+        function stopBgm() {
+            if (currentBgm) currentBgm.pause();
+        }
+
+        function updateBgmVolume(val) {
+            bgmVolume = val / 100;
+            document.getElementById('bgmVolText').innerText = val + '%';
+            if (currentBgm) {
+                currentBgm.volume = bgmVolume;
+                if (bgmVolume > 0 && currentBgm.paused) {
+                    currentBgm.play().catch(e => console.log('BGM error:', e));
+                } else if (bgmVolume === 0) {
+                    currentBgm.pause();
+                }
+            } else if (bgmVolume > 0) {
+                startBgm(currentBgmType || 'bgm_lobby');
+            }
+        }
+
+        function updateSfxVolume(val) {
+            sfxVolume = val / 100;
+            document.getElementById('sfxVolText').innerText = val + '%';
+            if (sfxVolume > 0) {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playTone(600, 'sine', 0.1, 0.1); // test sound
+            }
+        }
+
+        /* CORE LOGIC */
+        const grades = ['Mythos', 'Legendary', 'Epic', 'Hero', 'Origin'];
+        const elements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
+        const beats = { Wood: 'Earth', Earth: 'Water', Water: 'Fire', Fire: 'Metal', Metal: 'Wood' };
+        const emo = {
+            Wood: '<img src="이모지/wood.png" class="element-icon">',
+            Fire: '<img src="이모지/fire.png" class="element-icon">',
+            Earth: '<img src="이모지/earth.png" class="element-icon">',
+            Metal: '<img src="이모지/steel.png" class="element-icon">',
+            Water: '<img src="이모지/water.png" class="element-icon">'
+        };
+
+        // NEW CARD DATABASE (8 Factions x 5 Grades)
+        const heroPools = {
+            'Mythos': ['주몽', '카이사르', '토르', '아서왕', '라', '손오공', '아마테라스', '제우스'],
+            'Legendary': ['이순신', '아우구스투스', '시구르드', '란슬롯', '스콜피온킹', '관우', '스사노오', '헤라클레스'],
+            'Epic': ['광개토대왕', '스키피오', '하랄', '리처드1세', '살라딘', '항우', '노부나가', '알렉산더'],
+            'Hero': ['척준경', '스파르타쿠스', '라그나르', '로빈후드', '람세스2세', '여포', '무사시', '레오니다스'],
+            'Origin': ['만적', '그라쿠스', '에릭슨', '잭더리퍼', '임호텝', '형가', '아마쿠사', '필리피데스']
+        };
+
+        let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1;
+        let isBattling = false;
+        let maxWins = 3;
+        let maxRounds = 5;
+        let currentMode = 'Beginner';
+
+        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        const imageB64 = {};
+        imageB64['만적'] = 'images/만적.jpg';
+        imageB64['척준경'] = 'images/척준경.jpg';
+        imageB64['광개토대왕'] = 'images/광개토대왕.jpg';
+        imageB64['이순신'] = 'images/이순신.jpg';
+        imageB64['주몽'] = 'images/주몽.jpg';
+        imageB64['그라쿠스'] = 'images/Origin티베리우스 그라쿠스 (Tiberius Gracchus).jpg';
+        imageB64['스파르타쿠스'] = 'images/Hero스파르타쿠스 (Spartacus).jpg';
+        imageB64['스키피오'] = 'images/Epic스키피오 아프리카누스 (Scipio Africanus).jpg';
+        imageB64['아우구스투스'] = 'images/Legend아우구스투스 (Augustus).jpg';
+        imageB64['카이사르'] = 'images/Mythos율리우스 카이사르 (Julius Caesar).jpg';
+        imageB64['에릭슨'] = 'images/Origin레이프 에릭슨 (Leif Erikson).jpg';
+        imageB64['라그나르'] = 'images/Hero라그나르 로스브로크 (Ragnar Lothbrok).jpg';
+        imageB64['하랄'] = 'images/Epic하랄 하르드라다 (Harald Hardrada).jpg';
+        imageB64['시구르드'] = 'images/Legend시구르드 (Sigurd).jpg';
+        imageB64['토르'] = 'images/Mythos토르 (Thor).jpg';
+        imageB64['잭더리퍼'] = 'images/Origin잭 더 리퍼 (Jack the Ripper).jpg';
+        imageB64['로빈후드'] = 'images/Hero 로빈 후드 (Robin Hood).jpg';
+        imageB64['리처드1세'] = 'images/Epic리처드 1세 (Richard the Lionheart).jpg';
+        imageB64['란슬롯'] = 'images/Legend란슬롯 (Lancelot).jpg';
+        imageB64['아서왕'] = 'images/Mythos아서 왕 (King Arthur).jpg';
+        imageB64['임호텝'] = 'images/Origin임호텝 (Imhotep).jpg';
+        imageB64['람세스2세'] = 'images/Hero람세스 2세 (Ramesses II).jpg';
+        imageB64['살라딘'] = 'images/Epic살라흐 앗딘 (Saladin).jpg';
+        imageB64['스콜피온킹'] = 'images/Legend스콜피온 킹 (The Scorpion King).jpg';
+        imageB64['라'] = 'images/Mythos라 (Ra).jpg';
+        imageB64['형가'] = 'images/Origin 형가 (Jing Ke).jpg';
+        imageB64['여포'] = 'images/Hero여포 (Lu Bu).jpg';
+        imageB64['항우'] = 'images/Epic항우 (Xiang Yu).jpg';
+        imageB64['관우'] = 'images/Legend관우 (Guan Yu).jpg';
+        imageB64['손오공'] = 'images/Mythos손오공 (Sun Wukong).jpg';
+        imageB64['아마쿠사'] = 'images/Origin아마쿠사 시로 (Amakusa Shiro).jpg';
+        imageB64['무사시'] = 'images/Hero미야모토 무사시 (Miyamoto Musashi).jpg';
+        imageB64['노부나가'] = 'images/Epic오다 노부나가 (Oda Nobunaga).jpg';
+        imageB64['스사노오'] = 'images/Legend스사노오 (Susanoo).jpg';
+        imageB64['아마테라스'] = 'images/Mythos아마테라스 (Amaterasu).jpg';
+        imageB64['필리피데스'] = 'images/Origin필리피데스 (Pheidippides).jpg';
+        imageB64['레오니다스'] = 'images/Hero레오니다스 (Leonidas).jpg';
+        imageB64['알렉산더'] = 'images/Epic알렉산더 대왕 (Alexander the Great).jpg';
+        imageB64['헤라클레스'] = 'images/Legend헤라클레스 (Heracles).jpg';
+        imageB64['제우스'] = 'images/Mythos제우스 (Zeus).jpg';
+        function getHeroImage(hName) {
+            return imageB64[hName] || null;
+        }
+        // Create mixed deck
+        function createDeck(difficulty) {
+            let deck = [];
+
+            if (difficulty === 'Expert') {
+                // Origin 2, Hero 1, Epic 2, Legendary 1, Mythos 1
+                const counts = { 'Origin': 2, 'Hero': 1, 'Epic': 2, 'Legendary': 1, 'Mythos': 1 };
+                for (const grade of grades) {
+                    if (counts[grade]) { // Ensure grade exists in counts
+                        for (let i = 0; i < counts[grade]; i++) {
+                            const hName = rand(heroPools[grade]);
+                            const hElement = rand(elements);
+                            const avatarInitials = hName.substring(0, 2);
+                            const imgUrl = getHeroImage(hName);
+                            deck.push({ grade, element: hElement, used: false, name: hName, avatar: avatarInitials, image: imgUrl });
+                        }
+                    }
+                }
+            } else {
+                // Beginner: 1 per grade
+                deck = [...grades].reverse().map((g) => {
+                    const hName = rand(heroPools[g]);
+                    const hElement = rand(elements);
+                    const avatarInitials = hName.substring(0, 2);
+                    const imgUrl = getHeroImage(hName);
+                    return { grade: g, element: hElement, used: false, name: hName, avatar: avatarInitials, image: imgUrl };
+                });
+            }
+
+            // Sort deck from lowest (Origin) to highest (Mythos)
+            deck.sort((a, b) => grades.indexOf(b.grade) - grades.indexOf(a.grade));
+
+            return deck;
+        }
+
+        function cardHTML(card, isPlayer, idx = null) {
+            if (!card) return '<div class="card-slot placeholder">Empty</div>';
+
+            const isUsed = card.used;
+            const usedClass = isUsed ? 'used' : '';
+            const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx}, this)"` : '';
+
+            const bgColors = { 'Fire': 'ffcccc', 'Water': 'cceeff', 'Wood': 'ccffcc', 'Earth': 'ffeebb', 'Metal': 'ececec' };
+            const textColors = { 'Fire': 'ff0000', 'Water': '0066ff', 'Wood': '009900', 'Earth': 'aa6600', 'Metal': '555555' };
+            const bg = bgColors[card.element];
+            const tc = textColors[card.element];
+            const imgUrl = card.image ? card.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(card.avatar)}&background=${bg}&color=${tc}&size=450&font-size=0.4&bold=true`;
+
+            // Both cards show face-up now, no more hidden-card trick!
+            return `
+        <div class="card-slot" id="${isPlayer ? 'p' : 'c'}-slot-${idx}">
+          <div class="card-wrapper">
+            <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}">
+              <div class="hologram-overlay"></div>
+              <div class="card-header">
+                <span class="card-grade">${card.grade}</span>
+                <span class="card-element">${emo[card.element]}</span>
+              </div>
+              <div class="card-image-container">
+                 <img src="${imgUrl}" alt="${card.name}">
+              </div>
+              <div class="card-footer">${t(card.name)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+
+        // Store global logs to allow dynamic re-rendering on language switch
+        let logHistory = [];
+
+        function renderLogHistory() {
+            const ul = document.getElementById('roundLog');
+            ul.innerHTML = '';
+            logHistory.forEach(lg => {
+                const pName = t(lg.pCard.name);
+                const cName = t(lg.cCard.name);
+                const resText = lg.logClass === 'win' ? `<span style="color:#00ffd9">${t('log_p_win')} (+${lg.pts})</span>` :
+                    lg.logClass === 'lose' ? `<span style="color:#ff0055">${t('log_e_win')} (+${lg.pts})</span>` :
+                        `<span style="color:#aaa">${t('log_draw')}</span>`;
+
+                const li = `<li class="log-entry ${lg.logClass}">
+         <div><strong>- Round ${lg.roundNum} -</strong></div>
+         <div>${t('ui_me')}: <strong>${pName}</strong>( ${emo[lg.pCard.element]} ${t('el_' + lg.pCard.element.toLowerCase())} )</div>
+         <div>${t('ui_enemy')}: <strong>${cName}</strong>( ${emo[lg.cCard.element]} ${t('el_' + lg.cCard.element.toLowerCase())} )</div>
+         <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #555;">${t('log_res')} <br><strong>${resText}</strong></div>
+      </li>`;
+                ul.insertAdjacentHTML('beforeend', li);
+            });
+            ul.scrollTop = ul.scrollHeight; // Auto scroll to bottom
+        }
+
+        function log(pCard, cCard, logClass, pts, roundNum) {
+            logHistory.push({ pCard, cCard, logClass, pts, roundNum });
+            renderLogHistory();
+        }
+
+        function render() {
+            const pZone = document.getElementById('playerZone');
+            pZone.innerHTML = '';
+            playerDeck.forEach((c, i) => pZone.innerHTML += cardHTML(c, true, i));
+
+            const cZone = document.getElementById('computerZone');
+            cZone.innerHTML = '';
+            cpuDeck.forEach((c, i) => cZone.innerHTML += cardHTML(c, false, i));
+
+            document.getElementById('playerScoreUi').innerText = pWin;
+            document.getElementById('cpuScoreUi').innerText = cWin;
+            const safeRound = Math.min(round, 7);
+            document.getElementById('roundImage').src = `images/round${safeRound}.jpg`;
+        }
+
+        function compare(a, b) {
+            const ai = grades.indexOf(a.grade), bi = grades.indexOf(b.grade);
+            if (a.element === b.element) return ai < bi ? 'A' : ai > bi ? 'B' : 'Draw';
+            const aB = (beats[a.element] === b.element), bB = (beats[b.element] === a.element), d = Math.abs(ai - bi);
+            if (aB || bB) { if (d >= 3) return ai < bi ? 'A' : 'B'; return aB ? 'A' : 'B'; }
+            return ai < bi ? 'A' : ai > bi ? 'B' : 'Draw';
+        }
+
+        function checkGameEnd() {
+            if (pWin >= maxWins || cWin >= maxWins || round > maxRounds) {
+                const overlay = document.getElementById('finalOverlay');
+                const title = document.getElementById('finalTitle');
+                if (pWin > cWin) {
+                    title.innerText = t('pop_win');
+                    title.style.color = '#00ffd9';
+                } else if (cWin > pWin) {
+                    title.innerText = t('pop_lose');
+                    title.style.color = '#ff0055';
+                } else {
+                    title.innerText = t('pop_draw');
+                    title.style.color = '#fff';
+                }
+                overlay.style.display = 'flex';
+                // Final music cue
+                if (pWin > cWin) startBgm('bgm_win');
+                else if (cWin > pWin) startBgm('bgm_lose');
+                else startBgm('bgm_lobby');
+
+                setTimeout(() => playSound(pWin > cWin ? 'win' : 'lose'), 500);
+            }
+        }
+
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function playTurn(pIdx) {
+            if (isBattling || playerDeck[pIdx].used) return;
+            isBattling = true;
+            playSound('select');
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const pCardData = playerDeck[pIdx];
+            const availCPU = cpuDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+            const cPick = availCPU[Math.floor(Math.random() * availCPU.length)];
+            const cIdx = cPick.i;
+            const cCardData = cPick.c;
+
+            pCardData.used = true; cCardData.used = true;
+
+            const pDomCard = document.getElementById(`p-card-${pIdx}`);
+            const cDomCard = document.getElementById(`c-card-${cIdx}`);
+            const clashEffect = document.getElementById('clashEffect');
+
+            const pRect = pDomCard.getBoundingClientRect();
+            const cRect = cDomCard.getBoundingClientRect();
+
+            // Set transition for initial flight (none, instant appear) to prevent phantom flying ghost visuals
+            // Bypass rotated getBoundingClientRect coordinates by strictly using app-relative DOM offset math
+            const bz = document.getElementById('battleZone');
+            const gb = document.getElementById('gameBoard');
+
+            // Calculate center of battle zone purely via logical offsets inside the container
+            const localCenterX = gb.offsetLeft + bz.offsetLeft + (bz.offsetWidth / 2);
+            const localCenterY = gb.offsetTop + bz.offsetTop + (bz.offsetHeight / 2);
+
+            const appContainer = document.getElementById('appContainer');
+            const appBox = appContainer.getBoundingClientRect();
+
+            const currentScale = window.currentAppScale || 1;
+
+            const pLocalX = (pRect.left - appBox.left) / currentScale;
+            const pLocalY = (pRect.top - appBox.top) / currentScale;
+            const cLocalX = (cRect.left - appBox.left) / currentScale;
+            const cLocalY = (cRect.top - appBox.top) / currentScale;
+
+            appContainer.appendChild(pDomCard);
+            pDomCard.style.top = pLocalY + 'px';
+            pDomCard.style.left = pLocalX + 'px';
+
+            appContainer.appendChild(cDomCard);
+            cDomCard.style.top = cLocalY + 'px';
+            cDomCard.style.left = cLocalX + 'px';
+
+            const isMobileBattle = document.body.classList.contains('is-mobile');
+            const baseW = isMobileBattle ? 191 * 1.3 : 191; // ~248
+            const baseH = isMobileBattle ? 271 * 1.3 : 271; // ~352
+            const clashOffset = baseW * 1.76 * 0.85; // dynamically calculate offset distance
+
+            // Dynamically position static labels matching expected card visual shifts to fix alignment bugs
+            const pLabel = document.querySelector('.p-label');
+            const cLabel = document.querySelector('.c-label');
+            appContainer.appendChild(pLabel);
+            appContainer.appendChild(cLabel);
+            appContainer.appendChild(clashEffect);
+
+            pLabel.style.left = (localCenterX - clashOffset) + 'px';
+            pLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
+
+            cLabel.style.left = (localCenterX + clashOffset) + 'px';
+            cLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
+
+            clashEffect.style.left = localCenterX + 'px';
+            clashEffect.style.top = localCenterY + 'px';
+
+            // Place both at the exact center for translation
+            const centerLeft = localCenterX - (baseW / 2);
+            const centerTop = localCenterY - (baseH / 2);
+
+            // Enter focus mode
+            document.body.classList.add('battling-mode');
+            document.getElementById('playerZone').classList.add('focus-mode');
+            document.getElementById('computerZone').classList.add('focus-mode');
+
+            pDomCard.classList.add('battling');
+            cDomCard.classList.add('battling');
+
+            // Force fixed base dimensions
+            pDomCard.style.width = baseW + 'px';
+            pDomCard.style.height = baseH + 'px';
+            cDomCard.style.width = baseW + 'px';
+            cDomCard.style.height = baseH + 'px';
+
+            await sleep(10); // small DOM ticket
+
+            // Align their base position to exact center
+            pDomCard.style.top = centerTop + 'px';
+            pDomCard.style.left = centerLeft + 'px';
+            cDomCard.style.top = centerTop + 'px';
+            cDomCard.style.left = centerLeft + 'px';
+
+            // Push them apart instantly and scale up for battle zone (1.76x scale, 85% width percentage distance)
+            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+
+            // Show static labels
+            document.body.classList.add('show-labels');
+
+            // Wait for transform to complete visually and allow match-up view duration
+            await sleep(1500); // 650 + 850 = 1500 total wait
+
+            // Multi-Hit: 3 Times
+            for (let hit = 1; hit <= 3; hit++) {
+                // Pull back before striking
+                pDomCard.style.transition = 'all 0.3s ease-out';
+                cDomCard.style.transition = 'all 0.3s ease-out';
+                pDomCard.style.transform = 'scale(1.76) translateX(-110%)';
+                cDomCard.style.transform = 'scale(1.76) translateX(110%)';
+                await sleep(350);
+
+                // Clash forward forcefully into the center
+                pDomCard.style.transition = 'all 0.1s ease-in';
+                cDomCard.style.transition = 'all 0.1s ease-in';
+                // Stop without overlapping (50% translation perfectly touches their inner edges!)
+                pDomCard.style.transform = 'scale(1.76) translateX(-50%)';
+                cDomCard.style.transform = 'scale(1.76) translateX(50%)';
+
+                await sleep(100);
+
+                // Boom explosion
+                clashEffect.classList.remove('active');
+                void clashEffect.offsetWidth; // trigger reflow
+                clashEffect.classList.add('active');
+
+                document.getElementById('mainLayout').classList.add('shake');
+                playSound('hit');
+
+                await sleep(150);
+                document.getElementById('mainLayout').classList.remove('shake');
+
+                if (hit < 3) await sleep(100); // brief pause before pulling back again
+            }
+
+            await sleep(150);
+
+            // Return to battle zone starting positions before showing effects
+            pDomCard.style.transition = 'all 0.4s ease-out';
+            cDomCard.style.transition = 'all 0.4s ease-out';
+            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+
+            await sleep(400);
+
+            // Restore smooth transition for the winner moving forward
+            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+
+            const r = compare(pCardData, cCardData);
+            let popClass, popTxt, logClass;
+            const pts = rollover;
+
+            if (r === 'A') {
+                pWin += pts; rollover = 1; popClass = 'damage-win'; popTxt = t('pop_win'); logClass = 'win';
+                playSound('win');
+
+                // Loser goes behind, Winner stays front
+                cDomCard.style.zIndex = '90';
+                pDomCard.style.zIndex = '110';
+
+                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+                cDomCard.style.animation = 'shatter-c 0.6s forwards';
+                pDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,215,0,0.8)) brightness(1.2)';
+            } else if (r === 'B') {
+                cWin += pts; rollover = 1; popClass = 'damage-lose'; popTxt = t('pop_lose'); logClass = 'lose';
+                playSound('lose');
+
+                // Loser goes behind, Winner stays front
+                pDomCard.style.zIndex = '90';
+                cDomCard.style.zIndex = '110';
+
+                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+                pDomCard.style.animation = 'shatter-p 0.6s forwards';
+                cDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,0,85,0.8)) brightness(1.2)';
+            } else {
+                rollover++; popClass = 'damage-draw'; popTxt = t('pop_draw'); logClass = 'draw';
+                playSound('draw');
+                pDomCard.style.filter = 'brightness(0.6)';
+                cDomCard.style.filter = 'brightness(0.6)';
+                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+            }
+
+            log(pCardData, cCardData, logClass, pts, round);
+
+            const popup = document.createElement('div');
+            popup.className = `damage-popup ${popClass}`;
+            popup.innerText = popTxt;
+            popup.style.top = localCenterY + 'px';
+            popup.style.left = localCenterX + 'px';
+            appContainer.appendChild(popup);
+
+            await sleep(1000); // Reduced from 2000 to give user just enough time to see shatter
+
+            // Snap away ghosting instantly before returning DOM elements
+            pDomCard.style.transition = 'none';
+            cDomCard.style.transition = 'none';
+
+            popup.remove();
+            clashEffect.classList.remove('active');
+
+            // Remove fixed sizes and reset the card for next use
+            pDomCard.style.width = '';
+            pDomCard.style.height = '';
+            cDomCard.style.width = '';
+            cDomCard.style.height = '';
+
+            // Exit focus mode
+            document.body.classList.remove('battling-mode');
+            document.body.classList.remove('show-labels');
+            document.getElementById('playerZone').classList.remove('focus-mode');
+            document.getElementById('computerZone').classList.remove('focus-mode');
+
+            pDomCard.remove();
+            cDomCard.remove();
+
+            round++;
+            render();
+
+            if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
+                checkGameEnd();
+            } else {
+                isBattling = false;
+            }
+        }
+
+        function startGame(mode) {
+            currentMode = mode;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.getElementById('lobbyOverlay').style.display = 'none';
+            document.getElementById('finalOverlay').style.display = 'none';
+
+            if (mode === 'Expert') {
+                maxWins = 5;
+                maxRounds = 7;
+            } else {
+                maxWins = 3;
+                maxRounds = 5;
+            }
+
+            playerDeck = createDeck(mode);
+            cpuDeck = createDeck(mode);
+            pWin = cWin = 0; round = 1; rollover = 1;
+            logHistory = []; // Reset combat logs
+            document.getElementById('roundLog').innerHTML = '';
+            isBattling = false;
+            render();
+
+            // Start BGM on game start
+            startBgm('bgm_game');
+        }
+
+        function showLobbyModal() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.getElementById('finalOverlay').style.display = 'none';
+            document.getElementById('settingsOverlay').style.display = 'none';
+            document.getElementById('lobbyOverlay').style.display = 'flex';
+
+            // Reset to main menu view conditionally if logged in (auth listener handles login gate)
+            if (auth.currentUser) {
+                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'none';
+            }
+            startBgm('bgm_lobby');
+        }
+
+        function showSettingsModal() {
+            document.getElementById('settingsOverlay').style.display = 'flex';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Detect mobile device purely via User-Agent to apply massive fonts despite base 1800 viewport logic
+            if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                document.body.classList.add('is-mobile');
+            }
+
+            document.getElementById('headerRestartBtn').addEventListener('click', showLobbyModal);
+            document.getElementById('restartBtn').addEventListener('click', showLobbyModal);
+
+            // Lobby Navigation Events
+            document.getElementById('btnMenuRulebook').addEventListener('click', () => {
+                document.getElementById('rulebookOverlay').style.display = 'flex';
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            });
+            document.getElementById('closeRulebookBtn').addEventListener('click', () => {
+                document.getElementById('rulebookOverlay').style.display = 'none';
+            });
+
+            document.getElementById('btnMenuTutorial').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('tutorialSection').style.display = 'block';
+            });
+
+            document.getElementById('btnMenuPvp').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'block';
+            });
+
+            document.getElementById('btnBackFromTutorial').addEventListener('click', () => {
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            document.getElementById('btnBackFromPvp').addEventListener('click', () => {
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            // My Page Handlers
+            document.getElementById('btnMenuMyPage').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('myPageSection').style.display = 'block';
+            });
+            document.getElementById('btnBackFromMyPage').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+
+            // Nickname UI Handlers
+            document.getElementById('btnChangeNickname').addEventListener('click', () => {
+                document.getElementById('myPageSection').style.display = 'none';
+                document.getElementById('nicknameSection').style.display = 'block';
+                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
+            });
+            document.getElementById('btnBackFromNickname').addEventListener('click', () => {
+                document.getElementById('nicknameSection').style.display = 'none';
+                document.getElementById('myPageSection').style.display = 'block';
+            });
+
+            document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
+            document.getElementById('btnPvpRandom').addEventListener('click', () => alert("PVP 랜덤 덱 모드는 준비 중입니다!"));
+
+            // Settings Slider events
+            document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
+            document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+                document.getElementById('settingsOverlay').style.display = 'none';
+            });
+
+            document.getElementById('btnLangKo').addEventListener('click', () => setLanguage('ko'));
+            document.getElementById('btnLangEn').addEventListener('click', () => setLanguage('en'));
+
+            document.getElementById('bgmSlider').addEventListener('input', (e) => updateBgmVolume(e.target.value));
+            document.getElementById('sfxSlider').addEventListener('input', (e) => updateSfxVolume(e.target.value));
+            document.getElementById('sfxSlider').addEventListener('change', (e) => updateSfxVolume(e.target.value)); // play test sound on release
+
+            document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+                if (window.location.protocol === 'file:') {
+                    alert('보안 정책 상 구글 로그인은 내 컴퓨터(로컬 더블클릭)에서는 작동하지 않습니다! 반드시 배포된 깃허브 웹사이트 (https://petros90.github.io/chrono-link) 에 접속해서 로그인 구동 테스트를 진행해주세요.');
+                    return;
+                }
+                const provider = new firebase.auth.GoogleAuthProvider();
+
+                // Force prompt selection to bypass intelligent tracking prevention silent failures in Safari/Mobile
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+
+                // Use Popup instead of Redirect, as Redirect requires custom domain configuration to work seamlessly on modern browsers.
+                auth.signInWithPopup(provider).catch(error => {
+                    console.error("Login popup failed:", error);
+                    alert("에러 원인 추적: " + error.code + "\\n" + error.message);
+                });
+            });
+
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                auth.signOut();
+            });
+
+            document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
+            document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
+
+            document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
+                const inputVal = document.getElementById('nicknameInput').value.trim();
+                const btn = document.getElementById('btnSubmitNickname');
+                const feedback = document.getElementById('nicknameFeedback');
+
+                feedback.style.color = '#ff5555'; // Default error color
+                feedback.innerHTML = '';
+
+                if (inputVal.length < 2) {
+                    feedback.innerText = "❌ 닉네임은 최소 2글자 이상 입력해주세요 (최대 10자).";
+                    return;
+                }
+
+                // 7-day Cooldown Check
+                const lastChange = localStorage.getItem('lastNicknameChange');
+                const nowMs = new Date().getTime();
+                const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+                if (lastChange && (nowMs - parseInt(lastChange)) < sevenDaysMs) {
+                    const daysLeft = Math.ceil((sevenDaysMs - (nowMs - parseInt(lastChange))) / (1000 * 60 * 60 * 24));
+                    feedback.innerHTML = `❌ 닉네임은 일주일에 한 번만 변경할 수 있습니다!<br><span style="color:#aaa; font-size:1.1rem;">(남은 시간: 약 ${daysLeft}일)</span>`;
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "확인 중...";
+
+                try {
+                    // Check for duplicates with a 3-second timeout to prevent infinite hang on silent Network/Rule errors
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 3000));
+
+                    // Firestore handles offline requests via cache natively, but we must race it aggressively 
+                    // because if it is purely offline but with an empty cache, `.get()` will never resolve.
+                    const getPromise = db.collection('users').where('nickname', '==', inputVal).get({ source: 'server' });
+
+                    const snapshot = await Promise.race([
+                        getPromise,
+                        timeoutPromise
+                    ]);
+
+                    if (!snapshot.empty) {
+                        feedback.innerHTML = `❌ 이미 사용 중인 닉네임입니다.<br><span style="color:#aaa; font-size:1.1rem;">※ 중복 없는 닉네임을 등록하면 7일 동안 변경할 수 없습니다.</span>`;
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        return;
+                    }
+
+                    // Save nickname to user profile
+                    const user = auth.currentUser;
+                    const userRef = db.collection('users').doc(user.uid);
+                    await userRef.set({
+                        nickname: inputVal,
+                        email: user.email,
+                        lastNicknameChange: nowMs,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    // Update UI and return to My Page Seamlessly
+                    localStorage.setItem('lastNicknameChange', nowMs.toString());
+                    document.getElementById('userDisplayName').innerText = inputVal;
+
+                    feedback.style.color = '#00ffd9';
+                    feedback.innerText = `✅ 닉네임이 [${inputVal}] (으)로 확정되었습니다!`;
+                    btn.innerText = "등록 완료!";
+
+                    setTimeout(() => {
+                        document.getElementById('nicknameSection').style.display = 'none';
+                        document.getElementById('myPageSection').style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        feedback.innerText = "";
+                        document.getElementById('nicknameInput').value = "";
+                    }, 1500);
+
+                } catch (error) {
+                    console.error("Nickname reg error:", error);
+                    let errMsg = "서버 에러입니다.";
+                    if (error.message === "TIMEOUT" || error.code === "unavailable") {
+                        errMsg = "서버 통신 지연! 데이터베이스 캐시를 우회합니다.";
+                    } else {
+                        errMsg = "연결 실패: " + (error.code || error.message);
+                    }
+
+                    feedback.style.color = '#ffaa00';
+                    feedback.innerHTML = `⚠️ ${errMsg}<br>오프라인 임시 모드로 자동 저장합니다...`;
+
+                    setTimeout(() => {
+                        localStorage.setItem('offlineNickname', inputVal);
+                        localStorage.setItem('lastNicknameChange', nowMs.toString());
+                        document.getElementById('userDisplayName').innerText = inputVal;
+
+                        document.getElementById('nicknameSection').style.display = 'none';
+                        document.getElementById('myPageSection').style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerText = "중복 확인 및 등록";
+                        feedback.innerText = "";
+                        document.getElementById('nicknameInput').value = "";
+                    }, 2000);
+                }
+            });
+
+            showLobbyModal();
+        });
+        function updateScale() {
+            const layout = document.getElementById('appContainer');
+            /* Check if CSS has forced landscape rotation using the exact media query */
+            const isForcedLandscape = window.matchMedia("(pointer: coarse) and (orientation: portrait)").matches;
+            const logicalWidth = isForcedLandscape ? window.innerHeight : window.innerWidth;
+            const logicalHeight = isForcedLandscape ? window.innerWidth : window.innerHeight;
+
+            // Force physical body sizes to bypass unpredictable CSS 100vh/100vw mobile bugs
+            if (isForcedLandscape) {
+                document.body.style.width = logicalWidth + 'px';
+                document.body.style.height = logicalHeight + 'px';
+            } else {
+                document.body.style.width = '100%';
+                document.body.style.height = '100%';
+            }
+
+            // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
+            const BASE_HEIGHT = 1250;
+            const BASE_WIDTH = 2100;
+            const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
+
+            window.currentAppScale = MathScale <= 1 ? MathScale : 1;
+            const finalScale = window.currentAppScale;
+
+            layout.style.transform = `scale(${finalScale})`;
+            layout.style.width = BASE_WIDTH + 'px';
+            layout.style.height = BASE_HEIGHT + 'px';
+
+            const scaledWidth = BASE_WIDTH * finalScale;
+            const scaledHeight = BASE_HEIGHT * finalScale;
+
+            layout.style.left = ((logicalWidth - scaledWidth) / 2) + 'px';
+            layout.style.top = ((logicalHeight - scaledHeight) / 2) + 'px';
+        }
+        window.addEventListener('resize', updateScale);
+        updateScale(); // Initial call
+    </script>
+</body>
+
+</html>
