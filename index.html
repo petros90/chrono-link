@@ -99,6 +99,47 @@
             background: #2a2a36;
         }
 
+        .menu-img-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-top: -15px;
+            margin-bottom: -15px;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+            width: 20%;
+            max-width: 140px;
+            min-width: 70px;
+            transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
+            display: block;
+        }
+
+        .menu-img-btn:first-of-type {
+            margin-top: 10px;
+        }
+
+        .menu-img-btn:last-of-type {
+            margin-bottom: 10px;
+        }
+
+        .menu-img-btn:hover {
+            transform: scale(1.05);
+            /* Soft glow that respects the PNG transparency shape instead of a square box */
+            filter: brightness(1.2) drop-shadow(0 0 15px rgba(0, 255, 217, 0.4));
+        }
+
+        .menu-img-btn:active {
+            transform: scale(0.95);
+            filter: brightness(0.9);
+        }
+
+        .menu-img-btn img {
+            width: 100%;
+            display: block;
+            pointer-events: none;
+        }
+
         .diff-desc {
             font-size: 1.3rem;
             color: #aaa;
@@ -547,18 +588,18 @@
 
         #settingsBtn {
             position: absolute;
-            top: 30px;
-            right: 30px;
+            top: 20px;
+            right: 20px;
             z-index: 1000;
-            padding: 12px 16px;
-            font-size: 50px;
+            padding: 8px 12px;
+            font-size: 24px;
             border: 2px solid #00ffd9;
-            border-radius: 12px;
+            border-radius: 8px;
             background: rgba(0, 0, 0, 0.7);
             color: #fff;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 0 15px rgba(0, 255, 217, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 217, 0.5);
             backdrop-filter: blur(5px);
         }
 
@@ -1415,10 +1456,8 @@
         }
 
         body.is-mobile #settingsBtn {
-            top: 40px;
-            right: 40px;
-            padding: 20px 25px;
-            font-size: 70px;
+            padding: 12px 18px;
+            font-size: 40px;
         }
 
         body.is-mobile .score-board {
@@ -1506,7 +1545,6 @@
 
             <!-- Absolute centered Score Board -->
             <div class="score-board" style="align-items: center;">
-                <img id="roundImage" src="images/round1.jpg" style="height: 90px; border-radius: 8px;">
                 <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
                 <div><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
@@ -1516,12 +1554,10 @@
                 style="display: flex; align-items: center; position: absolute; right: 10px; top: 10px; gap: 15px;">
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
+                    <button id="settingsBtn"
+                        style="position: static; padding: 4px 8px; font-size: 1.4rem; margin: 0 5px;">⚙️</button>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                 </div>
-                <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    <img src="images/btn_restart.jpg" alt="Restart" style="height: 90px; border-radius: 8px;">
-                </button>
             </div>
         </div>
 
@@ -1549,21 +1585,17 @@
                     <img src="images/chronolinklogo.png"
                         style="width: 100%; max-height: 240px; object-fit: contain; margin-bottom: 30px;"
                         alt="Chrono Link Logo">
-                    <button id="btnMenuMyPage"
-                        style="background: transparent; border: none; padding: 0; margin-bottom: 20px; cursor: pointer; width: 100%;">
-                        <img src="images/btn_mypage.png" style="width: 100%; border-radius: 12px;">
+                    <button id="btnMenuMyPage" class="menu-img-btn">
+                        <img src="images/btn_mypage.png?v=2" alt="My Page">
                     </button>
-                    <button id="btnMenuRulebook"
-                        style="background: transparent; border: none; padding: 0; margin-bottom: 20px; cursor: pointer; width: 100%;">
-                        <img src="images/btn_rulebook.png" style="width: 100%; border-radius: 12px;">
+                    <button id="btnMenuRulebook" class="menu-img-btn">
+                        <img src="images/btn_rulebook.png?v=2" alt="Rulebook">
                     </button>
-                    <button id="btnMenuTutorial"
-                        style="background: transparent; border: none; padding: 0; margin-bottom: 20px; cursor: pointer; width: 100%;">
-                        <img src="images/btn_tutorial.png" style="width: 100%; border-radius: 12px;">
+                    <button id="btnMenuTutorial" class="menu-img-btn">
+                        <img src="images/btn_tutorial.png?v=2" alt="Tutorial (AI Match)">
                     </button>
-                    <button id="btnMenuPvp"
-                        style="background: transparent; border: none; padding: 0; cursor: pointer; width: 100%;">
-                        <img src="images/btn_pvp.png" style="width: 100%; border-radius: 12px;">
+                    <button id="btnMenuPvp" class="menu-img-btn">
+                        <img src="images/btn_pvp.png?v=2" alt="PVP Match">
                     </button>
                 </div>
 
@@ -1731,9 +1763,13 @@
 
         <div id="mainLayout">
             <div class="side-panel" id="logPanel">
-                <img src="images/chronolinklogo.png"
-                    style="width: 100%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
-                    alt="Chrono Link Logo">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                    <img src="images/chronolinklogo.png"
+                        style="width: 65%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
+                        alt="Chrono Link Logo">
+                    <img id="roundImage" src="images/round1.png?v=3"
+                        style="height: 70px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
+                </div>
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
                 <ul class="log-list" id="roundLog"></ul>
             </div>
@@ -1833,17 +1869,24 @@
                         <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
                     </div>
                 </div>
+
+                <!-- Relocated Restart Button under the element chart -->
+                <button id="headerRestartBtn"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 180px;">
+                    <img src="images/btn_restart.png?v=3" alt="Restart"
+                        style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
+                </button>
             </div>
         </div>
 
         <div id="finalOverlay">
             <div class="final-box" id="finalTitle">승리!</div>
             <button id="restartBtn">
-                <img src="images/btn_restart.jpg" alt="Restart">
+                <img src="images/btn_restart.png?v=3" alt="Restart">
             </button>
         </div>
 
-        <button id="settingsBtn">⚙️</button>
+        <!-- Removed floating settingsBtn to merge into header-buttons above -->
 
         <!-- End Global Scale Container -->
     </div>
@@ -2319,7 +2362,7 @@
             document.getElementById('playerScoreUi').innerText = pWin;
             document.getElementById('cpuScoreUi').innerText = cWin;
             const safeRound = Math.min(round, 7);
-            document.getElementById('roundImage').src = `images/round${safeRound}.jpg`;
+            document.getElementById('roundImage').src = `images/round${safeRound}.png?v=3`;
         }
 
         function compare(a, b) {
