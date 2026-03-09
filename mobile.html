@@ -225,6 +225,9 @@
             z-index: 380;
         }
 
+        /* --- LOG MSG MAX WIDTH TO FIT WIDER PANEL --- */
+
+
         .rulebook-box {
             background: #1a1a24;
             padding: 30px;
@@ -655,8 +658,8 @@
         .side-panel {
             background: transparent;
             /* Removed #111 to prevent visual bounding line against black body */
-            border-right: 1px solid #000;
-            border-left: 1px solid #000;
+            border-right: none;
+            border-left: none;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -668,7 +671,7 @@
             flex: 0 0 590px;
             /* +200px expanded */
             background: transparent;
-            border-right: 1px solid #000;
+            border-right: none;
             display: flex;
             flex-direction: column;
             padding: 15px;
@@ -743,8 +746,9 @@
         /* Circular SVG Chart */
         .chart-container {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 286px;
+            /* 220px + 30% */
+            height: 286px;
             margin: 10px auto;
         }
 
@@ -1816,7 +1820,7 @@
             <div class="side-panel" id="logPanel">
                 <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 25px;">
                     <img src="images/chronolinklogo.png"
-                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transform: scale(1.2);"
+                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transform: scale(0.84);"
                         alt="Chrono Link Logo">
                 </div>
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
