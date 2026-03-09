@@ -3148,11 +3148,13 @@
                         rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
                                           <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0055; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
 
-                        document.getElementById('btnRematchAccept').onclick = () => {
+                        document.getElementById('btnRematchAccept').onclick = (e) => {
+                            e.stopPropagation(); // Prevent #restartBtn parent from triggering resetGame()
                             rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;'>상대방의 선택 대기 중...</span>";
                             pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
                         };
-                        document.getElementById('btnRematchDecline').onclick = () => {
+                        document.getElementById('btnRematchDecline').onclick = (e) => {
+                            e.stopPropagation();
                             pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: false });
                         };
                     });

@@ -175,6 +175,9 @@ io.on('connection', (socket) => {
         const room = rooms[roomId];
         if (!room) return;
 
+        // Prevent late timer triggers from spawning a new round after match concludes
+        clearTimeout(room.timer);
+
         if (winnerId !== 'Draw') {
             room.playerData[winnerId].matchWins++;
         }
