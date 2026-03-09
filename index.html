@@ -103,12 +103,15 @@
             background: transparent;
             border: none;
             padding: 0;
-            margin-top: -15px;
-            margin-bottom: -15px;
+            margin-top: 0px;
+            /* Added spacing */
+            margin-bottom: 0px;
+            /* Added spacing */
             margin-left: auto;
             margin-right: auto;
             cursor: pointer;
-            width: 100%;
+            width: 70%;
+            /* Shrunk by 30% from 100% */
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
@@ -1459,37 +1462,37 @@
             /* Greatly enlarged for mobile */
         }
 
-        /* 100% Size Increase for Settings Modal on Mobile */
+        /* 150% cumulative Size Increase for Settings Modal on Mobile (50% bigger than last time) */
         body.is-mobile .settings-box {
-            width: 80%;
-            max-width: 700px;
-            padding: 60px;
-            border-radius: 30px;
+            width: 90%;
+            max-width: 1000px;
+            padding: 90px;
+            border-radius: 45px;
         }
 
         body.is-mobile .settings-box h2 {
-            font-size: 4rem;
-            margin-bottom: 40px;
+            font-size: 6rem;
+            margin-bottom: 60px;
         }
 
         body.is-mobile .settings-box .toggle-row {
-            font-size: 2.4rem;
-            margin-bottom: 50px;
+            font-size: 3.6rem;
+            margin-bottom: 75px;
         }
 
         body.is-mobile .settings-box .toggle-row>span {
-            width: 240px;
+            width: 360px;
         }
 
         body.is-mobile .settings-box .vol-text {
-            font-size: 2rem;
-            width: 90px;
+            font-size: 3rem;
+            width: 135px;
         }
 
         body.is-mobile .settings-box .close-settings {
-            font-size: 2.6rem;
-            padding: 25px;
-            margin-top: 50px;
+            font-size: 3.9rem;
+            padding: 38px;
+            margin-top: 75px;
         }
 
         body.is-mobile .score-board {
@@ -1723,10 +1726,10 @@
                     </div>
                 </div>
                 <div class="toggle-row">
-                    <span data-i18n="ui_bgm">배경 음악</span>
+                    <span data-i18n="ui_bgm">배경음악</span>
                     <div class="slider-container">
-                        <input type="range" id="bgmSlider" min="0" max="100" value="50">
-                        <span class="vol-text" id="bgmVolText">50%</span>
+                        <input type="range" id="bgmSlider" min="0" max="100" value="25">
+                        <div class="vol-text" id="bgmText">25%</div>
                     </div>
                 </div>
                 <div class="toggle-row">
@@ -1974,7 +1977,7 @@
                 ui_diff_title: "난이도 선택",
                 ui_diff_beginner: "5장 덱 / 3선승제",
                 ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
-                ui_settings_title: "설정", ui_lang: "언어 / Language", ui_bgm: "배경 음악", ui_sfx: "효과음", btn_close: "닫기",
+                ui_settings_title: "설정", ui_lang: "언어 / Language", ui_bgm: "배경음악", ui_sfx: "효과음", btn_close: "닫기",
                 ui_log_title: "전투 로그",
                 log_p_win: "플레이어 승", log_e_win: "적 승리", log_draw: "무승부 (이월)", log_res: "결과:",
                 ui_cpu_deck: "상대 카드", ui_player_deck: "내 카드", ui_element_table: "오행 상성",
@@ -2112,8 +2115,12 @@
         // -----------------------------------------------------
 
         /* Audio Settings State */
+        let bgmCache = {};
+        const bgmFiles = ['1.mp3', '2.mp3', '3.mp3', '4.mp3'];
+
+        let playHistory = [];
         let sfxVolume = 1.0;
-        let bgmVolume = 0.5;
+        let bgmVolume = 0.25;
 
         /* Synth Audio - 100% Zero-Dependency Sounds */
         const audioCtx = new (window.AudioContext || window.AudioContext)();
