@@ -2460,7 +2460,7 @@
             // Removed .used grayscale from here, instead using inline filter later if used
             const usedStyle = isUsed ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
-            const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx}, this)"` : '';
+            const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx})"` : '';
 
             let resultOverlay = '';
             if (isUsed && card.result) {
@@ -2507,10 +2507,13 @@
                     lg.logClass === 'lose' ? `<span style="color:#ff0055">${t('log_e_win')} (+${lg.pts})</span>` :
                         `<span style="color:#aaa">${t('log_draw')}</span>`;
 
+                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
+                const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
+
                 const li = `<li class="log-entry ${lg.logClass}">
          <div><strong>- Round ${lg.roundNum} -</strong></div>
-         <div>${t('ui_me')}: <strong>${pName}</strong>( ${emo[lg.pCard.element]} ${t('el_' + lg.pCard.element.toLowerCase())} )</div>
-         <div>${t('ui_enemy')}: <strong>${cName}</strong>( ${emo[lg.cCard.element]} ${t('el_' + lg.cCard.element.toLowerCase())} )</div>
+         <div>${meName}: <strong>${pName}</strong>( ${emo[lg.pCard.element]} ${t('el_' + lg.pCard.element.toLowerCase())} )</div>
+         <div>${oppNameText}: <strong>${cName}</strong>( ${emo[lg.cCard.element]} ${t('el_' + lg.cCard.element.toLowerCase())} )</div>
          <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #555;">${t('log_res')} <br><strong>${resText}</strong></div>
       </li>`;
                 ul.insertAdjacentHTML('beforeend', li);
