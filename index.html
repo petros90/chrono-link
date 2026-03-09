@@ -1335,10 +1335,11 @@
 
         .final-box {
             font-family: 'Jua', sans-serif;
-            font-size: 4rem;
+            font-size: 12rem;
+            /* 200% 확대 */
             text-align: center;
-            padding: 30px 60px;
-            border-radius: 20px;
+            padding: 50px 100px;
+            border-radius: 30px;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -1503,11 +1504,14 @@
         }
 
         body.is-mobile #roundImage {
-            height: 160px !important;
+            height: 78px !important;
+            /* Fully respect shrink properties */
         }
 
         body.is-mobile #headerRestartBtn img {
-            height: 160px !important;
+            height: auto !important;
+            /* Fix squishing by maintaining aspect ratio */
+            width: 100% !important;
         }
 
         body.is-mobile .score-board span {
