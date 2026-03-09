@@ -620,9 +620,10 @@
             gap: 20px;
             font-size: 1.6rem;
             color: #aaa;
-            flex-wrap: wrap;
-            justify-content: center;
             align-items: center;
+            /* Fix vertical alignment between text and round icon */
+            justify-content: center;
+            flex-wrap: wrap;
             position: absolute;
             left: 50%;
             top: 20px;
@@ -659,13 +660,14 @@
         /* Side Panels */
         .side-panel {
             background: transparent;
-            /* Removed #111 to prevent visual bounding line against black body */
             border-right: none;
             border-left: none;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             padding: 15px;
+            margin-top: 200px;
+            /* Push panels down 200px */
         }
 
         /* LEFT PANEL WIDER */
@@ -773,48 +775,38 @@
             font-size: 3.6rem;
         }
 
-        /* Circle Layout Scaled for 286px Base (+30%) */
+        /* Circle Layout Scaled for 286px Base (+30% precisely centered) */
         #n-fire {
-            top: 13px;
-            /* 10 * 1.3 */
-            left: 110px;
-            /* 85 * 1.3 */
+            top: 10px;
+            left: 119px;
             border-color: #ff4444;
             color: #ff4444;
         }
 
         #n-earth {
-            top: 91px;
-            /* 70 * 1.3 */
-            left: 208px;
-            /* 160 * 1.3 */
+            top: 85px;
+            left: 223px;
             border-color: #dd8833;
             color: #dd8833;
         }
 
         #n-metal {
-            top: 201px;
-            /* 155 * 1.3 */
-            left: 175px;
-            /* 135 * 1.3 */
+            top: 207px;
+            left: 183px;
             border-color: #aaaaaa;
             color: #aaaaaa;
         }
 
         #n-water {
-            top: 201px;
-            /* 155 * 1.3 */
-            left: 45px;
-            /* 35 * 1.3 */
+            top: 207px;
+            left: 55px;
             border-color: #4488ff;
             color: #4488ff;
         }
 
         #n-wood {
-            top: 91px;
-            /* 70 * 1.3 */
-            left: 13px;
-            /* 10 * 1.3 */
+            top: 85px;
+            left: 15px;
             border-color: #22cc22;
             color: #22cc22;
         }
@@ -1877,22 +1869,22 @@
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
                             </marker>
                         </defs>
-                        <!-- Chart scaled by 1.3x from original 220px to 286px -->
+                        <!-- Chart perfectly modeled as Regular Pentagon (Radius 109px around center 143,143) -->
 
-                        <!-- F(143,45) to M(208,234). -->
-                        <line x1="152" y1="78" x2="195" y2="196" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+                        <!-- F to M -->
+                        <line x1="150" y1="56" x2="199" y2="206" stroke="#ff4444" marker-end="url(#arrow-fire)" />
 
-                        <!-- M(208,234) to Wo(45,123). -->
-                        <line x1="175" y1="214" x2="78" y2="145" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+                        <!-- M to Wo -->
+                        <line x1="188" y1="217" x2="60" y2="124" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
 
-                        <!-- Wo(45,123) to E(240,123). -->
-                        <line x1="84" y1="123" x2="201" y2="123" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+                        <!-- Wo to E -->
+                        <line x1="63" y1="109" x2="220" y2="109" stroke="#22cc22" marker-end="url(#arrow-wood)" />
 
-                        <!-- E(240,123) to Wa(78,234). -->
-                        <line x1="208" y1="145" x2="110" y2="212" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+                        <!-- E to Wa -->
+                        <line x1="228" y1="123" x2="100" y2="216" stroke="#dd8833" marker-end="url(#arrow-earth)" />
 
-                        <!-- Wa(78,234) to F(143,45). -->
-                        <line x1="91" y1="196" x2="134" y2="78" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                        <!-- Wa to F -->
+                        <line x1="86" y1="209" x2="135" y2="59" stroke="#4488ff" marker-end="url(#arrow-water)" />
                     </svg>
 
                     <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
@@ -1930,9 +1922,9 @@
                     </div>
                 </div>
 
-                <!-- Relocated Restart Button under the element chart -->
+                <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
                 <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 130px;">
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
                     <img src="images/btn_restart.png?v=3" alt="Restart"
                         style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
                 </button>
