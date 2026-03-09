@@ -103,16 +103,17 @@
             background: transparent;
             border: none;
             padding: 0;
-            margin-top: -2%;
-            /* Adjusted margin for the smaller 25% size */
-            margin-bottom: -2%;
+            margin-top: -15px;
+            /* Fixed pixel margin to pull transparent gaps together predictably */
+            margin-bottom: -15px;
             margin-left: auto;
-            /* Center horizontally */
             margin-right: auto;
-            /* Center horizontally */
             cursor: pointer;
-            width: 25%;
-            /* Shrunk to 25% from 50% as requested */
+            width: 40%;
+            max-width: 280px;
+            /* Force maximum physical size to prevent spanning the entire screen */
+            min-width: 150px;
+            /* Ensure they don't get too tiny */
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
