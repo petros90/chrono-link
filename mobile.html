@@ -2618,10 +2618,20 @@
 
             const currentScale = window.currentAppScale || 1;
 
-            const pLocalX = (pRect.left - appBox.left) / currentScale;
-            const pLocalY = (pRect.top - appBox.top) / currentScale;
-            const cLocalX = (cRect.left - appBox.left) / currentScale;
-            const cLocalY = (cRect.top - appBox.top) / currentScale;
+            // Fix: In mobile forced landscape mode, getBoundingClientRect returns visually rotated sizes 
+            // which breaks our offset calculation. Use a robust fallback if it drops below zero or errors out.
+            let pLocalX = (pRect.left - appBox.left) / currentScale;
+            let pLocalY = (pRect.top - appBox.top) / currentScale;
+            let cLocalX = (cRect.left - appBox.left) / currentScale;
+            let cLocalY = (cRect.top - appBox.top) / currentScale;
+
+            // If the math spins out because of CSS rotation on mobile body, snap to safe hardcoded deck positions
+            if (pLocalX < 0 || cLocalX < 0) {
+                pLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
+                pLocalY = gb.offsetTop + gb.offsetHeight - 300;
+                cLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
+                cLocalY = gb.offsetTop + 100;
+            }
 
             appContainer.appendChild(pDomCard);
             pDomCard.style.top = pLocalY + 'px';
@@ -3031,10 +3041,18 @@
                     });
 
                     pvpSocket.on('opponent_picked', () => {
-                        const cZone = document.getElementById('computerZone');
-                        cZone.innerHTML = `<div class="card battling" style="background:#555; position:relative; display:flex; align-items:center; justify-content:center;">
-                            <span style="font-size:3rem; color:#fff;">?</span>
-                        </div>`;
+                        // Find a dummy card in cpuDeck to act as the hidden picked card
+                        const cIdx = cpuDeck.findIndex(c => !c.used);
+                        if (cIdx !== -1) {
+                            cpuDeck[cIdx].used = true;
+                            render();
+                            // Visually mask the specific used card as a hidden back-face
+                            const cDom = document.getElementById(`c-card-${cIdx}`);
+                            if (cDom) {
+                                cDom.innerHTML = `<span style="font-size:3rem; color:#fff;">?</span>`;
+                                cDom.style.background = '#555';
+                            }
+                        }
                     });
 
                     pvpSocket.on('force_auto_pick', () => {
