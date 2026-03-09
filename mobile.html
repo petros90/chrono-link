@@ -1616,7 +1616,7 @@
             transform: translateY(-50%);
             display: none;
             /* Only visible in PVP mode during a turn */
-            z-index: 100;
+            z-index: 10;
         }
 
         #turnTimerBar {
@@ -2466,8 +2466,8 @@
             if (!isPlayer && card.pendingReveal) {
                 return `
         <div class="card-slot" id="c-slot-${idx}">
-          <div class="card-wrapper">
-            <div class="card" id="c-card-${idx}" style="background: linear-gradient(135deg, #333, #555);">
+          <div class="card-wrapper" style="position:relative;">
+            <div class="card used" id="c-card-${idx}" style="background: linear-gradient(135deg, #333, #555);">
               <div class="hologram-overlay"></div>
               <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem; color:#fff;">?</span>
             </div>
