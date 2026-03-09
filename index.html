@@ -632,7 +632,7 @@
         }
 
         #appContainer {
-            width: 2300px;
+            width: 2400px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -662,7 +662,8 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 290px;
+            flex: 0 0 390px;
+            /* +100px expanded */
             background: #111116;
             border-right: 1px solid #333;
             display: flex;
@@ -673,7 +674,8 @@
         }
 
         #chartPanel {
-            flex: 0 0 290px;
+            flex: 0 0 390px;
+            /* +100px expanded */
             border-right: none;
             align-items: center;
         }
@@ -1582,7 +1584,7 @@
             <div class="score-board"
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
                 <img id="roundImage" src="images/round1.png?v=3"
-                    style="height: 56px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
+                    style="height: 39px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
                 <div style="font-size: 3rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
                         style="color:#00ffd9">0</span></div>
                 <div style="font-size: 3rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
@@ -1728,8 +1730,8 @@
                 <div class="toggle-row">
                     <span data-i18n="ui_bgm">배경음악</span>
                     <div class="slider-container">
-                        <input type="range" id="bgmSlider" min="0" max="100" value="25">
-                        <div class="vol-text" id="bgmText">25%</div>
+                        <input type="range" id="bgmSlider" min="0" max="100" value="100">
+                        <div class="vol-text" id="bgmText">100%</div>
                     </div>
                 </div>
                 <div class="toggle-row">
@@ -1910,7 +1912,7 @@
 
                 <!-- Relocated Restart Button under the element chart -->
                 <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 144px;">
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 100px;">
                     <img src="images/btn_restart.png?v=3" alt="Restart"
                         style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
                 </button>
@@ -2120,7 +2122,7 @@
 
         let playHistory = [];
         let sfxVolume = 1.0;
-        let bgmVolume = 0.25;
+        let bgmVolume = 0.05; // Base max hardware volume capped at 5%
 
         /* Synth Audio - 100% Zero-Dependency Sounds */
         const audioCtx = new (window.AudioContext || window.AudioContext)();
@@ -2199,8 +2201,13 @@
         }
 
         function updateBgmVolume(val) {
-            bgmVolume = val / 100;
-            document.getElementById('bgmVolText').innerText = val + '%';
+            // Map the frontend 0-100 scale to 0.0-0.05 hardware bounds (100% UI = 5% Hardware Max output)
+            bgmVolume = (val / 100) * 0.05;
+
+            // UI text update (try/catch to avoid bugging out if ID changed)
+            try { document.getElementById('bgmText').innerText = val + '%'; } catch (e) { }
+            try { document.getElementById('bgmVolText').innerText = val + '%'; } catch (e) { }
+
             if (currentBgm) {
                 currentBgm.volume = bgmVolume;
                 if (bgmVolume > 0 && currentBgm.paused) {
@@ -2939,7 +2946,7 @@
 
             // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
             const BASE_HEIGHT = 1250;
-            const BASE_WIDTH = 2300;
+            const BASE_WIDTH = 2400;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = MathScale <= 1 ? MathScale : 1;
