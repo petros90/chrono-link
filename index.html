@@ -631,8 +631,10 @@
             font-size: 2.0rem;
         }
 
+        /* --- BASE CONTAINER SCALING --- */
         #appContainer {
-            width: 2400px;
+            width: 2800px;
+            /* Increased by 400px to accommodate wider side panels */
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -651,7 +653,8 @@
 
         /* Side Panels */
         .side-panel {
-            background: #111;
+            background: transparent;
+            /* Removed #111 to prevent visual bounding line against black body */
             border-right: 1px solid #000;
             border-left: 1px solid #000;
             display: flex;
@@ -662,9 +665,9 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 390px;
-            /* +100px expanded */
-            background: #111116;
+            flex: 0 0 590px;
+            /* +200px expanded */
+            background: transparent;
             border-right: 1px solid #000;
             display: flex;
             flex-direction: column;
@@ -674,8 +677,8 @@
         }
 
         #chartPanel {
-            flex: 0 0 390px;
-            /* +100px expanded */
+            flex: 0 0 590px;
+            /* +200px expanded */
             border-right: none;
             align-items: center;
         }
@@ -1586,14 +1589,14 @@
             <!-- Left side empty to balance flex, or can hold future items -->
             <div></div>
 
-            <!-- Centered Score Board with Flexbox (No absolute bounds) -->
+            <!-- Centered Score Board with Flexbox (PC BASE +30%) -->
             <div class="score-board"
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
                 <img id="roundImage" src="images/round1.png?v=3"
-                    style="height: 39px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
-                <div style="font-size: 3rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
+                    style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
+                <div style="font-size: 3.9rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
                         style="color:#00ffd9">0</span></div>
-                <div style="font-size: 3rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
+                <div style="font-size: 3.9rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
                         style="color:#ff0055">0</span></div>
             </div>
 
@@ -2956,7 +2959,7 @@
 
             // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
             const BASE_HEIGHT = 1250;
-            const BASE_WIDTH = 2400;
+            const BASE_WIDTH = 2800;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = MathScale <= 1 ? MathScale : 1;
