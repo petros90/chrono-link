@@ -2457,8 +2457,16 @@
             if (!card) return '<div class="card-slot placeholder">Empty</div>';
 
             const isUsed = card.used;
+            // Removed .used grayscale from here, instead using inline filter later if used
+            const usedStyle = isUsed ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
             const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx}, this)"` : '';
+
+            let resultOverlay = '';
+            if (isUsed && card.result) {
+                if (card.result === 'win') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#00ff00; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">V</div>';
+                else if (card.result === 'lose') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#ff0055; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">X</div>';
+            }
 
             const bgColors = { 'Fire': 'ffcccc', 'Water': 'cceeff', 'Wood': 'ccffcc', 'Earth': 'ffeebb', 'Metal': 'ececec' };
             const textColors = { 'Fire': 'ff0000', 'Water': '0066ff', 'Wood': '009900', 'Earth': 'aa6600', 'Metal': '555555' };
@@ -2466,11 +2474,11 @@
             const tc = textColors[card.element];
             const imgUrl = card.image ? card.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(card.avatar)}&background=${bg}&color=${tc}&size=450&font-size=0.4&bold=true`;
 
-            // Both cards show face-up now, no more hidden-card trick!
             return `
         <div class="card-slot" id="${isPlayer ? 'p' : 'c'}-slot-${idx}">
-          <div class="card-wrapper">
-            <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}">
+          <div class="card-wrapper" style="position:relative;">
+            ${resultOverlay}
+            <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}" style="${usedStyle}">
               <div class="hologram-overlay"></div>
               <div class="card-header">
                 <span class="card-grade">${card.grade}</span>
@@ -2570,7 +2578,7 @@
 
                 const pDomCard = document.getElementById(`p-card-${pIdx}`);
                 pDomCard.style.transform = 'translateY(-30px)';
-                pDomCard.style.boxShadow = '0 0 20px #00ffd9';
+                pDomCard.style.boxShadow = '0 0 20px #ffd700, 0 0 0 4px #ffd700'; // Golden Highlight
                 pDomCard.style.zIndex = '100';
 
                 pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
@@ -2750,6 +2758,7 @@
 
             if (r === 'A') {
                 pWin += pts; rollover = 1; popClass = 'damage-win'; popTxt = t('pop_win'); logClass = 'win';
+                pCardData.result = 'win'; cCardData.result = 'lose';
                 playSound('win');
 
                 // Loser goes behind, Winner stays front
@@ -2762,6 +2771,7 @@
                 pDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,215,0,0.8)) brightness(1.2)';
             } else if (r === 'B') {
                 cWin += pts; rollover = 1; popClass = 'damage-lose'; popTxt = t('pop_lose'); logClass = 'lose';
+                pCardData.result = 'lose'; cCardData.result = 'win';
                 playSound('lose');
 
                 // Loser goes behind, Winner stays front
@@ -2774,6 +2784,7 @@
                 cDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,0,85,0.8)) brightness(1.2)';
             } else {
                 rollover++; popClass = 'damage-draw'; popTxt = t('pop_draw'); logClass = 'draw';
+                pCardData.result = 'draw'; cCardData.result = 'draw';
                 playSound('draw');
                 pDomCard.style.filter = 'brightness(0.6)';
                 cDomCard.style.filter = 'brightness(0.6)';
@@ -2842,7 +2853,14 @@
             maxRounds = 5;
 
             playerDeck = createDeck('Beginner');
-            cpuDeck = createDeck('Beginner'); // We'll overwrite these as the opponent plays
+
+            // Fix Sync Bug: Don't generate fake random deck for opponent in PVP
+            if (isPvpMode) {
+                cpuDeck = [];
+                pvpSocket.emit('send_deck', { roomId: pvpRoomId, deck: playerDeck });
+            } else {
+                cpuDeck = createDeck('Beginner');
+            }
 
             pWin = cWin = 0; round = 1; rollover = 1;
             logHistory = [];
@@ -2888,10 +2906,11 @@
             let pIdx = playerDeck.findIndex(c => c.name === myCard.name && !c.used);
             if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.name === myCard.name);
 
-            // Give the cpuDeck the exact opponent card
-            const cIdx = cpuDeck.findIndex(c => !c.used);
-            cpuDeck[cIdx] = oppCard;
-            cpuDeck[cIdx].used = false; // ensure playTurn works properly
+            // Find opponent's card index in synced deck
+            let cIdx = cpuDeck.findIndex(c => c.name === oppCard.name && !c.used);
+            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.name === oppCard.name);
+
+            if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // ensure playTurn works properly
 
             // Re-render opponent zone so DOM elements exist cleanly before animation kicks in
             render();
@@ -3033,6 +3052,11 @@
                         document.getElementById('pvpMatchOverlay').style.display = 'none';
                         startPvpGame();
                         playSound('win');
+                    });
+
+                    pvpSocket.on('decks_synced', (data) => {
+                        cpuDeck = data.oppDeck;
+                        render();
                     });
 
                     pvpSocket.on('round_start', (data) => {

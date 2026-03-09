@@ -55,10 +55,28 @@ io.on('connection', (socket) => {
             io.to(p1.id).emit('match_found', { oppName: p2.name, roomId: roomId, myId: p1.id, oppId: p2.id });
             io.to(p2.id).emit('match_found', { oppName: p1.name, roomId: roomId, myId: p2.id, oppId: p1.id });
 
-            // Start the first round after 3 seconds of buffer
+            // Wait for clients to generate and send their decks before starting the round.
+        }
+    });
+
+    // SYNC DECKS FOR PVP
+    socket.on('send_deck', ({ roomId, deck }) => {
+        const room = rooms[roomId];
+        if (!room) return;
+
+        room.playerData[socket.id].deck = deck;
+
+        const p1Id = room.players[0];
+        const p2Id = room.players[1];
+
+        if (room.playerData[p1Id].deck && room.playerData[p2Id].deck) {
+            io.to(p1Id).emit('decks_synced', { oppDeck: room.playerData[p2Id].deck });
+            io.to(p2Id).emit('decks_synced', { oppDeck: room.playerData[p1Id].deck });
+
+            // Start the first round after 1 second buffer
             setTimeout(() => {
                 startRound(roomId);
-            }, 3000);
+            }, 1000);
         }
     });
 
@@ -195,10 +213,11 @@ io.on('connection', (socket) => {
         if (room.playerData[p1Id].rematchVote === true && room.playerData[p2Id].rematchVote === true) {
             // Rematch accepted
             room.round = 1;
+            // Clear prev decks to enforce new shuffle
+            room.playerData[p1Id].deck = null;
+            room.playerData[p2Id].deck = null;
             io.to(roomId).emit('rematch_accepted');
-            setTimeout(() => {
-                startRound(roomId);
-            }, 2000);
+            // Client will receive rematch_accepted, run startPvpGame(), and send a new deck
         }
     });
 
