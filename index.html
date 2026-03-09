@@ -108,11 +108,7 @@
             margin-left: auto;
             margin-right: auto;
             cursor: pointer;
-            width: 60%;
-            /* 60% of the container (to match 60% relative to the logo) */
-            max-width: 170px;
-            /* 60% of original 280px logo width */
-            min-width: 90px;
+            width: 100%;
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
@@ -1463,6 +1459,39 @@
             /* Greatly enlarged for mobile */
         }
 
+        /* 100% Size Increase for Settings Modal on Mobile */
+        body.is-mobile .settings-box {
+            width: 80%;
+            max-width: 700px;
+            padding: 60px;
+            border-radius: 30px;
+        }
+
+        body.is-mobile .settings-box h2 {
+            font-size: 4rem;
+            margin-bottom: 40px;
+        }
+
+        body.is-mobile .settings-box .toggle-row {
+            font-size: 2.4rem;
+            margin-bottom: 50px;
+        }
+
+        body.is-mobile .settings-box .toggle-row>span {
+            width: 240px;
+        }
+
+        body.is-mobile .settings-box .vol-text {
+            font-size: 2rem;
+            width: 90px;
+        }
+
+        body.is-mobile .settings-box .close-settings {
+            font-size: 2.6rem;
+            padding: 25px;
+            margin-top: 50px;
+        }
+
         body.is-mobile .score-board {
             gap: 40px;
             font-size: 2.5rem;
@@ -1546,13 +1575,15 @@
             <!-- Left side empty to balance flex, or can hold future items -->
             <div></div>
 
-            <!-- Absolute centered Score Board -->
-            <div class="score-board" style="align-items: center; position: relative; width: 350px;">
-                <!-- Moving roundImage back to the board but pinned to the far left of the center area -->
+            <!-- Centered Score Board with Flexbox (No absolute bounds) -->
+            <div class="score-board"
+                style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
                 <img id="roundImage" src="images/round1.png?v=3"
-                    style="position: absolute; left: -100px; height: 80px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
-                <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
+                    style="height: 80px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
+                <div style="font-size: 3rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
+                        style="color:#00ffd9">0</span></div>
+                <div style="font-size: 3rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
+                        style="color:#ff0055">0</span></div>
             </div>
 
             <!-- Right side Header Buttons (Absolute Position to prevent overlap) -->
