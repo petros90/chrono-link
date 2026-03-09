@@ -104,16 +104,13 @@
             border: none;
             padding: 0;
             margin-top: -15px;
-            /* Fixed pixel margin to pull transparent gaps together predictably */
             margin-bottom: -15px;
             margin-left: auto;
             margin-right: auto;
             cursor: pointer;
-            width: 40%;
-            max-width: 280px;
-            /* Force maximum physical size to prevent spanning the entire screen */
-            min-width: 150px;
-            /* Ensure they don't get too tiny */
+            width: 20%;
+            max-width: 140px;
+            min-width: 70px;
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
@@ -1557,13 +1554,10 @@
                 style="display: flex; align-items: center; position: absolute; right: 10px; top: 10px; gap: 15px;">
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
+                    <button id="settingsBtn"
+                        style="position: static; padding: 4px 8px; font-size: 1.4rem; margin: 0 5px;">⚙️</button>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                 </div>
-                <button id="settingsBtn" style="position: static; padding: 5px 10px; font-size: 2rem;">⚙️</button>
-                <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    <img src="images/btn_restart.jpg" alt="Restart" style="height: 90px; border-radius: 8px;">
-                </button>
             </div>
         </div>
 
@@ -1773,7 +1767,7 @@
                     <img src="images/chronolinklogo.png"
                         style="width: 65%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
                         alt="Chrono Link Logo">
-                    <img id="roundImage" src="images/round1.jpg"
+                    <img id="roundImage" src="images/round1.png?v=3"
                         style="height: 70px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
                 </div>
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
@@ -1875,13 +1869,20 @@
                         <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
                     </div>
                 </div>
+
+                <!-- Relocated Restart Button under the element chart -->
+                <button id="headerRestartBtn"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 180px;">
+                    <img src="images/btn_restart.png?v=3" alt="Restart"
+                        style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
+                </button>
             </div>
         </div>
 
         <div id="finalOverlay">
             <div class="final-box" id="finalTitle">승리!</div>
             <button id="restartBtn">
-                <img src="images/btn_restart.jpg" alt="Restart">
+                <img src="images/btn_restart.png?v=3" alt="Restart">
             </button>
         </div>
 
@@ -2361,7 +2362,7 @@
             document.getElementById('playerScoreUi').innerText = pWin;
             document.getElementById('cpuScoreUi').innerText = cWin;
             const safeRound = Math.min(round, 7);
-            document.getElementById('roundImage').src = `images/round${safeRound}.jpg`;
+            document.getElementById('roundImage').src = `images/round${safeRound}.png?v=3`;
         }
 
         function compare(a, b) {
