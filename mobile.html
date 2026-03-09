@@ -2535,6 +2535,15 @@
             cZone.innerHTML = '';
             cpuDeck.forEach((c, i) => cZone.innerHTML += cardHTML(c, false, i));
 
+            // Dynamic Names Instead of fixed HTML Titles
+            if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').innerText;
+                document.getElementById('cpuTitle').innerText = pvpOppName;
+            } else {
+                document.getElementById('playerTitle').innerText = t('ui_me');
+                document.getElementById('cpuTitle').innerText = t('ui_enemy');
+            }
+
             document.getElementById('playerScoreUi').innerText = pWin;
             document.getElementById('cpuScoreUi').innerText = cWin;
             const safeRound = Math.min(round, 7);
@@ -2833,16 +2842,18 @@
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
                 if (isPvpMode) {
+                    // Prevent duplicate tallying by having only the "winner" report the match end.
+                    // If it's a draw, only the "Host" (alphabetically first ID) reports it to prevent double draw.
                     const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
-                    pvpSocket.emit('match_end', { roomId: pvpRoomId, winnerId: myWin });
+                    if (myWin === pvpMyId || (myWin === 'Draw' && pvpMyId < pvpOppId)) {
+                        pvpSocket.emit('match_end', { roomId: pvpRoomId, winnerId: myWin });
+                    }
                 } else {
                     checkGameEnd();
                 }
             } else {
                 isBattling = false;
-                if (isPvpMode) {
-                    pvpSocket.emit('ready_next_round', pvpRoomId);
-                }
+                // PVP is now handled autonomously by server setTimeout
             }
         }
 
@@ -3109,7 +3120,7 @@
                                           <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0055; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
 
                         document.getElementById('btnRematchAccept').onclick = () => {
-                            rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua;'>상대방 대기 중...</span>";
+                            rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;'>상대방의 선택 대기 중...</span>";
                             pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
                         };
                         document.getElementById('btnRematchDecline').onclick = () => {

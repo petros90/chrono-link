@@ -155,14 +155,17 @@ io.on('connection', (socket) => {
 
         room.round++;
 
-        // Next round start is handled by the client requesting it after animation, 
-        // to ensure animations don't overlap with server ticks.
+        // After 6 seconds (to allow frontend animations to finish), server autonomously starts the next round 
+        // IF the match hasn't naturally ended. This prevents duplicate client requests.
+        setTimeout(() => {
+            if (rooms[roomId]) { // Check if match wasn't destroyed
+                // Match end condition checked defensively
+                if (room.round <= 5 && room.playerData[p1Id].matchWins < 3 && room.playerData[p2Id].matchWins < 3) {
+                    startRound(roomId);
+                }
+            }
+        }, 6000);
     };
-
-    // CLIENT REQUESTS NEXT ROUND AFTER ANIMATION
-    socket.on('ready_next_round', (roomId) => {
-        startRound(roomId);
-    });
 
     // MATCH ENDED (Client sends result)
     socket.on('match_end', ({ roomId, winnerId }) => {
@@ -202,7 +205,7 @@ io.on('connection', (socket) => {
         room.playerData[socket.id].rematchVote = accept;
 
         if (accept === false) {
-            io.to(roomId).emit('room_closed', { reason: 'Opponent declined rematch.' });
+            io.to(roomId).emit('room_closed', { reason: '상대방이 재대결을 거절했습니다.' });
             delete rooms[roomId];
             return;
         }
