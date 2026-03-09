@@ -1680,9 +1680,9 @@
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; height: 104px;">
                 <img id="roundImage" src="images/round1.png?v=3"
                     style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
+                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span id="headerPlayerName"
                         data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
+                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span id="headerCpuName"
                         data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
 
@@ -2457,10 +2457,23 @@
             if (!card) return '<div class="card-slot placeholder">Empty</div>';
 
             const isUsed = card.used;
-            // Only apply grayscale after the card has a battle result (prevents opponent masked cards from being greyed out prematurely)
+            // Only apply grayscale after the card has a battle result
             const usedStyle = (isUsed && card.result) ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
             const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx})"` : '';
+
+            // Handle PVP Opponent's masked card visually using the core template
+            if (!isPlayer && card.pendingReveal) {
+                return `
+        <div class="card-slot" id="c-slot-${idx}">
+          <div class="card-wrapper">
+            <div class="card" id="c-card-${idx}" style="background: linear-gradient(135deg, #333, #555);">
+              <div class="hologram-overlay"></div>
+              <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem; color:#fff;">?</span>
+            </div>
+          </div>
+        </div>`;
+            }
 
             let resultOverlay = '';
             if (isUsed && card.result) {
@@ -2535,13 +2548,16 @@
             cZone.innerHTML = '';
             cpuDeck.forEach((c, i) => cZone.innerHTML += cardHTML(c, false, i));
 
-            // Dynamic Names Instead of fixed HTML Titles
             if (typeof isPvpMode !== 'undefined' && isPvpMode) {
                 document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').innerText;
                 document.getElementById('cpuTitle').innerText = pvpOppName;
+                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = document.getElementById('userDisplayName').innerText;
+                if (document.getElementById('headerCpuName')) document.getElementById('headerCpuName').innerText = pvpOppName;
             } else {
                 document.getElementById('playerTitle').innerText = t('ui_me');
                 document.getElementById('cpuTitle').innerText = t('ui_enemy');
+                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = t('ui_me');
+                if (document.getElementById('headerCpuName')) document.getElementById('headerCpuName').innerText = t('ui_enemy');
             }
 
             document.getElementById('playerScoreUi').innerText = pWin;
@@ -2562,12 +2578,16 @@
             if (pWin >= maxWins || cWin >= maxWins || round > maxRounds) {
                 const overlay = document.getElementById('finalOverlay');
                 const title = document.getElementById('finalTitle');
+
+                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
+                const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
+
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" alt="Victory">`;
+                    title.innerHTML = `<h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;">${meName} 승리!<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" alt="Defeat">`;
+                    title.innerHTML = `<h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;">${oppNameText} 승리<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
-                    title.innerHTML = `<h1 style="color:#aaa; font-size:8rem; font-family:'Jua',sans-serif;">무승부</h1>`;
+                    title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
                 overlay.style.display = 'flex';
                 // Final music cue
@@ -2696,6 +2716,10 @@
             cDomCard.style.height = baseH + 'px';
 
             await sleep(50);
+
+            // Add smooth flight transition
+            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
 
             // Align their base position to exact center
             const centerLeft = localCenterX - (baseW / 2);
@@ -2856,22 +2880,23 @@
 
         // --- PVP Helpers ---
         function startPvpGame() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            // Mobile iOS hack to unlock audio context reliably
+            if (audioCtx.state === 'suspended') {
+                const unlock = () => { audioCtx.resume(); document.removeEventListener('touchstart', unlock); };
+                document.addEventListener('touchstart', unlock);
+                audioCtx.resume();
+            }
+
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
             maxWins = 3;
             maxRounds = 5;
 
-            playerDeck = createDeck('Beginner');
-
-            // Fix Sync Bug: Don't generate fake random deck for opponent in PVP
-            if (isPvpMode) {
-                cpuDeck = [];
-                pvpSocket.emit('send_deck', { roomId: pvpRoomId, deck: playerDeck });
-            } else {
-                cpuDeck = createDeck('Beginner');
-            }
+            // Opponent's deck isn't sent immediately upon start, we wait for decks_synced event
+            playerDeck = createDeck('random');
+            cpuDeck = [];
+            pvpSocket.emit('submit_deck', { roomId: pvpRoomId, deck: playerDeck });
 
             pWin = cWin = 0; round = 1; rollover = 1;
             logHistory = [];
@@ -2933,7 +2958,13 @@
 
         function startGame(mode) {
             currentMode = mode;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            // Mobile iOS hack to unlock audio context
+            if (audioCtx.state === 'suspended') {
+                const unlock = () => { audioCtx.resume(); document.removeEventListener('touchstart', unlock); };
+                document.addEventListener('touchstart', unlock);
+                audioCtx.resume();
+            }
+
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
@@ -3042,6 +3073,10 @@
             document.getElementById('btnPvpRandom').addEventListener('click', () => {
                 if (!auth.currentUser) { alert("구글 로그인이 필요합니다."); return; }
 
+                // Unlock audio strictly inside a synchronous click event for iOS constraint
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playSound('select');
+
                 document.getElementById('pvpSection').style.display = 'none';
                 document.getElementById('pvpMatchOverlay').style.display = 'flex';
 
@@ -3076,17 +3111,11 @@
                     });
 
                     pvpSocket.on('opponent_picked', () => {
-                        // Find an available (unused) card to temporarily display as '?' (hidden from view)
-                        // Do NOT set used=true here — that gets set only after the round reveals the true cards
+                        // Find an available (unused) card to temporarily display as '?'
                         const cIdx = cpuDeck.findIndex(c => !c.used && !c.pendingReveal);
                         if (cIdx !== -1) {
-                            cpuDeck[cIdx].pendingReveal = true; // Track visual-only state
-                            // Visually mask without going through render() which would trigger grayscale
-                            const cDom = document.getElementById(`c-card-${cIdx}`);
-                            if (cDom) {
-                                cDom.style.background = 'linear-gradient(135deg, #333, #555)';
-                                cDom.innerHTML = `<div class="hologram-overlay"></div><span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem; color:#fff;">?</span>`;
-                            }
+                            cpuDeck[cIdx].pendingReveal = true;
+                            render(); // Let the newly upgraded cardHTML natively render the ? card state cleanly
                         }
                     });
 
@@ -3111,8 +3140,9 @@
                         const title = document.getElementById('finalTitle');
                         const myScore = data.scores[pvpMyId];
                         const oppScore = data.scores[pvpOppId];
+                        const meName = document.getElementById('userDisplayName').innerText;
 
-                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br>스코어: ${myScore} 대 ${oppScore}<br>재대결 하시겠습니까?</h1>`;
+                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0055">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
 
                         const rBtn = document.getElementById('restartBtn');
                         rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
@@ -3136,12 +3166,13 @@
                     pvpSocket.on('complete_victory', (data) => {
                         document.getElementById('finalOverlay').style.display = 'flex';
                         const title = document.getElementById('finalTitle');
+                        const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<h1 style="color:#00ffd9; font-size:12rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            title.innerHTML = `<h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">${meName} 완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<h1 style="color:#ff0055; font-size:12rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배...</h1>`;
+                            title.innerHTML = `<h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">${pvpOppName} 완전 승리! (패배)</h1>`;
                             startBgm('bgm_lose');
                         }
 
