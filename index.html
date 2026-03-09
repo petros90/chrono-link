@@ -108,9 +108,11 @@
             margin-left: auto;
             margin-right: auto;
             cursor: pointer;
-            width: 20%;
-            max-width: 140px;
-            min-width: 70px;
+            width: 60%;
+            /* 60% of the container (to match 60% relative to the logo) */
+            max-width: 170px;
+            /* 60% of original 280px logo width */
+            min-width: 90px;
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
@@ -1456,8 +1458,9 @@
         }
 
         body.is-mobile #settingsBtn {
-            padding: 12px 18px;
-            font-size: 40px;
+            padding: 20px 30px;
+            font-size: 60px;
+            /* Greatly enlarged for mobile */
         }
 
         body.is-mobile .score-board {
@@ -1544,7 +1547,10 @@
             <div></div>
 
             <!-- Absolute centered Score Board -->
-            <div class="score-board" style="align-items: center;">
+            <div class="score-board" style="align-items: center; position: relative; width: 350px;">
+                <!-- Moving roundImage back to the board but pinned to the far left of the center area -->
+                <img id="roundImage" src="images/round1.png?v=3"
+                    style="position: absolute; left: -100px; height: 80px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
                 <div><span data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
                 <div><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
             </div>
@@ -1555,7 +1561,7 @@
                 <div id="userInfoBox">
                     <span id="userDisplayName">User Name</span>
                     <button id="settingsBtn"
-                        style="position: static; padding: 4px 8px; font-size: 1.4rem; margin: 0 5px;">⚙️</button>
+                        style="position: static; padding: 10px 15px; font-size: 3rem; margin: 0 5px;">⚙️</button>
                     <button id="btnLogout" data-i18n="btn_logout">로그아웃</button>
                 </div>
             </div>
@@ -1763,12 +1769,10 @@
 
         <div id="mainLayout">
             <div class="side-panel" id="logPanel">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
                     <img src="images/chronolinklogo.png"
-                        style="width: 65%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
+                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
                         alt="Chrono Link Logo">
-                    <img id="roundImage" src="images/round1.png?v=3"
-                        style="height: 70px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
                 </div>
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
                 <ul class="log-list" id="roundLog"></ul>
