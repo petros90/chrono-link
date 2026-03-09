@@ -2697,39 +2697,23 @@
 
             await sleep(50);
 
-            // Phase 1: Fly to center
-            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            pDomCard.style.top = localCenterY + 'px';
-            pDomCard.style.left = localCenterX - (pRect.width * 0.6) + 'px';
-            pDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? 15 : -15}deg)`;
+            // Align their base position to exact center
+            const centerLeft = localCenterX - (baseW / 2);
+            const centerTop = localCenterY - (baseH / 2);
+            pDomCard.style.top = centerTop + 'px';
+            pDomCard.style.left = centerLeft + 'px';
+            cDomCard.style.top = centerTop + 'px';
+            cDomCard.style.left = centerLeft + 'px';
 
-            cDomCard.style.top = localCenterY + 'px';
-            cDomCard.style.left = localCenterX + (cRect.width * 0.6) + 'px';
-            cDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? -15 : 15}deg)`;
-
-            await sleep(400);
-
-            // Phase 2: Pull back and Clash
-            pDomCard.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 1, 1)';
-            cDomCard.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 1, 1)';
-            pDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? 30 : -30}deg) translateX(-60px)`;
-            cDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? -30 : 30}deg) translateX(60px)`;
-
-            await sleep(250);
-
-            // The impact!
-            playSound('clash_se'); // Play sound on impact
-            pDomCard.style.transition = 'all 0.1s cubic-bezier(0, 0, 0.2, 1)';
-            cDomCard.style.transition = 'all 0.1s cubic-bezier(0, 0, 0.2, 1)';
-            pDomCard.style.transform = `translate(-50%, -50%) scale(1.8) rotate(0deg) translateX(${clashOffset}px)`;
-            cDomCard.style.transform = `translate(-50%, -50%) scale(1.8) rotate(0deg) translateX(-${clashOffset}px)`;
+            // Push them apart instantly and scale up for battle zone
+            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
+            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
 
             // Show static labels
             document.body.classList.add('show-labels');
 
             // Wait for transform to complete visually and allow match-up view duration
-            await sleep(1500); // 650 + 850 = 1500 total wait
+            await sleep(1500);
 
             // Multi-Hit: 3 Times
             for (let hit = 1; hit <= 3; hit++) {
@@ -3092,16 +3076,16 @@
                     });
 
                     pvpSocket.on('opponent_picked', () => {
-                        // Find a dummy card in cpuDeck to act as the hidden picked card
-                        const cIdx = cpuDeck.findIndex(c => !c.used);
+                        // Find an available (unused) card to temporarily display as '?' (hidden from view)
+                        // Do NOT set used=true here — that gets set only after the round reveals the true cards
+                        const cIdx = cpuDeck.findIndex(c => !c.used && !c.pendingReveal);
                         if (cIdx !== -1) {
-                            cpuDeck[cIdx].used = true;
-                            render();
-                            // Visually mask the specific used card as a hidden back-face
+                            cpuDeck[cIdx].pendingReveal = true; // Track visual-only state
+                            // Visually mask without going through render() which would trigger grayscale
                             const cDom = document.getElementById(`c-card-${cIdx}`);
                             if (cDom) {
-                                cDom.innerHTML = `<span style="font-size:3rem; color:#fff;">?</span>`;
-                                cDom.style.background = '#555';
+                                cDom.style.background = 'linear-gradient(135deg, #333, #555)';
+                                cDom.innerHTML = `<div class="hologram-overlay"></div><span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem; color:#fff;">?</span>`;
                             }
                         }
                     });
@@ -3117,6 +3101,8 @@
                     });
 
                     pvpSocket.on('round_reveal', (data) => {
+                        // Clear any pending '?' visual state from opponent_picked
+                        cpuDeck.forEach(c => { c.pendingReveal = false; });
                         resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
                     });
 
