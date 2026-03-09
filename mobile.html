@@ -103,11 +103,16 @@
             background: transparent;
             border: none;
             padding: 0;
-            margin-top: -15%;
-            /* Drastically increased to overlap the massive transparent gaps */
-            margin-bottom: -15%;
+            margin-top: -5%;
+            /* Reduced margin overlap since the buttons are now smaller */
+            margin-bottom: -5%;
+            margin-left: auto;
+            /* Center horizontally */
+            margin-right: auto;
+            /* Center horizontally */
             cursor: pointer;
-            width: 100%;
+            width: 50%;
+            /* Shrink button width by half to prevent clipping */
             transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.2s;
             display: block;
         }
