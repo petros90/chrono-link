@@ -1611,7 +1611,7 @@
             border-radius: 4px;
             overflow: hidden;
             position: absolute;
-            top: 50%;
+            top: 45%;
             left: 0;
             transform: translateY(-50%);
             display: none;
@@ -2896,7 +2896,7 @@
             // Opponent's deck isn't sent immediately upon start, we wait for decks_synced event
             playerDeck = createDeck('random');
             cpuDeck = [];
-            pvpSocket.emit('submit_deck', { roomId: pvpRoomId, deck: playerDeck });
+            pvpSocket.emit('send_deck', { roomId: pvpRoomId, deck: playerDeck });
 
             pWin = cWin = 0; round = 1; rollover = 1;
             logHistory = [];
