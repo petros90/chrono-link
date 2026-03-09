@@ -2457,8 +2457,8 @@
             if (!card) return '<div class="card-slot placeholder">Empty</div>';
 
             const isUsed = card.used;
-            // Removed .used grayscale from here, instead using inline filter later if used
-            const usedStyle = isUsed ? 'filter: grayscale(100%); opacity: 0.8;' : '';
+            // Only apply grayscale after the card has a battle result (prevents opponent masked cards from being greyed out prematurely)
+            const usedStyle = (isUsed && card.result) ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
             const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx})"` : '';
 
@@ -2624,7 +2624,6 @@
             const pRect = pDomCard.getBoundingClientRect();
             const cRect = cDomCard.getBoundingClientRect();
 
-            // Set transition for initial flight (none, instant appear) to prevent phantom flying ghost visuals
             // Bypass rotated getBoundingClientRect coordinates by strictly using app-relative DOM offset math
             const bz = document.getElementById('battleZone');
             const gb = document.getElementById('gameBoard');
@@ -2682,10 +2681,6 @@
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation
-            const centerLeft = localCenterX - (baseW / 2);
-            const centerTop = localCenterY - (baseH / 2);
-
             // Enter focus mode
             document.body.classList.add('battling-mode');
             document.getElementById('playerZone').classList.add('focus-mode');
@@ -2700,17 +2695,35 @@
             cDomCard.style.width = baseW + 'px';
             cDomCard.style.height = baseH + 'px';
 
-            await sleep(10); // small DOM ticket
+            await sleep(50);
 
-            // Align their base position to exact center
-            pDomCard.style.top = centerTop + 'px';
-            pDomCard.style.left = centerLeft + 'px';
-            cDomCard.style.top = centerTop + 'px';
-            cDomCard.style.left = centerLeft + 'px';
+            // Phase 1: Fly to center
+            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            pDomCard.style.top = localCenterY + 'px';
+            pDomCard.style.left = localCenterX - (pRect.width * 0.6) + 'px';
+            pDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? 15 : -15}deg)`;
 
-            // Push them apart instantly and scale up for battle zone (1.76x scale, 85% width percentage distance)
-            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+            cDomCard.style.top = localCenterY + 'px';
+            cDomCard.style.left = localCenterX + (cRect.width * 0.6) + 'px';
+            cDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? -15 : 15}deg)`;
+
+            await sleep(400);
+
+            // Phase 2: Pull back and Clash
+            pDomCard.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 1, 1)';
+            cDomCard.style.transition = 'all 0.3s cubic-bezier(0.5, 0, 1, 1)';
+            pDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? 30 : -30}deg) translateX(-60px)`;
+            cDomCard.style.transform = `translate(-50%, -50%) scale(1.6) rotate(${isMobileBattle ? -30 : 30}deg) translateX(60px)`;
+
+            await sleep(250);
+
+            // The impact!
+            playSound('clash_se'); // Play sound on impact
+            pDomCard.style.transition = 'all 0.1s cubic-bezier(0, 0, 0.2, 1)';
+            cDomCard.style.transition = 'all 0.1s cubic-bezier(0, 0, 0.2, 1)';
+            pDomCard.style.transform = `translate(-50%, -50%) scale(1.8) rotate(0deg) translateX(${clashOffset}px)`;
+            cDomCard.style.transform = `translate(-50%, -50%) scale(1.8) rotate(0deg) translateX(-${clashOffset}px)`;
 
             // Show static labels
             document.body.classList.add('show-labels');

@@ -126,6 +126,9 @@ io.on('connection', (socket) => {
         const room = rooms[roomId];
         if (!room) return;
 
+        // Clear timer to prevent overlapping loops when auto-pick executes
+        clearTimeout(room.timer);
+
         const p1Id = room.players[0];
         const p2Id = room.players[1];
 
