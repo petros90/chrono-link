@@ -554,10 +554,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background: #000;
-            /* Replaced gradient layout that triggered artifacts */
+            background: transparent;
+            /* Changed from #000 to transparent to blend with body */
             box-shadow: none;
-            /* Removed shadow acting like a white line border */
             z-index: 10;
         }
 
@@ -655,6 +654,8 @@
             flex-direction: row;
             width: 100%;
             overflow: hidden;
+            margin-top: 200px;
+            /* Push the entire gameboard and panels down as one unit */
         }
 
         /* Side Panels */
@@ -666,8 +667,6 @@
             flex-direction: column;
             overflow-y: auto;
             padding: 15px;
-            margin-top: 200px;
-            /* Push panels down 200px */
         }
 
         /* LEFT PANEL WIDER */
