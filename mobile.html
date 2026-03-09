@@ -1602,7 +1602,69 @@
                 overflow: hidden;
             }
         }
+
+        /* 20 Second Turn Timer Bar */
+        #turnTimerBarContainer {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            display: none;
+            /* Only visible in PVP mode during a turn */
+            z-index: 100;
+        }
+
+        #turnTimerBar {
+            height: 100%;
+            width: 100%;
+            background-color: #00ff00;
+            transition: width 1s linear, background-color 1s linear;
+        }
+
+        /* Matchmaking Overlay */
+        #pvpMatchOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            /* hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #pvpMatchSpinner {
+            width: 100px;
+            height: 100px;
+            border: 10px solid rgba(255, 255, 255, 0.2);
+            border-top: 10px solid #00ffd9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
+
+    <!-- Socket.io Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 
 <body>
@@ -1695,10 +1757,10 @@
                     <br>
                     <button class="diff-btn" id="btnPvpCustom"
                         style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+                            style="font-size: 1.2rem; color: #777;">상점 기능 준비 중...</span></button>
                     <button class="diff-btn" id="btnPvpRandom"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">랜덤 카드 (Random Deck)<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 3rem;">⚔️ 랜덤 덱 매칭<br><span
+                            style="font-size: 1.5rem; color: #fff;">(온라인 대전)</span></button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
@@ -1844,9 +1906,15 @@
             </div>
 
             <!-- Center Panel: Game Board -->
-            <div id="gameBoard">
+            <div id="gameBoard" style="position: relative;">
                 <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
                 <div id="computerZone"></div>
+
+                <!-- 20s Turn Timer Bar for PVP -->
+                <div id="turnTimerBarContainer">
+                    <div id="turnTimerBar"></div>
+                </div>
+
                 <div id="battleZone">
                     <div id="clashEffect" class="clash-effect"></div>
                     <!-- Static labels remain invisible until battle mode -->
@@ -2284,6 +2352,13 @@
 
         let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1;
         let isBattling = false;
+        let isPvpMode = false;
+        let pvpSocket = null;
+        let pvpRoomId = null;
+        let pvpMyId = null;
+        let pvpOppId = null;
+        let pvpOppName = '';
+        let pvpTurnSubmitted = false;
         let maxWins = 3;
         let maxRounds = 5;
         let currentMode = 'Beginner';
@@ -2477,17 +2552,39 @@
 
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        async function playTurn(pIdx) {
+        async function playTurn(pIdx, manualCIdx = null) {
+            if (isPvpMode && manualCIdx === null) {
+                if (isBattling || playerDeck[pIdx].used || pvpTurnSubmitted) return;
+                pvpTurnSubmitted = true;
+                playSound('select');
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const pDomCard = document.getElementById(`p-card-${pIdx}`);
+                pDomCard.style.transform = 'translateY(-30px)';
+                pDomCard.style.boxShadow = '0 0 20px #00ffd9';
+                pDomCard.style.zIndex = '100';
+
+                pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
+                return;
+            }
+
             if (isBattling || playerDeck[pIdx].used) return;
             isBattling = true;
             playSound('select');
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
             const pCardData = playerDeck[pIdx];
-            const availCPU = cpuDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
-            const cPick = availCPU[Math.floor(Math.random() * availCPU.length)];
-            const cIdx = cPick.i;
-            const cCardData = cPick.c;
+            let cIdx;
+
+            if (manualCIdx !== null) {
+                cIdx = manualCIdx;
+            } else {
+                const availCPU = cpuDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                const cPick = availCPU[Math.floor(Math.random() * availCPU.length)];
+                cIdx = cPick.i;
+            }
+
+            const cCardData = cpuDeck[cIdx];
 
             pCardData.used = true; cCardData.used = true;
 
@@ -2702,10 +2799,87 @@
             render();
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
-                checkGameEnd();
+                if (isPvpMode) {
+                    const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
+                    pvpSocket.emit('match_end', { roomId: pvpRoomId, winnerId: myWin });
+                } else {
+                    checkGameEnd();
+                }
             } else {
                 isBattling = false;
+                if (isPvpMode) {
+                    pvpSocket.emit('ready_next_round', pvpRoomId);
+                }
             }
+        }
+
+        // --- PVP Helpers ---
+        function startPvpGame() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.getElementById('lobbyOverlay').style.display = 'none';
+            document.getElementById('finalOverlay').style.display = 'none';
+
+            maxWins = 3;
+            maxRounds = 5;
+
+            playerDeck = createDeck('Beginner');
+            cpuDeck = createDeck('Beginner'); // We'll overwrite these as the opponent plays
+
+            pWin = cWin = 0; round = 1; rollover = 1;
+            logHistory = [];
+            document.getElementById('roundLog').innerHTML = '';
+            isBattling = false;
+            pvpTurnSubmitted = false;
+
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+            startBgm('bgm_game');
+        }
+
+        function startPvpTurn(timeLimit) {
+            pvpTurnSubmitted = false;
+            isBattling = false;
+
+            // Re-render to clear states if needed that were touched 
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            const timerContainer = document.getElementById('turnTimerBarContainer');
+            const timerBar = document.getElementById('turnTimerBar');
+
+            timerContainer.style.display = 'block';
+
+            // Reset bar
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#00ff00';
+
+            void timerBar.offsetWidth; // force reflow
+
+            // Start shrink
+            timerBar.style.transition = `width ${timeLimit}s linear, background-color ${timeLimit}s linear`;
+            timerBar.style.width = '0%';
+            timerBar.style.backgroundColor = '#ff0055';
+        }
+
+        async function resolvePvpRound(myCard, oppCard) {
+            document.getElementById('turnTimerBarContainer').style.display = 'none';
+
+            // Find my card index
+            let pIdx = playerDeck.findIndex(c => c.name === myCard.name && !c.used);
+            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.name === myCard.name);
+
+            // Give the cpuDeck the exact opponent card
+            const cIdx = cpuDeck.findIndex(c => !c.used);
+            cpuDeck[cIdx] = oppCard;
+            cpuDeck[cIdx].used = false; // ensure playTurn works properly
+
+            // Re-render opponent zone so DOM elements exist cleanly before animation kicks in
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            // Trigger visual sequence
+            await playTurn(pIdx, cIdx);
         }
 
         function startGame(mode) {
@@ -2814,7 +2988,112 @@
             });
 
             document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
-            document.getElementById('btnPvpRandom').addEventListener('click', () => alert("PVP 랜덤 덱 모드는 준비 중입니다!"));
+
+            // --- PVP Random Match Logic (V17) ---
+            document.getElementById('btnPvpRandom').addEventListener('click', () => {
+                if (!auth.currentUser) { alert("구글 로그인이 필요합니다."); return; }
+
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('pvpMatchOverlay').style.display = 'flex';
+
+                isPvpMode = true;
+
+                if (!pvpSocket) {
+                    pvpSocket = io('https://chrono-link.onrender.com'); // Production URL connected to Render
+
+                    pvpSocket.on('connect', () => {
+                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText });
+                    });
+
+                    pvpSocket.on('match_found', (data) => {
+                        pvpRoomId = data.roomId;
+                        pvpMyId = data.myId;
+                        pvpOppId = data.oppId;
+                        pvpOppName = data.oppName;
+
+                        document.getElementById('pvpMatchOverlay').style.display = 'none';
+                        startPvpGame();
+                        playSound('win');
+                    });
+
+                    pvpSocket.on('round_start', (data) => {
+                        round = data.round;
+                        startPvpTurn(data.timeLimit);
+                    });
+
+                    pvpSocket.on('opponent_picked', () => {
+                        const cZone = document.getElementById('computerZone');
+                        cZone.innerHTML = `<div class="card battling" style="background:#555; position:relative; display:flex; align-items:center; justify-content:center;">
+                            <span style="font-size:3rem; color:#fff;">?</span>
+                        </div>`;
+                    });
+
+                    pvpSocket.on('force_auto_pick', () => {
+                        if (!pvpTurnSubmitted) {
+                            const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                            if (avail.length > 0) {
+                                const pick = avail[Math.floor(Math.random() * avail.length)];
+                                playTurn(pick.i);
+                            }
+                        }
+                    });
+
+                    pvpSocket.on('round_reveal', (data) => {
+                        resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
+                    });
+
+                    pvpSocket.on('ask_rematch', (data) => {
+                        document.getElementById('finalOverlay').style.display = 'flex';
+                        const title = document.getElementById('finalTitle');
+                        const myScore = data.scores[pvpMyId];
+                        const oppScore = data.scores[pvpOppId];
+
+                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br>스코어: ${myScore} 대 ${oppScore}<br>재대결 하시겠습니까?</h1>`;
+
+                        const rBtn = document.getElementById('restartBtn');
+                        rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
+                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0055; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
+
+                        document.getElementById('btnRematchAccept').onclick = () => {
+                            rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua;'>상대방 대기 중...</span>";
+                            pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
+                        };
+                        document.getElementById('btnRematchDecline').onclick = () => {
+                            pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: false });
+                        };
+                    });
+
+                    pvpSocket.on('rematch_accepted', () => {
+                        document.getElementById('finalOverlay').style.display = 'none';
+                        document.getElementById('restartBtn').innerHTML = `<img src="images/btn_restart.png?v=3" alt="Restart">`;
+                        startPvpGame();
+                    });
+
+                    pvpSocket.on('complete_victory', (data) => {
+                        document.getElementById('finalOverlay').style.display = 'flex';
+                        const title = document.getElementById('finalTitle');
+
+                        if (data.winnerId === pvpMyId) {
+                            title.innerHTML = `<h1 style="color:#00ffd9; font-size:12rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            startBgm('bgm_win');
+                        } else {
+                            title.innerHTML = `<h1 style="color:#ff0055; font-size:12rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배...</h1>`;
+                            startBgm('bgm_lose');
+                        }
+
+                        const rBtn = document.getElementById('restartBtn');
+                        rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; cursor:pointer;">로비로 돌아가기</button>`;
+                        document.getElementById('btnPvpExit').onclick = () => location.reload();
+                    });
+
+                    pvpSocket.on('room_closed', (data) => {
+                        alert("PVP 매치 종료: " + data.reason);
+                        location.reload();
+                    });
+                } else {
+                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText });
+                }
+            });
 
             // Settings Slider events
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
