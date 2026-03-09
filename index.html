@@ -632,7 +632,7 @@
         }
 
         #appContainer {
-            width: 2100px;
+            width: 2300px;
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -1582,7 +1582,7 @@
             <div class="score-board"
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
                 <img id="roundImage" src="images/round1.png?v=3"
-                    style="height: 80px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
+                    style="height: 56px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5);">
                 <div style="font-size: 3rem;"><span data-i18n="ui_me">나</span> <span id="playerScoreUi"
                         style="color:#00ffd9">0</span></div>
                 <div style="font-size: 3rem;"><span data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi"
@@ -1803,9 +1803,9 @@
 
         <div id="mainLayout">
             <div class="side-panel" id="logPanel">
-                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 25px;">
                     <img src="images/chronolinklogo.png"
-                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3));"
+                        style="width: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transform: scale(1.2);"
                         alt="Chrono Link Logo">
                 </div>
                 <h3 data-i18n="ui_log_title">전투 로그</h3>
@@ -1910,7 +1910,7 @@
 
                 <!-- Relocated Restart Button under the element chart -->
                 <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 180px;">
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 25px auto 0 auto; width: 100%; max-width: 144px;">
                     <img src="images/btn_restart.png?v=3" alt="Restart"
                         style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
                 </button>
@@ -2939,7 +2939,7 @@
 
             // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
             const BASE_HEIGHT = 1250;
-            const BASE_WIDTH = 2100;
+            const BASE_WIDTH = 2300;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = MathScale <= 1 ? MathScale : 1;
