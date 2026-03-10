@@ -644,8 +644,8 @@
             gap: 10px;
             align-items: center;
             position: absolute;
-            right: 295px;
-            /* Exactly center over the 590px right #chartPanel */
+            right: 245px;
+            /* Exactly center over the 490px right #chartPanel */
             transform: translateX(50%);
             top: 40px;
             /* Aligned vertically */
@@ -701,8 +701,8 @@
 
         /* --- BASE CONTAINER SCALING --- */
         #appContainer {
-            width: 2800px;
-            /* Increased by 400px to accommodate wider side panels */
+            width: 2600px;
+            /* Reduced by 200px to accommodate narrower side panels */
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -715,7 +715,6 @@
             flex: 1;
             display: flex;
             flex-direction: row;
-            justify-content: center;
             width: 100%;
             overflow: hidden;
             margin-top: 200px;
@@ -735,9 +734,8 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 1 1 25%;
-            max-width: 450px;
-            min-width: 280px;
+            flex: 0 0 490px;
+            /* -100px shrunk */
             background: transparent;
             border-right: none;
             display: flex;
@@ -748,9 +746,8 @@
         }
 
         #chartPanel {
-            flex: 1 1 25%;
-            max-width: 450px;
-            min-width: 280px;
+            flex: 0 0 490px;
+            /* -100px shrunk */
             border-right: none;
             align-items: center;
         }
@@ -984,9 +981,7 @@
         }
 
         #gameBoard {
-            flex: 2 1 50%;
-            max-width: 1600px;
-            /* Keep cards bounded on 57-inch monitors */
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -3810,7 +3805,7 @@
 
             // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
             const BASE_HEIGHT = 1250;
-            const BASE_WIDTH = 2800;
+            const BASE_WIDTH = 2600;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = MathScale <= 1 ? MathScale : 1;
