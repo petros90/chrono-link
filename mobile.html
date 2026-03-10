@@ -2080,7 +2080,7 @@
                 rule_g5: "Gods and Prime Movers"
             },
             ko: {
-                ui_round: "Round", ui_me: "나", ui_enemy: "상대방", btn_restart: "Restart",
+                ui_round: "Round", ui_me: "Player", ui_enemy: "Com", btn_restart: "Restart",
                 ui_diff_title: "난이도 선택",
                 ui_diff_beginner: "5장 덱 / 3선승제",
                 ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
@@ -2583,9 +2583,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:150px; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;">${meName} 승리!<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:225px; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:150px; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;">${oppNameText} 승리<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:225px; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -3171,10 +3171,10 @@
                         const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:150px; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">${meName} 완전 승리!</h1>`;
+                            title.innerHTML = `<img src="images/btn_win.png" style="height:225px; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:150px; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">${pvpOppName} 완전 승리! (패배)</h1>`;
+                            title.innerHTML = `<img src="images/btn_lose.png" style="height:225px; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
                             startBgm('bgm_lose');
                         }
 
