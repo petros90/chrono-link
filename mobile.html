@@ -3052,6 +3052,10 @@
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
+            // Reveal game elements
+            document.getElementById('mainLayout').style.display = 'flex';
+            document.querySelector('.score-board').style.display = 'flex';
+
             if (currentMode === 'Expert') {
                 maxWins = 4;
                 maxRounds = 7;
@@ -3153,6 +3157,10 @@
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
+            // Reveal game elements
+            document.getElementById('mainLayout').style.display = 'flex';
+            document.querySelector('.score-board').style.display = 'flex';
+
             if (mode === 'Expert') {
                 maxWins = 4;
                 maxRounds = 7;
@@ -3177,6 +3185,11 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
             document.getElementById('finalOverlay').style.display = 'none';
             document.getElementById('settingsOverlay').style.display = 'none';
+
+            // Hide game elements to prevent bleed-through
+            document.getElementById('mainLayout').style.display = 'none';
+            document.querySelector('.score-board').style.display = 'none';
+
             document.getElementById('lobbyOverlay').style.display = 'flex';
 
             // Reset to main menu view conditionally if logged in (auth listener handles login gate)
