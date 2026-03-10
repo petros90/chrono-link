@@ -1803,6 +1803,10 @@
                     <button id="btnMenuPvp" class="menu-img-btn">
                         <img src="images/btn_pvp.png?v=2" alt="PVP Match">
                     </button>
+                    <button id="btnMenuTourney" class="diff-btn"
+                        style="border-color:#ffd700; color:#ffd700; font-size: 2.2rem; margin-top: 10px; width: 90%; background: rgba(0,0,0,0.5);">
+                        🏆 PVP 토너먼트 (4~16인)
+                    </button>
                 </div>
 
                 <!-- Section 3: Tutorial Sub Menu -->
@@ -1843,279 +1847,337 @@
                         뒤로 가기</button>
                 </div>
 
-                <!-- Section 5: My Page -->
-                <div id="myPageSection" style="display: none;">
-                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
-                    <br>
-                    <button class="diff-btn" id="btnChangeNickname"
-                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
-                    <button class="diff-btn" id="btnDeckSettings"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+            </div>
 
-                    <button class="diff-btn" id="btnBackFromMyPage"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
-                        뒤로 가기</button>
+            <!-- Section 5: Tournament Room List -->
+            <div id="tourneySection" style="display: none;">
+                <h2 style="color: #ffd700; text-shadow: 0 0 10px #ffd700;">토너먼트 대기열</h2>
+                <br>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                    <button id="btnCreateTourney" class="diff-btn"
+                        style="font-size: 1.5rem; width: 45%; padding: 15px; border-color: #00ffd9; color: #00ffd9;">방
+                        만들기</button>
+                    <button id="btnRefreshTourney" class="diff-btn"
+                        style="font-size: 1.5rem; width: 45%; padding: 15px; border-color: #aaa; color: #aaa;">새로고침</button>
                 </div>
 
-                <!-- Section 6: Nickname Registration -->
-                <div id="nicknameSection" style="display: none;">
-                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
-                        닉네임 등록</h2>
-                    <p
-                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
-                        게임에서 사용할 멋진 닉네임을 정해주세요.</p>
-                    <p
-                        style="font-size: 1.2rem; color: #ff5555; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
-                        ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
-                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
-                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
-
-                    <!-- Feedback message area to replace annoying browser popups -->
-                    <div id="nicknameFeedback"
-                        style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
-                    </div>
-
-                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
-                        등록</button>
-                    <button class="diff-btn" id="btnBackFromNickname"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
-                        취소</button>
+                <div id="tourneyRoomList"
+                    style="max-height: 400px; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); border: 1px solid #555; border-radius: 10px; padding: 10px;">
+                    <!-- JS injects tourney-room-item here -->
                 </div>
+
+                <button class="diff-btn" id="btnBackFromTourney"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                    메인으로</button>
+            </div>
+
+            <!-- Section 6: Inside Tournament Room -->
+            <div id="tourneyRoomSection" style="display: none;">
+                <h2 id="tourneyRoomTitle"
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 2rem; margin-bottom: 10px;">방 제목
+                </h2>
+                <p id="tourneyRoomCount" style="color: #aaa; font-size: 1.5rem; margin-bottom: 20px;">참가자: 1 / 16 (최소
+                    4명)</p>
+
+                <ul id="tourneyPlayerList"
+                    style="list-style: none; padding: 0; margin-bottom: 30px; max-height: 250px; overflow-y: auto; text-align: center;">
+                    <!-- Players injected here -->
+                </ul>
+
+                <button class="diff-btn" id="btnStartTourney"
+                    style="display: none; border-color: #00ffd9; color: #00ffd9; font-size: 2rem; margin-bottom: 15px;">🚀
+                    토너먼트 시작 (방장전용)</button>
+                <button class="diff-btn" id="btnLeaveTourney"
+                    style="font-size: 1.5rem; padding: 10px; border-color:#ff0000; color:#ff0000; background:transparent;">방
+                    나가기</button>
+            </div>
+
+            <!-- Section 7: My Page (Formerly 5) -->
+            <div id="myPageSection" style="display: none;">
+                <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
+                <br>
+                <button class="diff-btn" id="btnChangeNickname"
+                    style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
+                <button class="diff-btn" id="btnDeckSettings" style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏
+                    카드 덱 셋팅<br><span style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                <button class="diff-btn" id="btnBackFromMyPage"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                    뒤로 가기</button>
+            </div>
+
+            <!-- Section 6: Nickname Registration -->
+            <div id="nicknameSection" style="display: none;">
+                <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
+                    닉네임 등록</h2>
+                <p style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
+                    게임에서 사용할 멋진 닉네임을 정해주세요.</p>
+                <p
+                    style="font-size: 1.2rem; color: #ff5555; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
+                    ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
+                <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
+                    style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+
+                <!-- Feedback message area to replace annoying browser popups -->
+                <div id="nicknameFeedback"
+                    style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
+                </div>
+
+                <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                    등록</button>
+                <button class="diff-btn" id="btnBackFromNickname"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
+                    취소</button>
             </div>
         </div>
+    </div>
 
-        <!-- PVP Matchmaking Spinner Overlay -->
-        <div id="pvpMatchOverlay">
-            <div id="pvpMatchSpinner"></div>
-            <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
-                중...</h2>
-            <p
-                style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
-                (잠시만 기다려 주세요)
+    <!-- PVP Matchmaking Spinner Overlay -->
+    <div id="pvpMatchOverlay">
+        <div id="pvpMatchSpinner"></div>
+        <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
+            중...</h2>
+        <p
+            style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
+            (잠시만 기다려 주세요)
+        </p>
+        <button id="btnCancelMatch"
+            style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
+            매칭 취소
+        </button>
+    </div>
+
+    <!-- Tournament Bracket Overlay -->
+    <div id="tourneyBracketOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center;">
+        <h2
+            style="color: #ffd700; font-size: 3.5rem; margin-bottom: 30px; text-shadow: 0 0 20px #ffd700; font-family: 'Jua', sans-serif;">
+            🏆 토너먼트 대진표</h2>
+        <div id="bracketContainer"
+            style="display: flex; flex-direction: row; gap: 40px; max-width: 95%; max-height: 60vh; overflow: auto; padding: 20px; align-items: center;">
+            <!-- Bracket dynamically drawn here -->
+        </div>
+        <p id="tourneyStatusText"
+            style="color: #00ffd9; font-size: 2rem; margin-top: 30px; font-family: 'Jua', sans-serif; animation: blink 1.5s infinite;">
+            대기 중...</p>
+    </div>
+
+    <!-- Settings Overlay -->
+    <div id="settingsOverlay">
+        <div class="settings-box">
+            <h2 data-i18n="ui_settings_title">설정</h2>
+            <div class="toggle-row">
+                <span data-i18n="ui_lang">언어 / Language</span>
+                <div class="slider-container" style="justify-content: flex-end;">
+                    <button class="toggle-btn active" id="btnLangKo"
+                        style="width:50px; padding:6px; font-size:1rem;">KR</button>
+                    <button class="toggle-btn" id="btnLangEn"
+                        style="width:50px; padding:6px; font-size:1rem;">EN</button>
+                </div>
+            </div>
+            <div class="toggle-row">
+                <span data-i18n="ui_bgm">배경음악</span>
+                <div class="slider-container">
+                    <input type="range" id="bgmSlider" min="0" max="100" value="100">
+                    <div class="vol-text" id="bgmText">100%</div>
+                </div>
+            </div>
+            <div class="toggle-row">
+                <span data-i18n="ui_sfx">효과음</span>
+                <div class="slider-container">
+                    <input type="range" id="sfxSlider" min="0" max="100" value="100">
+                    <span class="vol-text" id="sfxVolText">100%</span>
+                </div>
+            </div>
+            <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
+        </div>
+    </div>
+
+    <!-- Rulebook Overlay -->
+    <div id="rulebookOverlay">
+        <div class="rulebook-box">
+            <h2 data-i18n="rulebook_title">게임 규칙</h2>
+
+            <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
+            <ul>
+                <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
+                <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
+                <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
+            </ul>
+
+            <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
+            <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
+            <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
+                <b>카드 등급(계급)</b>을 비교합니다.
             </p>
-            <button id="btnCancelMatch"
-                style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
-                매칭 취소
+            <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
+                상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
+
+            <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
+            <ul>
+                <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
+                        src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
+                        이깁니다.</span></li>
+                <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
+                    <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
+                        이깁니다.</span>
+                </li>
+                <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
+                    <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
+                </li>
+                <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
+                        src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
+                        이깁니다.</span></li>
+                <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
+                    <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
+                </li>
+            </ul>
+
+            <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
+            <ol>
+                <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
+                        영웅</span></li>
+                <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
+                        영웅</span></li>
+                <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
+                        영웅</span></li>
+                <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
+                        영웅</span></li>
+                <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
+                        존재</span></li>
+            </ol>
+
+            <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
+        </div>
+    </div>
+
+    <div id="mainLayout">
+        <div class="side-panel" id="logPanel">
+            <!-- User requested complete removal of the in-game Logo here -->
+            <h3 data-i18n="ui_log_title">전투 로그</h3>
+            <ul class="log-list" id="roundLog"></ul>
+        </div>
+
+        <!-- Center Panel: Game Board -->
+        <div id="gameBoard" style="position: relative;">
+            <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
+            <div id="computerZone"></div>
+
+            <!-- 20s Turn Timer Bar for PVP -->
+            <div id="turnTimerBarContainer">
+                <div id="turnTimerBar"></div>
+            </div>
+
+            <div id="battleZone">
+                <div id="clashEffect" class="clash-effect"></div>
+                <!-- Static labels remain invisible until battle mode -->
+                <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
+                <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
+            </div>
+            <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
+            <div id="playerZone"></div>
+        </div>
+
+        <div class="side-panel" id="chartPanel">
+            <h3 data-i18n="ui_element_table">오행 상성</h3>
+            <div class="chart-container">
+                <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
+                <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
+                <svg id="chartSvg">
+                    <defs>
+                        <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
+                        </marker>
+                        <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
+                        </marker>
+                        <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
+                        </marker>
+                        <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
+                        </marker>
+                        <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
+                        </marker>
+                    </defs>
+                    <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
+
+                    <!-- F to M -->
+                    <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+
+                    <!-- M to Wo -->
+                    <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+
+                    <!-- Wo to E -->
+                    <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+
+                    <!-- E to Wa -->
+                    <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+
+                    <!-- Wa to F -->
+                    <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                </svg>
+
+                <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
+                <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
+                <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
+                <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
+                <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
+            </div>
+
+            <div class="chart-text-list">
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                </div>
+            </div>
+
+            <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
+            <button id="headerRestartBtn"
+                style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
+                <img src="images/btn_restart.png?v=3" alt="Restart"
+                    style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
             </button>
         </div>
+    </div>
 
-        <!-- Settings Overlay -->
-        <div id="settingsOverlay">
-            <div class="settings-box">
-                <h2 data-i18n="ui_settings_title">설정</h2>
-                <div class="toggle-row">
-                    <span data-i18n="ui_lang">언어 / Language</span>
-                    <div class="slider-container" style="justify-content: flex-end;">
-                        <button class="toggle-btn active" id="btnLangKo"
-                            style="width:50px; padding:6px; font-size:1rem;">KR</button>
-                        <button class="toggle-btn" id="btnLangEn"
-                            style="width:50px; padding:6px; font-size:1rem;">EN</button>
-                    </div>
-                </div>
-                <div class="toggle-row">
-                    <span data-i18n="ui_bgm">배경음악</span>
-                    <div class="slider-container">
-                        <input type="range" id="bgmSlider" min="0" max="100" value="100">
-                        <div class="vol-text" id="bgmText">100%</div>
-                    </div>
-                </div>
-                <div class="toggle-row">
-                    <span data-i18n="ui_sfx">효과음</span>
-                    <div class="slider-container">
-                        <input type="range" id="sfxSlider" min="0" max="100" value="100">
-                        <span class="vol-text" id="sfxVolText">100%</span>
-                    </div>
-                </div>
-                <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
-            </div>
-        </div>
+    <div id="finalOverlay">
+        <div class="final-box" id="finalTitle">승리!</div>
+        <button id="restartBtn">
+            <img src="images/btn_restart.png?v=3" alt="Restart">
+        </button>
+    </div>
 
-        <!-- Rulebook Overlay -->
-        <div id="rulebookOverlay">
-            <div class="rulebook-box">
-                <h2 data-i18n="rulebook_title">게임 규칙</h2>
+    <!-- Removed floating settingsBtn to merge into header-buttons above -->
 
-                <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
-                <ul>
-                    <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
-                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
-                    <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
-                </ul>
-
-                <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
-                <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
-                <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
-                    <b>카드 등급(계급)</b>을 비교합니다.
-                </p>
-                <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
-                    상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
-
-                <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
-                <ul>
-                    <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
-                            src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
-                            이깁니다.</span></li>
-                    <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
-                        <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
-                            이깁니다.</span>
-                    </li>
-                    <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
-                        <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
-                    </li>
-                    <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
-                            src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
-                            이깁니다.</span></li>
-                    <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
-                        <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
-                    </li>
-                </ul>
-
-                <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
-                <ol>
-                    <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
-                            영웅</span></li>
-                    <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
-                            영웅</span></li>
-                    <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
-                            영웅</span></li>
-                    <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
-                            영웅</span></li>
-                    <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
-                            존재</span></li>
-                </ol>
-
-                <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
-            </div>
-        </div>
-
-        <div id="mainLayout">
-            <div class="side-panel" id="logPanel">
-                <!-- User requested complete removal of the in-game Logo here -->
-                <h3 data-i18n="ui_log_title">전투 로그</h3>
-                <ul class="log-list" id="roundLog"></ul>
-            </div>
-
-            <!-- Center Panel: Game Board -->
-            <div id="gameBoard" style="position: relative;">
-                <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
-                <div id="computerZone"></div>
-
-                <!-- 20s Turn Timer Bar for PVP -->
-                <div id="turnTimerBarContainer">
-                    <div id="turnTimerBar"></div>
-                </div>
-
-                <div id="battleZone">
-                    <div id="clashEffect" class="clash-effect"></div>
-                    <!-- Static labels remain invisible until battle mode -->
-                    <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
-                    <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
-                </div>
-                <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
-                <div id="playerZone"></div>
-            </div>
-
-            <div class="side-panel" id="chartPanel">
-                <h3 data-i18n="ui_element_table">오행 상성</h3>
-                <div class="chart-container">
-                    <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
-                    <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
-                    <svg id="chartSvg">
-                        <defs>
-                            <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
-                            </marker>
-                            <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
-                            </marker>
-                            <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
-                            </marker>
-                            <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
-                            </marker>
-                            <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
-                            </marker>
-                        </defs>
-                        <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
-
-                        <!-- F to M -->
-                        <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
-
-                        <!-- M to Wo -->
-                        <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
-
-                        <!-- Wo to E -->
-                        <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
-
-                        <!-- E to Wa -->
-                        <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
-
-                        <!-- Wa to F -->
-                        <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
-                    </svg>
-
-                    <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
-                    <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
-                    <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
-                    <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
-                    <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
-                </div>
-
-                <div class="chart-text-list">
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                    </div>
-                </div>
-
-                <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
-                <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
-                    <img src="images/btn_restart.png?v=3" alt="Restart"
-                        style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
-                </button>
-            </div>
-        </div>
-
-        <div id="finalOverlay">
-            <div class="final-box" id="finalTitle">승리!</div>
-            <button id="restartBtn">
-                <img src="images/btn_restart.png?v=3" alt="Restart">
-            </button>
-        </div>
-
-        <!-- Removed floating settingsBtn to merge into header-buttons above -->
-
-        <!-- End Global Scale Container -->
+    <!-- End Global Scale Container -->
     </div>
 
     <script>
@@ -2709,7 +2771,11 @@
                 pDomCard.style.boxShadow = '0 0 20px #ffd700, 0 0 0 4px #ffd700'; // Golden Highlight
                 pDomCard.style.zIndex = '100';
 
-                pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
+                if (isTourneyMode && tourneyRoomId) {
+                    pvpSocket.emit('submit_tourney_card', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, cardInfo: playerDeck[pIdx] });
+                } else {
+                    pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
+                }
                 return;
             }
 
@@ -3014,7 +3080,6 @@
             pvpTurnSubmitted = false;
             isBattling = false;
 
-            // Re-render to clear states if needed that were touched 
             render();
             document.getElementById('cpuTitle').innerText = pvpOppName + "님";
 
@@ -3023,17 +3088,36 @@
 
             timerContainer.style.display = 'block';
 
-            // Reset bar
             timerBar.style.transition = 'none';
             timerBar.style.width = '100%';
             timerBar.style.backgroundColor = '#00ff00';
 
             void timerBar.offsetWidth; // force reflow
 
-            // Start shrink
             timerBar.style.transition = `width ${timeLimit}s linear, background-color ${timeLimit}s linear`;
             timerBar.style.width = '0%';
             timerBar.style.backgroundColor = '#ff0000';
+        }
+
+        async function resolveTourneyRound(myCard, oppCard) {
+            document.getElementById('turnTimerBarContainer').style.display = 'none';
+
+            let pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade && !c.used);
+            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade);
+
+            let cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade && !c.used);
+            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade);
+
+            if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // Bypass local duplicate check lock
+
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            await playTurn(pIdx, cIdx);
+
+            if (pWin >= maxWins) {
+                pvpSocket.emit('tourney_match_end', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, winnerId: pvpMyId });
+            }
         }
 
         async function resolvePvpRound(myCard, oppCard) {
@@ -3147,6 +3231,43 @@
                 document.getElementById('mainMenuSection').style.display = 'block';
             });
 
+            // Tournament Menu Handlers
+            document.getElementById('btnMenuTourney').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('tourneySection').style.display = 'block';
+                if (!pvpSocket) {
+                    initPvpSocket(() => pvpSocket.emit('get_tourney_rooms'));
+                } else {
+                    pvpSocket.emit('get_tourney_rooms');
+                }
+            });
+            document.getElementById('btnBackFromTourney').addEventListener('click', () => {
+                document.getElementById('tourneySection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+            document.getElementById('btnRefreshTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) pvpSocket.emit('get_tourney_rooms');
+            });
+            document.getElementById('btnCreateTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    const roomName = prompt("방 제목을 입력하세요:", document.getElementById('userDisplayName').innerText + "님의 방");
+                    if (roomName) pvpSocket.emit('create_tourney_room', { roomName: roomName, maxPlayers: 16, userName: document.getElementById('userDisplayName').innerText });
+                }
+            });
+            document.getElementById('btnLeaveTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    pvpSocket.emit('leave_tourney_room');
+                    document.getElementById('tourneyRoomSection').style.display = 'none';
+                    document.getElementById('tourneySection').style.display = 'block';
+                    pvpSocket.emit('get_tourney_rooms');
+                }
+            });
+            document.getElementById('btnStartTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected && tourneyRoomId) {
+                    pvpSocket.emit('start_tourney', { roomId: tourneyRoomId });
+                }
+            });
+
             // My Page Handlers
             document.getElementById('btnMenuMyPage').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
@@ -3179,11 +3300,256 @@
                 document.getElementById('pvpSection').style.display = 'block';
             });
 
+            const updateTourneyRoomUI = (room) => {
+                document.getElementById('tourneyRoomTitle').innerText = room.name;
+                document.getElementById('tourneyRoomCount').innerText = `참가자: ${room.players.length} / ${room.maxPlayers} (최소 4명)`;
+                const pList = document.getElementById('tourneyPlayerList');
+                pList.innerHTML = '';
+                room.players.forEach(p => {
+                    pList.innerHTML += `<li style="font-size: 1.8rem; color: ${p.status === 'ALIVE' ? '#fff' : '#555'}; margin-bottom: 5px;">${p.name} ${room.hostId === p.id ? '👑' : ''}</li>`;
+                });
+
+                if (room.hostId === pvpSocket.id) {
+                    document.getElementById('btnStartTourney').style.display = 'inline-block';
+                } else {
+                    document.getElementById('btnStartTourney').style.display = 'none';
+                }
+            };
+
+            const renderBracket = (bracket) => {
+                const container = document.getElementById('bracketContainer');
+                container.innerHTML = '';
+
+                bracket.forEach((round, rIndex) => {
+                    let colHtml = `<div style="display: flex; flex-direction: column; gap: 20px; align-items: center; min-width: 150px;">
+                                      <h3 style="color:#aaa; font-size:1.5rem; text-align:center;">Round ${rIndex + 1}</h3>`;
+                    round.forEach(match => {
+                        const p1Name = match.p1 ? match.p1.name : "???";
+                        const p2Name = match.p2 ? match.p2.name : (match.status === 'DONE' && match.p1 ? "BYE" : "???");
+
+                        let matchColor = "rgba(0,0,0,0.5)";
+                        let border = "1px solid #777";
+                        if (match.status === 'PLAYING') { border = "2px solid #00ffd9"; matchColor = "#222"; }
+                        else if (match.status === 'DONE') { matchColor = "rgba(0,0,0,0.8)"; }
+
+                        const winStyle = "color:#ffd700; font-weight:bold;";
+                        const p1Style = (match.winner && match.winner.id === (match.p1 ? match.p1.id : '')) ? winStyle : "color:#fff";
+                        const p2Style = (match.winner && match.winner.id === (match.p2 ? match.p2.id : '')) ? winStyle : "color:#fff";
+
+                        colHtml += `<div style="background: ${matchColor}; border: ${border}; border-radius: 8px; padding: 10px; width: 100%; text-align: center;">
+                                        <div style="font-size: 1.5rem; ${p1Style}">${p1Name}</div>
+                                        <div style="font-size: 1rem; color:#555; margin: 5px 0;">vs</div>
+                                        <div style="font-size: 1.5rem; ${p2Style}">${p2Name}</div>
+                                    </div>`;
+                    });
+                    colHtml += `</div>`;
+
+                    if (rIndex < bracket.length - 1) {
+                        colHtml += `<div style="display: flex; align-items: center; color: #555; font-size: 2rem;">▶</div>`;
+                    }
+                    container.innerHTML += colHtml;
+                });
+            };
+
+            const initPvpSocket = (onConnectCallback = null) => {
+                pvpSocket = io('https://chrono-link.onrender.com');
+
+                if (onConnectCallback) {
+                    pvpSocket.on('connect', onConnectCallback);
+                }
+
+                // --------- TOURNAMENT SOCKET LOGIC ---------
+                pvpSocket.on('update_tourney_rooms', (rooms) => {
+                    const list = document.getElementById('tourneyRoomList');
+                    if (list) {
+                        list.innerHTML = '';
+                        rooms.forEach(r => {
+                            list.innerHTML += `<div style="border:1px solid #777; padding:10px; margin-bottom:10px; border-radius:5px;">
+                                <strong style="color:#00ffd9; font-size: 1.6rem;">${r.name}</strong> <span style="font-size: 1.2rem; color: #aaa;">[${r.curr}/${r.max}]</span>
+                                <span style="color:#aaa; float:right; font-size: 1.2rem;">${r.status}</span>
+                                <br><button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').innerText}' })" style="padding:10px 15px; margin-top:10px; background:#444; color:#fff; border:none; border-radius:5px; font-size: 1.3rem;">참가하기</button>
+                            </div>`;
+                        });
+                    }
+                });
+
+                pvpSocket.on('tourney_error', (msg) => { alert("Error: " + msg); });
+
+                pvpSocket.on('tourney_room_joined', (room) => {
+                    tourneyRoomId = room.id;
+                    isTourneyMode = true;
+                    document.getElementById('tourneySection').style.display = 'none';
+                    document.getElementById('tourneyRoomSection').style.display = 'block';
+                    updateTourneyRoomUI(room);
+                });
+
+                pvpSocket.on('tourney_room_updated', (room) => {
+                    if (tourneyRoomId === room.id) updateTourneyRoomUI(room);
+                });
+
+                pvpSocket.on('tourney_started', (data) => {
+                    document.getElementById('tourneyRoomSection').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    document.getElementById('tourneyStatusText').innerText = "대진표가 생성되었습니다! 매치가 곧 시작됩니다.";
+                    renderBracket(data.bracket);
+                });
+
+                pvpSocket.on('tourney_bracket_update', (data) => {
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    renderBracket(data.bracket);
+                    setTimeout(() => {
+                        if (data.status === 'PLAYING') {
+                            document.getElementById('tourneyBracketOverlay').style.display = 'none';
+                        }
+                    }, 4000);
+                });
+
+                pvpSocket.on('tourney_match_found', (data) => {
+                    tourneyMatchKey = data.matchKey;
+                    pvpMyId = data.myId;
+                    pvpOppId = data.oppId;
+                    pvpOppName = data.oppName;
+
+                    document.getElementById('tourneyBracketOverlay').style.display = 'none';
+                    startGame('Beginner'); // Use standard UI init
+
+                    pvpSocket.emit('send_tourney_deck', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, deck: playerDeck });
+                });
+
+                pvpSocket.on('tourney_round_start', (data) => {
+                    round = data.round;
+                    startPvpTurn(data.timeLimit);
+                });
+
+                pvpSocket.on('force_tourney_auto_pick', () => {
+                    if (!pvpTurnSubmitted) {
+                        const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                        if (avail.length > 0) {
+                            const pick = avail[Math.floor(Math.random() * avail.length)];
+                            playTurn(pick.i);
+                        }
+                    }
+                });
+
+                pvpSocket.on('tourney_opponent_picked', () => {
+                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                });
+
+                pvpSocket.on('tourney_round_reveal', (data) => {
+                    document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+                    resolveTourneyRound(data.results[pvpMyId], data.results[pvpOppId]);
+                });
+
+                pvpSocket.on('tourney_finished', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    renderBracket(data.bracket);
+                    document.getElementById('tourneyStatusText').innerText = `🎉 최종 우승: ${data.winner.name} 🎉\n\n(새로고침을 통해 로비로 나갈 수 있습니다.)`;
+                    tourneyRoomId = null;
+                });
+
+                // --------- RANDOM PVP SOCKET LOGIC ---------
+                pvpSocket.on('match_found', (data) => {
+                    pvpRoomId = data.roomId;
+                    pvpMyId = data.myId;
+                    pvpOppId = data.oppId;
+                    pvpOppName = data.oppName;
+                    currentMode = data.mode; // Re-sync the mode agreed upon by the server
+
+                    document.getElementById('pvpMatchOverlay').style.display = 'none';
+                    startPvpGame();
+                    playSound('win');
+                });
+
+                pvpSocket.on('decks_synced', (data) => {
+                    cpuDeck = data.oppDeck;
+                    render();
+                });
+
+                pvpSocket.on('round_start', (data) => {
+                    round = data.round;
+                    startPvpTurn(data.timeLimit);
+                });
+
+                pvpSocket.on('opponent_picked', () => {
+                    // Append [준비 완료] to the Cpu Title directly above their cards
+                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                });
+
+                pvpSocket.on('force_auto_pick', () => {
+                    if (!pvpTurnSubmitted) {
+                        const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                        if (avail.length > 0) {
+                            const pick = avail[Math.floor(Math.random() * avail.length)];
+                            playTurn(pick.i);
+                        }
+                    }
+                });
+
+                pvpSocket.on('round_reveal', (data) => {
+                    // Clear the [준비 완료] tag from the cpuTitle
+                    document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+                    resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
+                });
+
+                pvpSocket.on('ask_rematch', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'flex';
+                    const title = document.getElementById('finalTitle');
+                    const myScore = data.scores[pvpMyId];
+                    const oppScore = data.scores[pvpOppId];
+                    const meName = document.getElementById('userDisplayName').innerText;
+
+                    title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0000">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
+
+                    const rBtn = document.getElementById('restartBtn');
+                    rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
+                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0000; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
+
+                    document.getElementById('btnRematchAccept').onclick = (e) => {
+                        e.stopPropagation(); // Prevent #restartBtn parent from triggering resetGame()
+                        rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;'>상대방의 선택 대기 중...</span>";
+                        pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
+                    };
+                    document.getElementById('btnRematchDecline').onclick = (e) => {
+                        e.stopPropagation();
+                        pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: false });
+                    };
+                });
+
+                pvpSocket.on('rematch_accepted', () => {
+                    document.getElementById('finalOverlay').style.display = 'none';
+                    document.getElementById('restartBtn').innerHTML = `<img src="images/btn_restart.png?v=3" alt="Restart">`;
+                    startPvpGame();
+                });
+
+                pvpSocket.on('complete_victory', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'flex';
+                    const title = document.getElementById('finalTitle');
+                    const meName = document.getElementById('userDisplayName').innerText;
+
+                    if (data.winnerId === pvpMyId) {
+                        title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                        startBgm('bgm_win');
+                    } else {
+                        title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
+                        startBgm('bgm_lose');
+                    }
+
+                    const rBtn = document.getElementById('restartBtn');
+                    rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; cursor:pointer;">로비로 돌아가기</button>`;
+                    document.getElementById('btnPvpExit').onclick = () => location.reload();
+                });
+
+                pvpSocket.on('room_closed', (data) => {
+                    alert("PVP 매치 종료: " + data.reason);
+                    location.reload();
+                });
+            };
+
             // PVP Match Flow Logic
             const joinPvpMatch = (mode) => {
                 if (!auth.currentUser) { alert("구글 로그인이 필요합니다."); return; }
 
-                // Unlock audio strictly inside a synchronous click event for iOS constraint
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 playSound('select');
 
@@ -3193,106 +3559,8 @@
                 isPvpMode = true;
 
                 if (!pvpSocket) {
-                    pvpSocket = io('https://chrono-link.onrender.com'); // Production URL connected to Render
-
-                    pvpSocket.on('connect', () => {
+                    initPvpSocket(() => {
                         pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
-                    });
-
-                    pvpSocket.on('match_found', (data) => {
-                        pvpRoomId = data.roomId;
-                        pvpMyId = data.myId;
-                        pvpOppId = data.oppId;
-                        pvpOppName = data.oppName;
-                        currentMode = data.mode; // Re-sync the mode agreed upon by the server
-
-                        document.getElementById('pvpMatchOverlay').style.display = 'none';
-                        startPvpGame();
-                        playSound('win');
-                    });
-
-                    pvpSocket.on('decks_synced', (data) => {
-                        cpuDeck = data.oppDeck;
-                        render();
-                    });
-
-                    pvpSocket.on('round_start', (data) => {
-                        round = data.round;
-                        startPvpTurn(data.timeLimit);
-                    });
-
-                    pvpSocket.on('opponent_picked', () => {
-                        // Append [준비 완료] to the Cpu Title directly above their cards
-                        document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
-                    });
-
-                    pvpSocket.on('force_auto_pick', () => {
-                        if (!pvpTurnSubmitted) {
-                            const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
-                            if (avail.length > 0) {
-                                const pick = avail[Math.floor(Math.random() * avail.length)];
-                                playTurn(pick.i);
-                            }
-                        }
-                    });
-
-                    pvpSocket.on('round_reveal', (data) => {
-                        // Clear the [준비 완료] tag from the cpuTitle
-                        document.getElementById('cpuTitle').innerText = pvpOppName + "님";
-                        resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
-                    });
-
-                    pvpSocket.on('ask_rematch', (data) => {
-                        document.getElementById('finalOverlay').style.display = 'flex';
-                        const title = document.getElementById('finalTitle');
-                        const myScore = data.scores[pvpMyId];
-                        const oppScore = data.scores[pvpOppId];
-                        const meName = document.getElementById('userDisplayName').innerText;
-
-                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0000">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
-
-                        const rBtn = document.getElementById('restartBtn');
-                        rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
-                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0000; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
-
-                        document.getElementById('btnRematchAccept').onclick = (e) => {
-                            e.stopPropagation(); // Prevent #restartBtn parent from triggering resetGame()
-                            rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;'>상대방의 선택 대기 중...</span>";
-                            pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
-                        };
-                        document.getElementById('btnRematchDecline').onclick = (e) => {
-                            e.stopPropagation();
-                            pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: false });
-                        };
-                    });
-
-                    pvpSocket.on('rematch_accepted', () => {
-                        document.getElementById('finalOverlay').style.display = 'none';
-                        document.getElementById('restartBtn').innerHTML = `<img src="images/btn_restart.png?v=3" alt="Restart">`;
-                        startPvpGame();
-                    });
-
-                    pvpSocket.on('complete_victory', (data) => {
-                        document.getElementById('finalOverlay').style.display = 'flex';
-                        const title = document.getElementById('finalTitle');
-                        const meName = document.getElementById('userDisplayName').innerText;
-
-                        if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
-                            startBgm('bgm_win');
-                        } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
-                            startBgm('bgm_lose');
-                        }
-
-                        const rBtn = document.getElementById('restartBtn');
-                        rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; cursor:pointer;">로비로 돌아가기</button>`;
-                        document.getElementById('btnPvpExit').onclick = () => location.reload();
-                    });
-
-                    pvpSocket.on('room_closed', (data) => {
-                        alert("PVP 매치 종료: " + data.reason);
-                        location.reload();
                     });
                 } else {
                     pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
