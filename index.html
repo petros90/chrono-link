@@ -3298,6 +3298,7 @@
             document.getElementById('btnLeaveTourney').addEventListener('click', () => {
                 if (pvpSocket && pvpSocket.connected) {
                     pvpSocket.emit('leave_tourney_room');
+                    tourneyRoomId = null; // Clear tourneyRoomId
                     document.getElementById('tourneyRoomSection').style.display = 'none';
                     document.getElementById('tourneySection').style.display = 'block';
                     pvpSocket.emit('get_tourney_rooms');
@@ -3640,6 +3641,11 @@
                 document.getElementById('pvpMatchOverlay').style.display = 'flex';
 
                 isPvpMode = true;
+                if (typeof isTourneyMode !== 'undefined') {
+                    isTourneyMode = false;
+                    tourneyRoomId = null;
+                    tourneyMatchKey = null;
+                }
 
                 if (!pvpSocket) {
                     initPvpSocket(() => {
