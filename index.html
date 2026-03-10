@@ -99,6 +99,60 @@
             background: #2a2a36;
         }
 
+        /* Online Users Panel (Main Menu) */
+        #onlineUserPanel {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            bottom: 40px;
+            width: 500px;
+            background: rgba(10, 10, 20, 0.85);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            z-index: 250;
+        }
+
+        #onlineUserPanel h3 {
+            color: #00ffd9;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Jua', sans-serif;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 217, 0.5);
+        }
+
+        #onlineUserList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #onlineUserList li {
+            font-size: 1.8rem;
+            color: #ddd;
+            padding: 12px 15px;
+            border-bottom: 1px solid #222;
+            font-family: 'Gowun Dodum', sans-serif;
+            display: flex;
+            align-items: center;
+        }
+
+        #onlineUserList li::before {
+            content: "●";
+            color: #00ffd9;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #00ffd9;
+        }
+
         .menu-img-btn {
             background: transparent;
             border: none;
@@ -310,10 +364,10 @@
             margin-top: 20px;
             font-size: 1.2rem;
             font-family: 'Jua', sans-serif;
-            border: 2px solid #ff0055;
+            border: 2px solid #ff0000;
             border-radius: 8px;
             background: #222;
-            color: #ff0055;
+            color: #ff0000;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -590,8 +644,8 @@
             gap: 10px;
             align-items: center;
             position: absolute;
-            right: 295px;
-            /* Exactly center over the 590px right #chartPanel */
+            right: 245px;
+            /* Exactly center over the 490px right #chartPanel */
             transform: translateX(50%);
             top: 40px;
             /* Aligned vertically */
@@ -647,8 +701,8 @@
 
         /* --- BASE CONTAINER SCALING --- */
         #appContainer {
-            width: 2800px;
-            /* Increased by 400px to accommodate wider side panels */
+            width: 2600px;
+            /* Reduced by 200px to accommodate narrower side panels */
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -676,12 +730,14 @@
             flex-direction: column;
             overflow-y: auto;
             padding: 15px;
+            margin-top: 100px;
+            /* Push panels down 100px */
         }
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 590px;
-            /* +200px expanded */
+            flex: 0 0 490px;
+            /* -100px shrunk */
             background: transparent;
             border-right: none;
             display: flex;
@@ -692,8 +748,8 @@
         }
 
         #chartPanel {
-            flex: 0 0 590px;
-            /* +200px expanded */
+            flex: 0 0 490px;
+            /* -100px shrunk */
             border-right: none;
             align-items: center;
         }
@@ -735,7 +791,7 @@
         }
 
         .log-entry.lose {
-            border-left-color: #ff0055;
+            border-left-color: #ff0000;
             background: rgba(255, 0, 85, 0.05);
         }
 
@@ -911,7 +967,7 @@
         }
 
         .zone-title.cpu {
-            color: #ff0055;
+            color: #ff0000;
             text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
         }
 
@@ -985,11 +1041,25 @@
         }
 
         .battle-label-static.c-label {
-            color: #ff0055;
+            color: #ff0000;
         }
 
         body.show-labels .battle-label-static {
             opacity: 1;
+        }
+
+        .zone-title {
+            font-size: 2.7rem;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Jua', sans-serif;
+            color: #00ffd9;
+            text-shadow: 0 0 10px #00ffd9;
+        }
+
+        .zone-title.cpu {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
         }
 
         /* Clash Explosion Effect */
@@ -1051,8 +1121,8 @@
         }
 
         .battle-label.c-label {
-            color: #ff0055;
-            text-shadow: 0 0 3px #ff0055, 0 0 6px #000;
+            color: #ff0000;
+            text-shadow: 0 0 3px #ff0000, 0 0 6px #000;
         }
 
         .battling .battle-label {
@@ -1235,13 +1305,13 @@
         }
 
         .card-mythos::before {
-            box-shadow: inset 0 0 0 0px #ff0055, 0 0 25px rgba(255, 0, 85, 0.9);
+            box-shadow: inset 0 0 0 0px #ff0000, 0 0 25px rgba(255, 0, 85, 0.9);
             animation: mythosPulse 2s infinite alternate;
         }
 
         @keyframes mythosPulse {
             0% {
-                box-shadow: inset 0 0 0 0px #ff0055, 0 0 15px rgba(255, 0, 85, 0.7);
+                box-shadow: inset 0 0 0 0px #ff0000, 0 0 15px rgba(255, 0, 85, 0.7);
             }
 
             100% {
@@ -1351,8 +1421,8 @@
         }
 
         .damage-lose {
-            color: #ff0055;
-            text-shadow: 0 0 15px #ff0055, 4px 4px 0 #000;
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000, 4px 4px 0 #000;
         }
 
         .damage-draw {
@@ -1418,8 +1488,7 @@
         }
 
         #restartBtn img {
-            height: 156px;
-            /* Increased 30% from 120px */
+            height: 110px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
@@ -1547,8 +1616,7 @@
         }
 
         body.is-mobile #restartBtn img {
-            height: 260px;
-            /* Increased 30% from 200px */
+            height: 180px;
         }
 
         body.is-mobile .rulebook-box {
@@ -1602,7 +1670,69 @@
                 overflow: hidden;
             }
         }
+
+        /* 20 Second Turn Timer Bar */
+        #turnTimerBarContainer {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: absolute;
+            top: 45%;
+            left: 0;
+            transform: translateY(-50%);
+            display: none;
+            /* Only visible in PVP mode during a turn */
+            z-index: 10;
+        }
+
+        #turnTimerBar {
+            height: 100%;
+            width: 100%;
+            background-color: #00ff00;
+            transition: width 1s linear, background-color 1s linear;
+        }
+
+        /* Matchmaking Overlay */
+        #pvpMatchOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            /* hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #pvpMatchSpinner {
+            width: 100px;
+            height: 100px;
+            border: 10px solid rgba(255, 255, 255, 0.2);
+            border-top: 10px solid #00ffd9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
+
+    <!-- Socket.io Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 
 <body>
@@ -1618,10 +1748,10 @@
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; height: 104px;">
                 <img id="roundImage" src="images/round1.png?v=3"
                     style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
-                        data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span
-                        data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
+                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerPlayerName"
+                        data-i18n="ui_me">Player</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
+                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerCpuName"
+                        data-i18n="ui_enemy">Com</span> <span id="cpuScoreUi" style="color:#ff0000">0</span></div>
             </div>
 
             <!-- Right side Header Buttons perfectly centered over 590px chartPanel -->
@@ -1638,6 +1768,11 @@
 
         <!-- Lobby Overlay -->
         <div id="lobbyOverlay">
+            <div id="onlineUserPanel" style="display: none;">
+                <h3>접속 중인 플레이어</h3>
+                <ul id="onlineUserList"></ul>
+            </div>
+
             <div class="diff-box">
                 <!-- Section 1: Login Gate -->
                 <div id="loginSection">
@@ -1672,6 +1807,10 @@
                     <button id="btnMenuPvp" class="menu-img-btn">
                         <img src="images/btn_pvp.png?v=2" alt="PVP Match">
                     </button>
+                    <button id="btnMenuTourney" class="diff-btn"
+                        style="border-color:#ffd700; color:#ffd700; font-size: 1.8rem; margin: 5px auto; width: 50%; padding: 10px; background: rgba(0,0,0,0.5);">
+                        🏆 PVP 토너먼트 <br><span style="font-size: 1.3rem;">(4~16인)</span>
+                    </button>
                 </div>
 
                 <!-- Section 3: Tutorial Sub Menu -->
@@ -1680,9 +1819,9 @@
                     <button class="diff-btn" id="btnBeginner">Beginner (초보자)</button>
                     <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
 
-                    <button class="diff-btn" style="border-color:#ff0055; color:#ff0055;" id="btnExpert">Expert
+                    <button class="diff-btn" style="border-color:#ff0000; color:#ff0000;" id="btnExpert">Expert
                         (숙련자)</button>
-                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
+                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 4선승제</div>
 
                     <button class="diff-btn" id="btnBackFromTutorial"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
@@ -1691,272 +1830,364 @@
 
                 <!-- Section 4: PVP Sub Menu -->
                 <div id="pvpSection" style="display: none;">
-                    <h2 style="color: #ff0055;">PVP 매치</h2>
+                    <h2 style="color: #ff0000;">PVP 매치</h2>
                     <br>
                     <button class="diff-btn" id="btnPvpCustom"
                         style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
-                    <button class="diff-btn" id="btnPvpRandom"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">랜덤 카드 (Random Deck)<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+                            style="font-size: 1.2rem; color: #777;">상점 기능 준비 중...</span></button>
+                    <button class="diff-btn" id="btnPvpRandomBeginner"
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        매칭<br>
+                        <span style="font-size: 1.5rem; color: #fff;">Beginner (초보자 - 5장)</span>
+                    </button>
+                    <button class="diff-btn" id="btnPvpRandomExpert"
+                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        매칭<br>
+                        <span style="font-size: 1.5rem; color: #fff;">Expert (숙련자 - 7장)</span>
+                    </button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
                 </div>
 
-                <!-- Section 5: My Page -->
-                <div id="myPageSection" style="display: none;">
-                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
-                    <br>
-                    <button class="diff-btn" id="btnChangeNickname"
-                        style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
-                    <button class="diff-btn" id="btnDeckSettings"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏 카드 덱 셋팅<br><span
-                            style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+            </div>
 
-                    <button class="diff-btn" id="btnBackFromMyPage"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
-                        뒤로 가기</button>
+            <!-- Section 5: Tournament Room List -->
+            <div id="tourneySection" style="display: none; width: 600px; max-width: 90vw; margin: 0 auto;">
+                <h2
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 3rem; margin-bottom: 20px;">
+                    토너먼트
+                    대기열
+                </h2>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
+                    <button id="btnCreateTourney" class="diff-btn"
+                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; margin-bottom: 0;">방
+                        만들기</button>
+                    <button id="btnRefreshTourney" class="diff-btn"
+                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #aaa; color: #aaa; margin-bottom: 0;">새로고침</button>
                 </div>
 
-                <!-- Section 6: Nickname Registration -->
-                <div id="nicknameSection" style="display: none;">
-                    <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
-                        닉네임 등록</h2>
-                    <p
-                        style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
-                        게임에서 사용할 멋진 닉네임을 정해주세요.</p>
-                    <p
-                        style="font-size: 1.2rem; color: #ff5555; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
-                        ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
-                    <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
-                        style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
-
-                    <!-- Feedback message area to replace annoying browser popups -->
-                    <div id="nicknameFeedback"
-                        style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
-                    </div>
-
-                    <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
-                        등록</button>
-                    <button class="diff-btn" id="btnBackFromNickname"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
-                        취소</button>
+                <div id="tourneyRoomList"
+                    style="max-height: 400px; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); border: 1px solid #555; border-radius: 10px; padding: 10px;">
+                    <!-- JS injects tourney-room-item here -->
                 </div>
+
+                <button class="diff-btn" id="btnBackFromTourney"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                    메인으로</button>
+            </div>
+
+            <!-- Section 6: Inside Tournament Room -->
+            <div id="tourneyRoomSection"
+                style="display: none; width: 650px; max-width: 90vw; margin: 0 auto; text-align: center;">
+                <h2 id="tourneyRoomTitle"
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 3rem; margin-bottom: 15px;">방 제목
+                </h2>
+                <p id="tourneyRoomCount" style="color: #aaa; font-size: 2rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
+                    4명)</p>
+
+                <div id="tourneyPlayerGrid"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; width: 100%;">
+                    <!-- Players injected here -->
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
+                    <button class="diff-btn" id="btnStartTourney"
+                        style="display: none; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; font-size: 1.8rem; margin-bottom: 0;">🚀
+                        시작 (방장전용)</button>
+                    <button class="diff-btn" id="btnLeaveTourney"
+                        style="flex: 1; font-size: 1.8rem; padding: 15px; border-color:#ff0000; color:#ff0000; background:transparent; margin-bottom: 0;">방
+                        나가기</button>
+                </div>
+            </div>
+
+            <!-- Section 7: My Page (Formerly 5) -->
+            <div id="myPageSection" style="display: none;">
+                <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
+                <br>
+                <button class="diff-btn" id="btnChangeNickname"
+                    style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
+                <button class="diff-btn" id="btnDeckSettings" style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏
+                    카드 덱 셋팅<br><span style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
+
+                <button class="diff-btn" id="btnBackFromMyPage"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                    뒤로 가기</button>
+            </div>
+
+            <!-- Section 6: Nickname Registration -->
+            <div id="nicknameSection" style="display: none;">
+                <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
+                    닉네임 등록</h2>
+                <p style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
+                    게임에서 사용할 멋진 닉네임을 정해주세요.</p>
+                <p
+                    style="font-size: 1.2rem; color: #ff5555; margin-bottom: 30px; font-family: 'Gowun Dodum', sans-serif;">
+                    ※ 닉네임은 한 번 확정하면 일주일(7일) 동안 변경할 수 없습니다.</p>
+                <input type="text" id="nicknameInput" maxlength="10" placeholder="10글자 이내"
+                    style="width: 100%; padding: 15px; font-size: 2rem; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; margin-bottom: 20px; font-family: 'Jua', sans-serif; text-align: center;">
+
+                <!-- Feedback message area to replace annoying browser popups -->
+                <div id="nicknameFeedback"
+                    style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
+                </div>
+
+                <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                    등록</button>
+                <button class="diff-btn" id="btnBackFromNickname"
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
+                    취소</button>
             </div>
         </div>
+    </div>
 
-        <!-- Settings Overlay -->
-        <div id="settingsOverlay">
-            <div class="settings-box">
-                <h2 data-i18n="ui_settings_title">설정</h2>
-                <div class="toggle-row">
-                    <span data-i18n="ui_lang">언어 / Language</span>
-                    <div class="slider-container" style="justify-content: flex-end;">
-                        <button class="toggle-btn active" id="btnLangKo"
-                            style="width:50px; padding:6px; font-size:1rem;">KR</button>
-                        <button class="toggle-btn" id="btnLangEn"
-                            style="width:50px; padding:6px; font-size:1rem;">EN</button>
-                    </div>
+    <!-- PVP Matchmaking Spinner Overlay -->
+    <div id="pvpMatchOverlay">
+        <div id="pvpMatchSpinner"></div>
+        <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
+            중...</h2>
+        <p
+            style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
+            (잠시만 기다려 주세요)
+        </p>
+        <button id="btnCancelMatch"
+            style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
+            매칭 취소
+        </button>
+    </div>
+
+    <!-- Tournament Bracket Overlay -->
+    <div id="tourneyBracketOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center;">
+        <h2
+            style="color: #ffd700; font-size: 3.5rem; margin-bottom: 30px; text-shadow: 0 0 20px #ffd700; font-family: 'Jua', sans-serif;">
+            🏆 토너먼트 대진표</h2>
+        <div id="bracketContainer"
+            style="display: flex; flex-direction: row; gap: 40px; max-width: 95%; max-height: 60vh; overflow: auto; padding: 20px; align-items: center;">
+            <!-- Bracket dynamically drawn here -->
+        </div>
+        <p id="tourneyStatusText"
+            style="color: #00ffd9; font-size: 2rem; margin-top: 30px; font-family: 'Jua', sans-serif; animation: blink 1.5s infinite;">
+            대기 중...</p>
+    </div>
+
+    <!-- Settings Overlay -->
+    <div id="settingsOverlay">
+        <div class="settings-box">
+            <h2 data-i18n="ui_settings_title">설정</h2>
+            <div class="toggle-row">
+                <span data-i18n="ui_lang">언어 / Language</span>
+                <div class="slider-container" style="justify-content: flex-end;">
+                    <button class="toggle-btn active" id="btnLangKo"
+                        style="width:50px; padding:6px; font-size:1rem;">KR</button>
+                    <button class="toggle-btn" id="btnLangEn"
+                        style="width:50px; padding:6px; font-size:1rem;">EN</button>
                 </div>
-                <div class="toggle-row">
-                    <span data-i18n="ui_bgm">배경음악</span>
-                    <div class="slider-container">
-                        <input type="range" id="bgmSlider" min="0" max="100" value="100">
-                        <div class="vol-text" id="bgmText">100%</div>
-                    </div>
-                </div>
-                <div class="toggle-row">
-                    <span data-i18n="ui_sfx">효과음</span>
-                    <div class="slider-container">
-                        <input type="range" id="sfxSlider" min="0" max="100" value="100">
-                        <span class="vol-text" id="sfxVolText">100%</span>
-                    </div>
-                </div>
-                <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
             </div>
+            <div class="toggle-row">
+                <span data-i18n="ui_bgm">배경음악</span>
+                <div class="slider-container">
+                    <input type="range" id="bgmSlider" min="0" max="100" value="100">
+                    <div class="vol-text" id="bgmText">100%</div>
+                </div>
+            </div>
+            <div class="toggle-row">
+                <span data-i18n="ui_sfx">효과음</span>
+                <div class="slider-container">
+                    <input type="range" id="sfxSlider" min="0" max="100" value="100">
+                    <span class="vol-text" id="sfxVolText">100%</span>
+                </div>
+            </div>
+            <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
+        </div>
+    </div>
+
+    <!-- Rulebook Overlay -->
+    <div id="rulebookOverlay">
+        <div class="rulebook-box">
+            <h2 data-i18n="rulebook_title">게임 규칙</h2>
+
+            <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
+            <ul>
+                <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
+                <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
+                <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
+            </ul>
+
+            <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
+            <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
+            <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
+                <b>카드 등급(계급)</b>을 비교합니다.
+            </p>
+            <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
+                상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
+
+            <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
+            <ul>
+                <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
+                        src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
+                        이깁니다.</span></li>
+                <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
+                    <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
+                        이깁니다.</span>
+                </li>
+                <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
+                    <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
+                </li>
+                <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
+                        src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
+                        이깁니다.</span></li>
+                <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
+                    <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
+                </li>
+            </ul>
+
+            <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
+            <ol>
+                <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
+                        영웅</span></li>
+                <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
+                        영웅</span></li>
+                <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
+                        영웅</span></li>
+                <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
+                        영웅</span></li>
+                <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
+                        존재</span></li>
+            </ol>
+
+            <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
+        </div>
+    </div>
+
+    <div id="mainLayout">
+        <div class="side-panel" id="logPanel">
+            <!-- User requested complete removal of the in-game Logo here -->
+            <h3 data-i18n="ui_log_title">전투 로그</h3>
+            <ul class="log-list" id="roundLog"></ul>
         </div>
 
-        <!-- Rulebook Overlay -->
-        <div id="rulebookOverlay">
-            <div class="rulebook-box">
-                <h2 data-i18n="rulebook_title">게임 규칙</h2>
+        <!-- Center Panel: Game Board -->
+        <div id="gameBoard" style="position: relative;">
+            <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
+            <div id="computerZone"></div>
 
-                <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
-                <ul>
-                    <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
-                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 5번 이기면 최종 승리합니다.</li>
-                    <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
-                </ul>
-
-                <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
-                <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
-                <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
-                    <b>카드 등급(계급)</b>을 비교합니다.
-                </p>
-                <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
-                    상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
-
-                <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
-                <ul>
-                    <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
-                            src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
-                            이깁니다.</span></li>
-                    <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
-                        <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
-                            이깁니다.</span>
-                    </li>
-                    <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
-                        <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
-                    </li>
-                    <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
-                            src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
-                            이깁니다.</span></li>
-                    <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
-                        <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
-                    </li>
-                </ul>
-
-                <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
-                <ol>
-                    <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
-                            영웅</span></li>
-                    <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
-                            영웅</span></li>
-                    <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
-                            영웅</span></li>
-                    <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
-                            영웅</span></li>
-                    <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
-                            존재</span></li>
-                </ol>
-
-                <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
+            <!-- 20s Turn Timer Bar for PVP -->
+            <div id="turnTimerBarContainer">
+                <div id="turnTimerBar"></div>
             </div>
+
+            <div id="battleZone">
+                <div id="clashEffect" class="clash-effect"></div>
+                <!-- Static labels remain invisible until battle mode -->
+                <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
+                <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
+            </div>
+            <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
+            <div id="playerZone"></div>
         </div>
 
-        <div id="mainLayout">
-            <div class="side-panel" id="logPanel">
-                <!-- User requested complete removal of the in-game Logo here -->
-                <h3 data-i18n="ui_log_title">전투 로그</h3>
-                <ul class="log-list" id="roundLog"></ul>
+        <div class="side-panel" id="chartPanel">
+            <h3 data-i18n="ui_element_table">오행 상성</h3>
+            <div class="chart-container">
+                <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
+                <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
+                <svg id="chartSvg">
+                    <defs>
+                        <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
+                        </marker>
+                        <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
+                        </marker>
+                        <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
+                        </marker>
+                        <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
+                        </marker>
+                        <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
+                        </marker>
+                    </defs>
+                    <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
+
+                    <!-- F to M -->
+                    <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+
+                    <!-- M to Wo -->
+                    <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+
+                    <!-- Wo to E -->
+                    <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+
+                    <!-- E to Wa -->
+                    <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+
+                    <!-- Wa to F -->
+                    <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                </svg>
+
+                <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
+                <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
+                <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
+                <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
+                <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
             </div>
 
-            <!-- Center Panel: Game Board -->
-            <div id="gameBoard">
-                <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
-                <div id="computerZone"></div>
-                <div id="battleZone">
-                    <div id="clashEffect" class="clash-effect"></div>
-                    <!-- Static labels remain invisible until battle mode -->
-                    <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
-                    <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
+            <div class="chart-text-list">
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
                 </div>
-                <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
-                <div id="playerZone"></div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
+                </div>
+                <div class="chart-text-row">
+                    <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
+                    <span class="arrow-tag">➔</span>
+                    <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                </div>
             </div>
 
-            <div class="side-panel" id="chartPanel">
-                <h3 data-i18n="ui_element_table">오행 상성</h3>
-                <div class="chart-container">
-                    <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
-                    <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
-                    <svg id="chartSvg">
-                        <defs>
-                            <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
-                            </marker>
-                            <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
-                            </marker>
-                            <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
-                            </marker>
-                            <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
-                            </marker>
-                            <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
-                                markerHeight="6" orient="auto">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
-                            </marker>
-                        </defs>
-                        <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
-
-                        <!-- F to M -->
-                        <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
-
-                        <!-- M to Wo -->
-                        <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
-
-                        <!-- Wo to E -->
-                        <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
-
-                        <!-- E to Wa -->
-                        <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
-
-                        <!-- Wa to F -->
-                        <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
-                    </svg>
-
-                    <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
-                    <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
-                    <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
-                    <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
-                    <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
-                </div>
-
-                <div class="chart-text-list">
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
-                    </div>
-                    <div class="chart-text-row">
-                        <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
-                        <span class="arrow-tag">➔</span>
-                        <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                    </div>
-                </div>
-
-                <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
-                <button id="headerRestartBtn"
-                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
-                    <img src="images/btn_restart.png?v=3" alt="Restart"
-                        style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
-                </button>
-            </div>
-        </div>
-
-        <div id="finalOverlay">
-            <div class="final-box" id="finalTitle">승리!</div>
-            <button id="restartBtn">
-                <img src="images/btn_restart.png?v=3" alt="Restart">
+            <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
+            <button id="headerRestartBtn"
+                style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
+                <img src="images/btn_restart.png?v=3" alt="Restart"
+                    style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
             </button>
         </div>
+    </div>
 
-        <!-- Removed floating settingsBtn to merge into header-buttons above -->
+    <div id="finalOverlay">
+        <div class="final-box" id="finalTitle">승리!</div>
+        <button id="restartBtn">
+            <img src="images/btn_restart.png?v=3" alt="Restart">
+        </button>
+    </div>
 
-        <!-- End Global Scale Container -->
+    <!-- Removed floating settingsBtn to merge into header-buttons above -->
+
+    <!-- End Global Scale Container -->
     </div>
 
     <script>
@@ -2003,7 +2234,7 @@
                 rule_g5: "Gods and Prime Movers"
             },
             ko: {
-                ui_round: "Round", ui_me: "나", ui_enemy: "상대방", btn_restart: "Restart",
+                ui_round: "Round", ui_me: "Player", ui_enemy: "Com", btn_restart: "Restart",
                 ui_diff_title: "난이도 선택",
                 ui_diff_beginner: "5장 덱 / 3선승제",
                 ui_diff_expert: "7장 덱 (기본 5 + 랜덤 2) / 5선승제",
@@ -2077,6 +2308,8 @@
             useFetchStreams: false
         });
 
+        let lobbySocket = null;
+
         // Check Auth State
         auth.onAuthStateChanged(user => {
             const loginSection = document.getElementById('loginSection');
@@ -2129,6 +2362,32 @@
                             }
                         }
                     }
+
+                    // Proceed to establish Lobby Socket after naming is locked in
+                    document.getElementById('onlineUserPanel').style.display = 'flex';
+                    if (!lobbySocket) {
+                        // lobbySocket = io('http://localhost:3000'); // Testing
+                        lobbySocket = io('https://chrono-link.onrender.com'); // Production URL
+
+                        lobbySocket.on('connect', () => {
+                            lobbySocket.emit('lobby_login', { name: nameSpan.innerText });
+                        });
+
+                        lobbySocket.on('update_user_list', (users) => {
+                            const ul = document.getElementById('onlineUserList');
+                            ul.innerHTML = '';
+                            if (users.length === 0) {
+                                ul.innerHTML = '<li style="color:#777; justify-content:center;">접속자가 없습니다.</li>';
+                            } else {
+                                users.forEach(name => {
+                                    const li = document.createElement('li');
+                                    li.innerText = name;
+                                    ul.appendChild(li);
+                                });
+                            }
+                        });
+                    }
+
                 };
                 fetchProfile();
 
@@ -2139,6 +2398,11 @@
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
                 document.getElementById('userInfoBox').style.display = 'none';
+                document.getElementById('onlineUserPanel').style.display = 'none';
+                if (lobbySocket) {
+                    lobbySocket.disconnect();
+                    lobbySocket = null;
+                }
             }
         });
 
@@ -2284,6 +2548,13 @@
 
         let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1;
         let isBattling = false;
+        let isPvpMode = false;
+        let pvpSocket = null;
+        let pvpRoomId = null;
+        let pvpMyId = null;
+        let pvpOppId = null;
+        let pvpOppName = '';
+        let pvpTurnSubmitted = false;
         let maxWins = 3;
         let maxRounds = 5;
         let currentMode = 'Beginner';
@@ -2373,8 +2644,11 @@
             if (!card) return '<div class="card-slot placeholder">Empty</div>';
 
             const isUsed = card.used;
+            // Only apply grayscale after the card has a battle result
+            const usedStyle = (isUsed && card.result) ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
-            const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx}, this)"` : '';
+            const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx})"` : '';
+            // W/L result overlays deleted; relying purely on the grayscale effect
 
             const bgColors = { 'Fire': 'ffcccc', 'Water': 'cceeff', 'Wood': 'ccffcc', 'Earth': 'ffeebb', 'Metal': 'ececec' };
             const textColors = { 'Fire': 'ff0000', 'Water': '0066ff', 'Wood': '009900', 'Earth': 'aa6600', 'Metal': '555555' };
@@ -2382,11 +2656,10 @@
             const tc = textColors[card.element];
             const imgUrl = card.image ? card.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(card.avatar)}&background=${bg}&color=${tc}&size=450&font-size=0.4&bold=true`;
 
-            // Both cards show face-up now, no more hidden-card trick!
             return `
         <div class="card-slot" id="${isPlayer ? 'p' : 'c'}-slot-${idx}">
-          <div class="card-wrapper">
-            <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}">
+          <div class="card-wrapper" style="position:relative;">
+            <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}" style="${usedStyle}">
               <div class="hologram-overlay"></div>
               <div class="card-header">
                 <span class="card-grade">${card.grade}</span>
@@ -2412,14 +2685,14 @@
                 const pName = t(lg.pCard.name);
                 const cName = t(lg.cCard.name);
                 const resText = lg.logClass === 'win' ? `<span style="color:#00ffd9">${t('log_p_win')} (+${lg.pts})</span>` :
-                    lg.logClass === 'lose' ? `<span style="color:#ff0055">${t('log_e_win')} (+${lg.pts})</span>` :
+                    lg.logClass === 'lose' ? `<span style="color:#ff0000">${t('log_e_win')} (+${lg.pts})</span>` :
                         `<span style="color:#aaa">${t('log_draw')}</span>`;
 
+                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
+                const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
+
                 const li = `<li class="log-entry ${lg.logClass}">
-         <div><strong>- Round ${lg.roundNum} -</strong></div>
-         <div>${t('ui_me')}: <strong>${pName}</strong>( ${emo[lg.pCard.element]} ${t('el_' + lg.pCard.element.toLowerCase())} )</div>
-         <div>${t('ui_enemy')}: <strong>${cName}</strong>( ${emo[lg.cCard.element]} ${t('el_' + lg.cCard.element.toLowerCase())} )</div>
-         <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #555;">${t('log_res')} <br><strong>${resText}</strong></div>
+         <strong>[Round ${lg.roundNum}]</strong> ${meName}(${pName} ${emo[lg.pCard.element]}) <strong>vs</strong> ${oppNameText}(${cName} ${emo[lg.cCard.element]}) ➔ <strong>${resText}</strong>
       </li>`;
                 ul.insertAdjacentHTML('beforeend', li);
             });
@@ -2440,6 +2713,18 @@
             cZone.innerHTML = '';
             cpuDeck.forEach((c, i) => cZone.innerHTML += cardHTML(c, false, i));
 
+            if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').innerText;
+                document.getElementById('cpuTitle').innerText = pvpOppName;
+                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = document.getElementById('userDisplayName').innerText;
+                if (document.getElementById('headerCpuName')) document.getElementById('headerCpuName').innerText = pvpOppName;
+            } else {
+                document.getElementById('playerTitle').innerText = t('ui_me');
+                document.getElementById('cpuTitle').innerText = t('ui_enemy');
+                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = t('ui_me');
+                if (document.getElementById('headerCpuName')) document.getElementById('headerCpuName').innerText = t('ui_enemy');
+            }
+
             document.getElementById('playerScoreUi').innerText = pWin;
             document.getElementById('cpuScoreUi').innerText = cWin;
             const safeRound = Math.min(round, 7);
@@ -2458,12 +2743,16 @@
             if (pWin >= maxWins || cWin >= maxWins || round > maxRounds) {
                 const overlay = document.getElementById('finalOverlay');
                 const title = document.getElementById('finalTitle');
+
+                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
+                const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
+
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" alt="Victory">`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" alt="Defeat">`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
-                    title.innerHTML = `<h1 style="color:#aaa; font-size:8rem; font-family:'Jua',sans-serif;">무승부</h1>`;
+                    title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
                 overlay.style.display = 'flex';
                 // Final music cue
@@ -2477,17 +2766,43 @@
 
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        async function playTurn(pIdx) {
+        async function playTurn(pIdx, manualCIdx = null) {
+            if (isPvpMode && manualCIdx === null) {
+                if (isBattling || playerDeck[pIdx].used || pvpTurnSubmitted) return;
+                pvpTurnSubmitted = true;
+                playSound('select');
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const pDomCard = document.getElementById(`p-card-${pIdx}`);
+                pDomCard.style.transform = 'translateY(-30px)';
+                pDomCard.style.boxShadow = '0 0 20px #ffd700, 0 0 0 4px #ffd700'; // Golden Highlight
+                pDomCard.style.zIndex = '100';
+
+                if (isTourneyMode && tourneyRoomId) {
+                    pvpSocket.emit('submit_tourney_card', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, cardInfo: playerDeck[pIdx] });
+                } else {
+                    pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
+                }
+                return;
+            }
+
             if (isBattling || playerDeck[pIdx].used) return;
             isBattling = true;
             playSound('select');
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
             const pCardData = playerDeck[pIdx];
-            const availCPU = cpuDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
-            const cPick = availCPU[Math.floor(Math.random() * availCPU.length)];
-            const cIdx = cPick.i;
-            const cCardData = cPick.c;
+            let cIdx;
+
+            if (manualCIdx !== null) {
+                cIdx = manualCIdx;
+            } else {
+                const availCPU = cpuDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                const cPick = availCPU[Math.floor(Math.random() * availCPU.length)];
+                cIdx = cPick.i;
+            }
+
+            const cCardData = cpuDeck[cIdx];
 
             pCardData.used = true; cCardData.used = true;
 
@@ -2498,7 +2813,6 @@
             const pRect = pDomCard.getBoundingClientRect();
             const cRect = cDomCard.getBoundingClientRect();
 
-            // Set transition for initial flight (none, instant appear) to prevent phantom flying ghost visuals
             // Bypass rotated getBoundingClientRect coordinates by strictly using app-relative DOM offset math
             const bz = document.getElementById('battleZone');
             const gb = document.getElementById('gameBoard');
@@ -2512,10 +2826,20 @@
 
             const currentScale = window.currentAppScale || 1;
 
-            const pLocalX = (pRect.left - appBox.left) / currentScale;
-            const pLocalY = (pRect.top - appBox.top) / currentScale;
-            const cLocalX = (cRect.left - appBox.left) / currentScale;
-            const cLocalY = (cRect.top - appBox.top) / currentScale;
+            // Fix: In mobile forced landscape mode, getBoundingClientRect returns visually rotated sizes 
+            // which breaks our offset calculation. Use a robust fallback if it drops below zero or errors out.
+            let pLocalX = (pRect.left - appBox.left) / currentScale;
+            let pLocalY = (pRect.top - appBox.top) / currentScale;
+            let cLocalX = (cRect.left - appBox.left) / currentScale;
+            let cLocalY = (cRect.top - appBox.top) / currentScale;
+
+            // If the math spins out because of CSS rotation on mobile body, snap to safe hardcoded deck positions
+            if (pLocalX < 0 || cLocalX < 0) {
+                pLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
+                pLocalY = gb.offsetTop + gb.offsetHeight - 300;
+                cLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
+                cLocalY = gb.offsetTop + 100;
+            }
 
             appContainer.appendChild(pDomCard);
             pDomCard.style.top = pLocalY + 'px';
@@ -2546,10 +2870,6 @@
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
 
-            // Place both at the exact center for translation
-            const centerLeft = localCenterX - (baseW / 2);
-            const centerTop = localCenterY - (baseH / 2);
-
             // Enter focus mode
             document.body.classList.add('battling-mode');
             document.getElementById('playerZone').classList.add('focus-mode');
@@ -2564,15 +2884,21 @@
             cDomCard.style.width = baseW + 'px';
             cDomCard.style.height = baseH + 'px';
 
-            await sleep(10); // small DOM ticket
+            await sleep(50);
+
+            // Add smooth flight transition
+            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
 
             // Align their base position to exact center
+            const centerLeft = localCenterX - (baseW / 2);
+            const centerTop = localCenterY - (baseH / 2);
             pDomCard.style.top = centerTop + 'px';
             pDomCard.style.left = centerLeft + 'px';
             cDomCard.style.top = centerTop + 'px';
             cDomCard.style.left = centerLeft + 'px';
 
-            // Push them apart instantly and scale up for battle zone (1.76x scale, 85% width percentage distance)
+            // Push them apart instantly and scale up for battle zone
             pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
             cDomCard.style.transform = 'scale(1.76) translateX(85%)';
 
@@ -2580,7 +2906,7 @@
             document.body.classList.add('show-labels');
 
             // Wait for transform to complete visually and allow match-up view duration
-            await sleep(1500); // 650 + 850 = 1500 total wait
+            await sleep(1500);
 
             // Multi-Hit: 3 Times
             for (let hit = 1; hit <= 3; hit++) {
@@ -2634,6 +2960,7 @@
 
             if (r === 'A') {
                 pWin += pts; rollover = 1; popClass = 'damage-win'; popTxt = t('pop_win'); logClass = 'win';
+                pCardData.result = 'win'; cCardData.result = 'lose';
                 playSound('win');
 
                 // Loser goes behind, Winner stays front
@@ -2646,6 +2973,7 @@
                 pDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,215,0,0.8)) brightness(1.2)';
             } else if (r === 'B') {
                 cWin += pts; rollover = 1; popClass = 'damage-lose'; popTxt = t('pop_lose'); logClass = 'lose';
+                pCardData.result = 'lose'; cCardData.result = 'win';
                 playSound('lose');
 
                 // Loser goes behind, Winner stays front
@@ -2658,6 +2986,7 @@
                 cDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,0,85,0.8)) brightness(1.2)';
             } else {
                 rollover++; popClass = 'damage-draw'; popTxt = t('pop_draw'); logClass = 'draw';
+                pCardData.result = 'draw'; cCardData.result = 'draw';
                 playSound('draw');
                 pDomCard.style.filter = 'brightness(0.6)';
                 cDomCard.style.filter = 'brightness(0.6)';
@@ -2702,20 +3031,151 @@
             render();
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
-                checkGameEnd();
+                if (typeof isTourneyMode !== 'undefined' && isTourneyMode) {
+                    // Prevent duplicate tallying
+                    const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
+                    if (myWin === pvpMyId || (myWin === 'Draw' && pvpMyId < pvpOppId)) {
+                        pvpSocket.emit('tourney_match_end', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, winnerId: myWin });
+                    }
+                } else if (isPvpMode) {
+                    // Prevent duplicate tallying by having only the "winner" report the match end.
+                    // If it's a draw, only the "Host" (alphabetically first ID) reports it to prevent double draw.
+                    const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
+                    if (myWin === pvpMyId || (myWin === 'Draw' && pvpMyId < pvpOppId)) {
+                        pvpSocket.emit('match_end', { roomId: pvpRoomId, winnerId: myWin });
+                    }
+                } else {
+                    checkGameEnd();
+                }
             } else {
                 isBattling = false;
+                // PVP is now handled autonomously by server setTimeout
             }
+        }
+
+        // --- PVP Helpers ---
+        function startPvpGame() {
+            // Mobile iOS hack to unlock audio context reliably
+            if (audioCtx.state === 'suspended') {
+                const unlock = () => { audioCtx.resume(); document.removeEventListener('touchstart', unlock); };
+                document.addEventListener('touchstart', unlock);
+                audioCtx.resume();
+            }
+
+            document.getElementById('lobbyOverlay').style.display = 'none';
+            document.getElementById('finalOverlay').style.display = 'none';
+
+            // Reveal game elements
+            document.getElementById('mainLayout').style.display = 'flex';
+            document.querySelector('.score-board').style.display = 'flex';
+
+            if (currentMode === 'Expert') {
+                maxWins = 4;
+                maxRounds = 7;
+            } else {
+                maxWins = 3;
+                maxRounds = 5;
+            }
+
+            // Opponent's deck isn't sent immediately upon start, we wait for decks_synced event
+            playerDeck = createDeck(currentMode);
+            cpuDeck = [];
+            pvpSocket.emit('send_deck', { roomId: pvpRoomId, deck: playerDeck });
+
+            pWin = cWin = 0; round = 1; rollover = 1;
+            logHistory = [];
+            document.getElementById('roundLog').innerHTML = '';
+            isBattling = false;
+            pvpTurnSubmitted = false;
+
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+            startBgm('bgm_game');
+        }
+
+        function startPvpTurn(timeLimit) {
+            pvpTurnSubmitted = false;
+            isBattling = false;
+
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            const timerContainer = document.getElementById('turnTimerBarContainer');
+            const timerBar = document.getElementById('turnTimerBar');
+
+            timerContainer.style.display = 'block';
+
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#00ff00';
+
+            void timerBar.offsetWidth; // force reflow
+
+            timerBar.style.transition = `width ${timeLimit}s linear, background-color ${timeLimit}s linear`;
+            timerBar.style.width = '0%';
+            timerBar.style.backgroundColor = '#ff0000';
+        }
+
+        async function resolveTourneyRound(myCard, oppCard) {
+            document.getElementById('turnTimerBarContainer').style.display = 'none';
+
+            let pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade && !c.used);
+            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade);
+
+            let cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade && !c.used);
+            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade);
+
+            if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // Bypass local duplicate check lock
+
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            await playTurn(pIdx, cIdx);
+
+            if (pWin >= maxWins) {
+                pvpSocket.emit('tourney_match_end', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, winnerId: pvpMyId });
+            }
+        }
+
+        async function resolvePvpRound(myCard, oppCard) {
+            document.getElementById('turnTimerBarContainer').style.display = 'none';
+
+            // Find my card index
+            let pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade && !c.used);
+            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade);
+
+            // Find opponent's card index in synced deck
+            let cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade && !c.used);
+            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade);
+
+            if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // ensure playTurn works properly
+
+            // Re-render opponent zone so DOM elements exist cleanly before animation kicks in
+            render();
+            document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+
+            // Trigger visual sequence
+            await playTurn(pIdx, cIdx);
         }
 
         function startGame(mode) {
             currentMode = mode;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            // Mobile iOS hack to unlock audio context
+            if (audioCtx.state === 'suspended') {
+                const unlock = () => { audioCtx.resume(); document.removeEventListener('touchstart', unlock); };
+                document.addEventListener('touchstart', unlock);
+                audioCtx.resume();
+            }
+
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
+            // Reveal game elements
+            document.getElementById('mainLayout').style.display = 'flex';
+            document.querySelector('.score-board').style.display = 'flex';
+
             if (mode === 'Expert') {
-                maxWins = 5;
+                maxWins = 4;
                 maxRounds = 7;
             } else {
                 maxWins = 3;
@@ -2723,7 +3183,15 @@
             }
 
             playerDeck = createDeck(mode);
-            cpuDeck = createDeck(mode);
+            // In PVP or Tournament mode, CPU deck comes via sockets, so we leave it empty/placeholder until synced
+            if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                cpuDeck = [];
+                // Set the opponent's name now
+                document.getElementById('cpuTitle').innerText = (typeof pvpOppName !== 'undefined' ? pvpOppName : 'Com') + "님";
+            } else {
+                cpuDeck = createDeck(mode);
+            }
+
             pWin = cWin = 0; round = 1; rollover = 1;
             logHistory = []; // Reset combat logs
             document.getElementById('roundLog').innerHTML = '';
@@ -2738,6 +3206,11 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
             document.getElementById('finalOverlay').style.display = 'none';
             document.getElementById('settingsOverlay').style.display = 'none';
+
+            // Hide game elements to prevent bleed-through
+            document.getElementById('mainLayout').style.display = 'none';
+            document.querySelector('.score-board').style.display = 'none';
+
             document.getElementById('lobbyOverlay').style.display = 'flex';
 
             // Reset to main menu view conditionally if logged in (auth listener handles login gate)
@@ -2792,6 +3265,43 @@
                 document.getElementById('mainMenuSection').style.display = 'block';
             });
 
+            // Tournament Menu Handlers
+            document.getElementById('btnMenuTourney').addEventListener('click', () => {
+                document.getElementById('mainMenuSection').style.display = 'none';
+                document.getElementById('tourneySection').style.display = 'block';
+                if (!pvpSocket) {
+                    initPvpSocket(() => pvpSocket.emit('get_tourney_rooms'));
+                } else {
+                    pvpSocket.emit('get_tourney_rooms');
+                }
+            });
+            document.getElementById('btnBackFromTourney').addEventListener('click', () => {
+                document.getElementById('tourneySection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'block';
+            });
+            document.getElementById('btnRefreshTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) pvpSocket.emit('get_tourney_rooms');
+            });
+            document.getElementById('btnCreateTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    const roomTitle = document.getElementById('userDisplayName').innerText + "님의 방";
+                    pvpSocket.emit('create_tourney_room', { roomName: roomTitle, maxPlayers: 16, userName: document.getElementById('userDisplayName').innerText });
+                }
+            });
+            document.getElementById('btnLeaveTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    pvpSocket.emit('leave_tourney_room');
+                    document.getElementById('tourneyRoomSection').style.display = 'none';
+                    document.getElementById('tourneySection').style.display = 'block';
+                    pvpSocket.emit('get_tourney_rooms');
+                }
+            });
+            document.getElementById('btnStartTourney').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected && tourneyRoomId) {
+                    pvpSocket.emit('start_tourney', { roomId: tourneyRoomId });
+                }
+            });
+
             // My Page Handlers
             document.getElementById('btnMenuMyPage').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
@@ -2814,7 +3324,328 @@
             });
 
             document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
-            document.getElementById('btnPvpRandom').addEventListener('click', () => alert("PVP 랜덤 덱 모드는 준비 중입니다!"));
+
+            // Cancel PVP Matchmaking
+            document.getElementById('btnCancelMatch').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    pvpSocket.emit('cancel_queue');
+                }
+                document.getElementById('pvpMatchOverlay').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'block';
+                isPvpMode = false;
+                if (typeof isTourneyMode !== 'undefined') isTourneyMode = false;
+            });
+
+            const updateTourneyRoomUI = (room) => {
+                document.getElementById('tourneyRoomTitle').innerText = room.name;
+                document.getElementById('tourneyRoomCount').innerText = `참가자: ${room.players.length} / ${room.maxPlayers} (최소 4명)`;
+                const grid = document.getElementById('tourneyPlayerGrid');
+                grid.innerHTML = '';
+
+                for (let i = 0; i < 16; i++) {
+                    const p = room.players[i];
+                    if (p) {
+                        grid.innerHTML += `<div style="background: rgba(255, 215, 0, 0.1); border: 2px solid ${p.status === 'ALIVE' ? '#00ffd9' : '#555'}; border-radius: 8px; padding: 15px 5px; text-align: center; color: ${p.status === 'ALIVE' ? '#fff' : '#555'}; font-size: 1.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; justify-content: center; min-height: 55px;">
+                            ${p.name} ${room.hostId === p.id ? '👑' : ''}
+                        </div>`;
+                    } else {
+                        grid.innerHTML += `<div style="background: rgba(255, 255, 255, 0.05); border: 2px dashed #555; border-radius: 8px; height: 55px;"></div>`;
+                    }
+                }
+
+                if (room.hostId === pvpSocket.id) {
+                    const startBtn = document.getElementById('btnStartTourney');
+                    startBtn.style.display = 'inline-block';
+                    if (room.players.length >= 4) {
+                        startBtn.style.opacity = '1';
+                        startBtn.style.pointerEvents = 'auto';
+                        startBtn.innerText = '🚀 토너먼트 시작 (방장전용)';
+                    } else {
+                        startBtn.style.opacity = '0.5';
+                        startBtn.style.pointerEvents = 'none';
+                        startBtn.innerText = '인원 부족 (최소 4명)';
+                    }
+                } else {
+                    document.getElementById('btnStartTourney').style.display = 'none';
+                }
+            };
+
+            const renderBracket = (bracket) => {
+                const container = document.getElementById('bracketContainer');
+                container.innerHTML = '';
+
+                bracket.forEach((round, rIndex) => {
+                    let colHtml = `<div style="display: flex; flex-direction: column; gap: 20px; align-items: center; min-width: 150px;">
+                                      <h3 style="color:#aaa; font-size:1.5rem; text-align:center;">Round ${rIndex + 1}</h3>`;
+                    round.forEach(match => {
+                        const p1Name = match.p1 ? match.p1.name : "???";
+                        const p2Name = match.p2 ? match.p2.name : (match.status === 'DONE' && match.p1 ? "BYE" : "???");
+
+                        let matchColor = "rgba(0,0,0,0.5)";
+                        let border = "1px solid #777";
+                        if (match.status === 'PLAYING') { border = "2px solid #00ffd9"; matchColor = "#222"; }
+                        else if (match.status === 'DONE') { matchColor = "rgba(0,0,0,0.8)"; }
+
+                        const winStyle = "color:#ffd700; font-weight:bold;";
+                        const p1Style = (match.winner && match.winner.id === (match.p1 ? match.p1.id : '')) ? winStyle : "color:#fff";
+                        const p2Style = (match.winner && match.winner.id === (match.p2 ? match.p2.id : '')) ? winStyle : "color:#fff";
+
+                        colHtml += `<div style="background: ${matchColor}; border: ${border}; border-radius: 8px; padding: 10px; width: 100%; text-align: center;">
+                                        <div style="font-size: 1.5rem; ${p1Style}">${p1Name}</div>
+                                        <div style="font-size: 1rem; color:#555; margin: 5px 0;">vs</div>
+                                        <div style="font-size: 1.5rem; ${p2Style}">${p2Name}</div>
+                                    </div>`;
+                    });
+                    colHtml += `</div>`;
+
+                    if (rIndex < bracket.length - 1) {
+                        colHtml += `<div style="display: flex; align-items: center; color: #555; font-size: 2rem;">▶</div>`;
+                    }
+                    container.innerHTML += colHtml;
+                });
+            };
+
+            const initPvpSocket = (onConnectCallback = null) => {
+                pvpSocket = io('https://chrono-link.onrender.com');
+
+                if (onConnectCallback) {
+                    pvpSocket.on('connect', onConnectCallback);
+                }
+
+                // --------- TOURNAMENT SOCKET LOGIC ---------
+                pvpSocket.on('update_tourney_rooms', (rooms) => {
+                    const list = document.getElementById('tourneyRoomList');
+                    if (list) {
+                        list.innerHTML = '';
+                        rooms.forEach(r => {
+                            list.innerHTML += `<div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid #777; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: rgba(0,0,0,0.6);">
+                                <div>
+                                    <strong style="color: #00ffd9; font-size: 2rem; display: block; margin-bottom: 5px;">${r.name}</strong>
+                                    <span style="font-size: 1.5rem; color: #aaa;">[${r.curr}/${r.max}]</span>
+                                    <span style="color: #ffd700; margin-left: 10px; font-size: 1.5rem;">${r.status}</span>
+                                </div>
+                                <button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').innerText}' })" 
+                                    style="padding: 15px 25px; background: #00ffd9; color: #000; border: none; border-radius: 8px; font-size: 1.8rem; font-family: 'Jua', sans-serif; cursor: pointer;">
+                                    참가하기
+                                </button>
+                            </div>`;
+                        });
+                    }
+                });
+
+                pvpSocket.on('tourney_error', (msg) => { alert("Error: " + msg); });
+
+                pvpSocket.on('tourney_room_joined', (room) => {
+                    tourneyRoomId = room.id;
+                    isTourneyMode = true;
+                    document.getElementById('tourneySection').style.display = 'none';
+                    document.getElementById('tourneyRoomSection').style.display = 'block';
+                    updateTourneyRoomUI(room);
+                });
+
+                pvpSocket.on('tourney_room_updated', (room) => {
+                    if (tourneyRoomId === room.id) updateTourneyRoomUI(room);
+                });
+
+                pvpSocket.on('tourney_started', (data) => {
+                    document.getElementById('tourneyRoomSection').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    document.getElementById('tourneyStatusText').innerText = "대진표가 생성되었습니다! 매치가 곧 시작됩니다.";
+                    renderBracket(data.bracket);
+                });
+                pvpSocket.on('tourney_bracket_update', (data) => {
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    renderBracket(data.bracket);
+                    setTimeout(() => {
+                        // Only auto-hide the bracket if the player is actively back in a match
+                        if (data.status === 'PLAYING' && document.getElementById('mainLayout').style.display !== 'none') {
+                            document.getElementById('tourneyBracketOverlay').style.display = 'none';
+                        }
+                    }, 4000);
+                });
+
+                // Triggered when a player's specific match finishes (win or lose)
+                pvpSocket.on('tourney_match_concluded', () => {
+                    document.getElementById('mainLayout').style.display = 'none';
+                    document.querySelector('.score-board').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                });
+
+                pvpSocket.on('tourney_match_found', (data) => {
+                    tourneyMatchKey = data.matchKey;
+                    pvpMyId = data.myId;
+                    pvpOppId = data.oppId;
+                    pvpOppName = data.oppName;
+
+                    document.getElementById('tourneyBracketOverlay').style.display = 'none';
+                    isPvpMode = true;
+                    // Start game with 5 cards ('Beginner' mode) for tournaments
+                    startGame('Beginner');
+                    // To prevent AI from making a move before the opponent, we flag battling state manually
+                    isBattling = false;
+
+                    pvpSocket.emit('send_tourney_deck', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, deck: playerDeck });
+                });
+
+                pvpSocket.on('tourney_decks_synced', (data) => {
+                    cpuDeck = data.oppDeck;
+                    render();
+                });
+
+                pvpSocket.on('tourney_round_start', (data) => {
+                    round = data.round;
+                    startPvpTurn(data.timeLimit);
+                });
+
+                pvpSocket.on('force_tourney_auto_pick', () => {
+                    if (!pvpTurnSubmitted) {
+                        const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                        if (avail.length > 0) {
+                            const pick = avail[Math.floor(Math.random() * avail.length)];
+                            playTurn(pick.i);
+                        }
+                    }
+                });
+
+                pvpSocket.on('tourney_opponent_picked', () => {
+                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                });
+
+                pvpSocket.on('tourney_round_reveal', (data) => {
+                    document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+                    resolveTourneyRound(data.results[pvpMyId], data.results[pvpOppId]);
+                });
+
+                pvpSocket.on('tourney_finished', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    renderBracket(data.bracket);
+                    document.getElementById('tourneyStatusText').innerText = `🎉 최종 우승: ${data.winner.name} 🎉\n\n(새로고침을 통해 로비로 나갈 수 있습니다.)`;
+                    tourneyRoomId = null;
+                });
+
+                // --------- RANDOM PVP SOCKET LOGIC ---------
+                pvpSocket.on('match_found', (data) => {
+                    pvpRoomId = data.roomId;
+                    pvpMyId = data.myId;
+                    pvpOppId = data.oppId;
+                    pvpOppName = data.oppName;
+                    currentMode = data.mode; // Re-sync the mode agreed upon by the server
+
+                    document.getElementById('pvpMatchOverlay').style.display = 'none';
+                    startPvpGame();
+                    playSound('win');
+                });
+
+                pvpSocket.on('decks_synced', (data) => {
+                    cpuDeck = data.oppDeck;
+                    render();
+                });
+
+                pvpSocket.on('round_start', (data) => {
+                    round = data.round;
+                    startPvpTurn(data.timeLimit);
+                });
+
+                pvpSocket.on('opponent_picked', () => {
+                    // Append [준비 완료] to the Cpu Title directly above their cards
+                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                });
+
+                pvpSocket.on('force_auto_pick', () => {
+                    if (!pvpTurnSubmitted) {
+                        const avail = playerDeck.map((c, i) => ({ c, i })).filter(v => !v.c.used);
+                        if (avail.length > 0) {
+                            const pick = avail[Math.floor(Math.random() * avail.length)];
+                            playTurn(pick.i);
+                        }
+                    }
+                });
+
+                pvpSocket.on('round_reveal', (data) => {
+                    // Clear the [준비 완료] tag from the cpuTitle
+                    document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+                    resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
+                });
+
+                pvpSocket.on('ask_rematch', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'flex';
+                    const title = document.getElementById('finalTitle');
+                    const myScore = data.scores[pvpMyId];
+                    const oppScore = data.scores[pvpOppId];
+                    const meName = document.getElementById('userDisplayName').innerText;
+
+                    title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0000">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
+
+                    const rBtn = document.getElementById('restartBtn');
+                    rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
+                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0000; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
+
+                    document.getElementById('btnRematchAccept').onclick = (e) => {
+                        e.stopPropagation(); // Prevent #restartBtn parent from triggering resetGame()
+                        rBtn.innerHTML = "<span style='color:#00ffd9; font-size:3rem; font-family:Jua; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;'>상대방의 선택 대기 중...</span>";
+                        pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: true });
+                    };
+                    document.getElementById('btnRematchDecline').onclick = (e) => {
+                        e.stopPropagation();
+                        pvpSocket.emit('vote_rematch', { roomId: pvpRoomId, accept: false });
+                    };
+                });
+
+                pvpSocket.on('rematch_accepted', () => {
+                    document.getElementById('finalOverlay').style.display = 'none';
+                    document.getElementById('restartBtn').innerHTML = `<img src="images/btn_restart.png?v=3" alt="Restart">`;
+                    startPvpGame();
+                });
+
+                pvpSocket.on('complete_victory', (data) => {
+                    document.getElementById('finalOverlay').style.display = 'flex';
+                    const title = document.getElementById('finalTitle');
+                    const meName = document.getElementById('userDisplayName').innerText;
+
+                    if (data.winnerId === pvpMyId) {
+                        title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                        startBgm('bgm_win');
+                    } else {
+                        title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
+                        startBgm('bgm_lose');
+                    }
+
+                    const rBtn = document.getElementById('restartBtn');
+                    rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; cursor:pointer;">로비로 돌아가기</button>`;
+                    document.getElementById('btnPvpExit').onclick = () => location.reload();
+                });
+
+                pvpSocket.on('room_closed', (data) => {
+                    alert("PVP 매치 종료: " + data.reason);
+                    location.reload();
+                });
+            };
+
+            // PVP Match Flow Logic
+            const joinPvpMatch = (mode) => {
+                if (!auth.currentUser) { alert("구글 로그인이 필요합니다."); return; }
+
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playSound('select');
+
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('pvpMatchOverlay').style.display = 'flex';
+
+                isPvpMode = true;
+
+                if (!pvpSocket) {
+                    initPvpSocket(() => {
+                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
+                    });
+                } else {
+                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
+                }
+            };
+
+            // Bind separated buttons
+            document.getElementById('btnPvpRandomBeginner').addEventListener('click', () => joinPvpMatch('Beginner'));
+            document.getElementById('btnPvpRandomExpert').addEventListener('click', () => joinPvpMatch('Expert'));
 
             // Settings Slider events
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
@@ -2852,8 +3683,8 @@
                 auth.signOut();
             });
 
-            document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
-            document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
+            document.getElementById('btnBeginner').addEventListener('click', () => { isPvpMode = false; if (typeof isTourneyMode !== 'undefined') isTourneyMode = false; startGame('Beginner'); });
+            document.getElementById('btnExpert').addEventListener('click', () => { isPvpMode = false; if (typeof isTourneyMode !== 'undefined') isTourneyMode = false; startGame('Expert'); });
 
             document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
                 const inputVal = document.getElementById('nicknameInput').value.trim();
@@ -2975,7 +3806,7 @@
 
             // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
             const BASE_HEIGHT = 1250;
-            const BASE_WIDTH = 2800;
+            const BASE_WIDTH = 2600;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
             window.currentAppScale = MathScale <= 1 ? MathScale : 1;
