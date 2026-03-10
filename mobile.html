@@ -1827,9 +1827,16 @@
                     <button class="diff-btn" id="btnPvpCustom"
                         style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
                             style="font-size: 1.2rem; color: #777;">상점 기능 준비 중...</span></button>
-                    <button class="diff-btn" id="btnPvpRandom"
-                        style="border-color:#00ffd9; color:#00ffd9; font-size: 3rem;">⚔️ 랜덤 덱 매칭<br><span
-                            style="font-size: 1.5rem; color: #fff;">(온라인 대전)</span></button>
+                    <button class="diff-btn" id="btnPvpRandomBeginner"
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        매칭<br>
+                        <span style="font-size: 1.5rem; color: #fff;">Beginner (초보자 - 5장)</span>
+                    </button>
+                    <button class="diff-btn" id="btnPvpRandomExpert"
+                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        매칭<br>
+                        <span style="font-size: 1.5rem; color: #fff;">Expert (숙련자 - 7장)</span>
+                    </button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
@@ -1883,8 +1890,14 @@
             <div id="pvpMatchSpinner"></div>
             <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
                 중...</h2>
-            <p style="color: #aaa; font-size: 1.5rem; margin-top: 15px; font-family: 'Gowun Dodum', sans-serif;">(잠시만
-                기다려 주세요)</p>
+            <p
+                style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
+                (잠시만 기다려 주세요)
+            </p>
+            <button id="btnCancelMatch"
+                style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
+                매칭 취소
+            </button>
         </div>
 
         <!-- Settings Overlay -->
@@ -2973,11 +2986,16 @@
             document.getElementById('lobbyOverlay').style.display = 'none';
             document.getElementById('finalOverlay').style.display = 'none';
 
-            maxWins = 3;
-            maxRounds = 5;
+            if (currentMode === 'Expert') {
+                maxWins = 5;
+                maxRounds = 7;
+            } else {
+                maxWins = 3;
+                maxRounds = 5;
+            }
 
             // Opponent's deck isn't sent immediately upon start, we wait for decks_synced event
-            playerDeck = createDeck('random');
+            playerDeck = createDeck(currentMode);
             cpuDeck = [];
             pvpSocket.emit('send_deck', { roomId: pvpRoomId, deck: playerDeck });
 
@@ -3152,8 +3170,17 @@
 
             document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
 
-            // --- PVP Random Match Logic (V17) ---
-            document.getElementById('btnPvpRandom').addEventListener('click', () => {
+            // Cancel PVP Matchmaking
+            document.getElementById('btnCancelMatch').addEventListener('click', () => {
+                if (pvpSocket && pvpSocket.connected) {
+                    pvpSocket.emit('cancel_queue');
+                }
+                document.getElementById('pvpMatchOverlay').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'block';
+            });
+
+            // PVP Match Flow Logic
+            const joinPvpMatch = (mode) => {
                 if (!auth.currentUser) { alert("구글 로그인이 필요합니다."); return; }
 
                 // Unlock audio strictly inside a synchronous click event for iOS constraint
@@ -3169,7 +3196,7 @@
                     pvpSocket = io('https://chrono-link.onrender.com'); // Production URL connected to Render
 
                     pvpSocket.on('connect', () => {
-                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText });
+                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
                     });
 
                     pvpSocket.on('match_found', (data) => {
@@ -3177,6 +3204,7 @@
                         pvpMyId = data.myId;
                         pvpOppId = data.oppId;
                         pvpOppName = data.oppName;
+                        currentMode = data.mode; // Re-sync the mode agreed upon by the server
 
                         document.getElementById('pvpMatchOverlay').style.display = 'none';
                         startPvpGame();
@@ -3267,9 +3295,13 @@
                         location.reload();
                     });
                 } else {
-                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText });
+                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
                 }
-            });
+            };
+
+            // Bind separated buttons
+            document.getElementById('btnPvpRandomBeginner').addEventListener('click', () => joinPvpMatch('Beginner'));
+            document.getElementById('btnPvpRandomExpert').addEventListener('click', () => joinPvpMatch('Expert'));
 
             // Settings Slider events
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);

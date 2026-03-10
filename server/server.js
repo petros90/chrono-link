@@ -37,18 +37,26 @@ io.on('connection', (socket) => {
         // Prevent duplicate queueing
         if (waitingQueue.find(p => p.id === socket.id)) return;
 
-        console.log(`${socket.id} (${userData.name}) joined queue`);
-        waitingQueue.push({ id: socket.id, name: userData.name, socket: socket });
+        const mode = userData.mode || 'Beginner'; // Default to Beginner if missing
+        console.log(`${socket.id} (${userData.name}) joined queue for [${mode}]`);
+        waitingQueue.push({ id: socket.id, name: userData.name, mode: mode, socket: socket });
 
-        if (waitingQueue.length >= 2) {
-            const p1 = waitingQueue.shift();
-            const p2 = waitingQueue.shift();
+        // Find another player in the queue with the SAME mode
+        const myIndex = waitingQueue.findIndex(p => p.id === socket.id);
+        const matchIndex = waitingQueue.findIndex((p, idx) => p.mode === mode && idx !== myIndex);
+
+        if (matchIndex !== -1) {
+            // Match found!
+            // .splice returns an array of the removed elements, we just need the first item
+            const p1 = waitingQueue.splice(Math.max(myIndex, matchIndex), 1)[0];
+            const p2 = waitingQueue.splice(Math.min(myIndex, matchIndex), 1)[0];
 
             const roomId = generateRoomId();
 
             rooms[roomId] = {
                 id: roomId,
                 players: [p1.id, p2.id],
+                mode: mode,
                 playerData: {
                     [p1.id]: { name: p1.name, matchWins: 0, ready: false, card: null, rematchVote: false },
                     [p2.id]: { name: p2.name, matchWins: 0, ready: false, card: null, rematchVote: false }
@@ -60,11 +68,20 @@ io.on('connection', (socket) => {
             p1.socket.join(roomId);
             p2.socket.join(roomId);
 
-            // Notify both players they found a match
-            io.to(p1.id).emit('match_found', { oppName: p2.name, roomId: roomId, myId: p1.id, oppId: p2.id });
-            io.to(p2.id).emit('match_found', { oppName: p1.name, roomId: roomId, myId: p2.id, oppId: p1.id });
+            // Notify both players they found a match with the correct mode
+            io.to(p1.id).emit('match_found', { oppName: p2.name, roomId: roomId, myId: p1.id, oppId: p2.id, mode: mode });
+            io.to(p2.id).emit('match_found', { oppName: p1.name, roomId: roomId, myId: p2.id, oppId: p1.id, mode: mode });
 
             // Wait for clients to generate and send their decks before starting the round.
+        }
+    });
+
+    // CANCEL QUEUE
+    socket.on('cancel_queue', () => {
+        const userInQueue = waitingQueue.find(p => p.id === socket.id);
+        if (userInQueue) {
+            waitingQueue = waitingQueue.filter(p => p.id !== socket.id);
+            console.log(`${socket.id} (${userInQueue.name}) cancelled matchmaking.`);
         }
     });
 
