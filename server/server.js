@@ -229,6 +229,10 @@ io.on('connection', (socket) => {
             if (finalMatch.status === 'DONE' && finalMatch.winner) {
                 room.status = 'FINISHED';
                 io.to(`tourney_${roomId}`).emit('tourney_finished', { winner: finalMatch.winner, bracket: room.bracket });
+
+                // Immediately delete finished tournament rooms to clean up the lobby
+                delete tournamentRooms[roomId];
+                io.emit('update_tourney_rooms', getTourneyRooms());
             }
         } else {
             io.to(`tourney_${roomId}`).emit('tourney_bracket_update', { bracket: room.bracket, status: room.status });
