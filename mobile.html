@@ -1850,12 +1850,14 @@
             </div>
 
             <!-- Section 5: Tournament Room List -->
-            <div id="tourneySection" style="display: none; transform: translateX(-600px) scale(1.5);">
-                <h2 style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center;">토너먼트 대기열</h2>
+            <div id="tourneySection"
+                style="display: none; width: 800px; max-width: 90vw; margin-right: 300px; margin-left: 20px;">
+                <h2 style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 3rem;">토너먼트 대기열
+                </h2>
                 <br>
-                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
                     <button id="btnCreateTourney" class="diff-btn"
-                        style="font-size: 1.5rem; width: 45%; padding: 15px; border-color: #00ffd9; color: #00ffd9;">방
+                        style="font-size: 2rem; width: 45%; padding: 20px; border-color: #00ffd9; color: #00ffd9;">방
                         만들기</button>
                     <button id="btnRefreshTourney" class="diff-btn"
                         style="font-size: 1.5rem; width: 45%; padding: 15px; border-color: #aaa; color: #aaa;">새로고침</button>
@@ -1873,23 +1875,23 @@
 
             <!-- Section 6: Inside Tournament Room -->
             <div id="tourneyRoomSection"
-                style="display: none; transform: translateX(-600px) scale(1.5); text-align: center;">
+                style="display: none; width: 800px; max-width: 90vw; margin-right: 300px; margin-left: 20px; text-align: center;">
                 <h2 id="tourneyRoomTitle"
-                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 2rem; margin-bottom: 10px;">방 제목
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 3rem; margin-bottom: 15px;">방 제목
                 </h2>
-                <p id="tourneyRoomCount" style="color: #aaa; font-size: 1.5rem; margin-bottom: 20px;">참가자: 1 / 16 (최소
+                <p id="tourneyRoomCount" style="color: #aaa; font-size: 2rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
                     4명)</p>
 
                 <div id="tourneyPlayerGrid"
-                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 40px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
                     <!-- Players injected here -->
                 </div>
 
                 <button class="diff-btn" id="btnStartTourney"
-                    style="display: none; border-color: #00ffd9; color: #00ffd9; font-size: 2rem; margin-bottom: 15px;">🚀
+                    style="display: none; padding: 20px; border-color: #00ffd9; color: #00ffd9; font-size: 2.5rem; margin-bottom: 20px;">🚀
                     토너먼트 시작 (방장전용)</button>
                 <button class="diff-btn" id="btnLeaveTourney"
-                    style="font-size: 1.5rem; padding: 10px; border-color:#ff0000; color:#ff0000; background:transparent;">방
+                    style="font-size: 2rem; padding: 15px; border-color:#ff0000; color:#ff0000; background:transparent;">방
                     나가기</button>
             </div>
 
@@ -3171,7 +3173,15 @@
             }
 
             playerDeck = createDeck(mode);
-            cpuDeck = createDeck(mode);
+            // In PVP or Tournament mode, CPU deck comes via sockets, so we leave it empty/placeholder until synced
+            if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                cpuDeck = [];
+                // Set the opponent's name now
+                document.getElementById('cpuTitle').innerText = (typeof pvpOppName !== 'undefined' ? pvpOppName : 'Com') + "님";
+            } else {
+                cpuDeck = createDeck(mode);
+            }
+
             pWin = cWin = 0; round = 1; rollover = 1;
             logHistory = []; // Reset combat logs
             document.getElementById('roundLog').innerHTML = '';
@@ -3443,7 +3453,11 @@
                     pvpOppName = data.oppName;
 
                     document.getElementById('tourneyBracketOverlay').style.display = 'none';
-                    startGame('Beginner'); // Use standard UI init
+                    isPvpMode = true;
+                    // Start game with 5 cards ('Beginner' mode) for tournaments
+                    startGame('Beginner');
+                    // To prevent AI from making a move before the opponent, we flag battling state manually
+                    isBattling = false;
 
                     pvpSocket.emit('send_tourney_deck', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, deck: playerDeck });
                 });
