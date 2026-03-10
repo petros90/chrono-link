@@ -16,12 +16,21 @@ const io = new Server(server, {
 // State Management
 let waitingQueue = [];
 const rooms = {};
+const globalUsers = {}; // Maps socket.id to user name
 
 // ID Generator
 const generateRoomId = () => Math.random().toString(36).substring(2, 9);
 
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
+
+    // GLOBAL LOBBY LOGIN
+    socket.on('lobby_login', (userData) => {
+        if (!userData || !userData.name) return;
+        globalUsers[socket.id] = userData.name;
+        io.emit('update_user_list', Object.values(globalUsers));
+        console.log(`User registered in lobby: ${userData.name} (${socket.id})`);
+    });
 
     // JOIN QUEUE FOR RANDOM MATCH
     socket.on('join_queue', (userData) => {
@@ -233,6 +242,13 @@ io.on('connection', (socket) => {
     // DISCONNECT
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
+
+        // Remove from global lobby
+        if (globalUsers[socket.id]) {
+            delete globalUsers[socket.id];
+            io.emit('update_user_list', Object.values(globalUsers));
+        }
+
         // Remove from queue
         waitingQueue = waitingQueue.filter(p => p.id !== socket.id);
 

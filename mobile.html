@@ -99,6 +99,60 @@
             background: #2a2a36;
         }
 
+        /* Online Users Panel (Main Menu) */
+        #onlineUserPanel {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            bottom: 40px;
+            width: 500px;
+            background: rgba(10, 10, 20, 0.85);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            z-index: 250;
+        }
+
+        #onlineUserPanel h3 {
+            color: #00ffd9;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Jua', sans-serif;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 217, 0.5);
+        }
+
+        #onlineUserList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #onlineUserList li {
+            font-size: 1.8rem;
+            color: #ddd;
+            padding: 12px 15px;
+            border-bottom: 1px solid #222;
+            font-family: 'Gowun Dodum', sans-serif;
+            display: flex;
+            align-items: center;
+        }
+
+        #onlineUserList li::before {
+            content: "●";
+            color: #00ffd9;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #00ffd9;
+        }
+
         .menu-img-btn {
             background: transparent;
             border: none;
@@ -1710,6 +1764,11 @@
 
         <!-- Lobby Overlay -->
         <div id="lobbyOverlay">
+            <div id="onlineUserPanel" style="display: none;">
+                <h3>접속 중인 플레이어</h3>
+                <ul id="onlineUserList"></ul>
+            </div>
+
             <div class="diff-box">
                 <!-- Section 1: Login Gate -->
                 <div id="loginSection">
@@ -2164,6 +2223,8 @@
             useFetchStreams: false
         });
 
+        let lobbySocket = null;
+
         // Check Auth State
         auth.onAuthStateChanged(user => {
             const loginSection = document.getElementById('loginSection');
@@ -2216,6 +2277,32 @@
                             }
                         }
                     }
+
+                    // Proceed to establish Lobby Socket after naming is locked in
+                    document.getElementById('onlineUserPanel').style.display = 'flex';
+                    if (!lobbySocket) {
+                        // lobbySocket = io('http://localhost:3000'); // Testing
+                        lobbySocket = io('https://chrono-link.onrender.com'); // Production URL
+
+                        lobbySocket.on('connect', () => {
+                            lobbySocket.emit('lobby_login', { name: nameSpan.innerText });
+                        });
+
+                        lobbySocket.on('update_user_list', (users) => {
+                            const ul = document.getElementById('onlineUserList');
+                            ul.innerHTML = '';
+                            if (users.length === 0) {
+                                ul.innerHTML = '<li style="color:#777; justify-content:center;">접속자가 없습니다.</li>';
+                            } else {
+                                users.forEach(name => {
+                                    const li = document.createElement('li');
+                                    li.innerText = name;
+                                    ul.appendChild(li);
+                                });
+                            }
+                        });
+                    }
+
                 };
                 fetchProfile();
 
@@ -2226,6 +2313,11 @@
                 tutorialSection.style.display = 'none';
                 pvpSection.style.display = 'none';
                 document.getElementById('userInfoBox').style.display = 'none';
+                document.getElementById('onlineUserPanel').style.display = 'none';
+                if (lobbySocket) {
+                    lobbySocket.disconnect();
+                    lobbySocket = null;
+                }
             }
         });
 
