@@ -718,15 +718,13 @@
 
         .log-entry {
             background: rgba(255, 255, 255, 0.05);
-            padding: 6px 10px;
+            padding: 10px 14px;
             border-radius: 8px;
             border-left: 4px solid #666;
-            font-size: 1.2rem;
-            line-height: 1.3;
+            font-size: 1.6rem;
+            line-height: 1.4;
             animation: slideInLeft 0.3s ease-out;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: keep-all;
         }
 
         .log-entry.win {
@@ -2581,9 +2579,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:270px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:270px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -2937,12 +2935,12 @@
             document.getElementById('turnTimerBarContainer').style.display = 'none';
 
             // Find my card index
-            let pIdx = playerDeck.findIndex(c => c.name === myCard.name && !c.used);
-            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.name === myCard.name);
+            let pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade && !c.used);
+            if (pIdx === -1) pIdx = playerDeck.findIndex(c => c.avatar === myCard.avatar && c.grade === myCard.grade);
 
             // Find opponent's card index in synced deck
-            let cIdx = cpuDeck.findIndex(c => c.name === oppCard.name && !c.used);
-            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.name === oppCard.name);
+            let cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade && !c.used);
+            if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade);
 
             if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // ensure playTurn works properly
 
@@ -3169,10 +3167,10 @@
                         const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:270px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            title.innerHTML = `<img src="images/btn_win.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:270px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
+                            title.innerHTML = `<img src="images/btn_lose.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
                             startBgm('bgm_lose');
                         }
 
