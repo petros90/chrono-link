@@ -313,9 +313,23 @@ io.on('connection', (socket) => {
         const p1Id = matchState.players[0];
         const p2Id = matchState.players[1];
 
+        const forcePick = (pId) => {
+            const pData = matchState.playerData[pId];
+            if (!pData.ready && pData.deck) {
+                const avail = pData.deck.filter(c => !c.used);
+                if (avail.length > 0) {
+                    const pick = avail[Math.floor(Math.random() * avail.length)];
+                    pick.used = true;
+                    pData.card = pick;
+                    pData.ready = true;
+                }
+            }
+        };
+
         if (!matchState.playerData[p1Id].ready || !matchState.playerData[p2Id].ready) {
-            io.to(p1Id).emit('force_tourney_auto_pick');
-            io.to(p2Id).emit('force_tourney_auto_pick');
+            forcePick(p1Id);
+            forcePick(p2Id);
+            resolveTourneyRound(tourneyId, matchKey);
         }
     };
 
@@ -351,6 +365,11 @@ io.on('connection', (socket) => {
 
         pData.ready = true;
         pData.card = cardInfo;
+
+        if (pData.deck) {
+            const deckCard = pData.deck.find(c => c.avatar === cardInfo.avatar && c.grade === cardInfo.grade && !c.used);
+            if (deckCard) deckCard.used = true;
+        }
 
         const p1Id = matchState.players[0];
         const p2Id = matchState.players[1];
@@ -524,6 +543,11 @@ io.on('connection', (socket) => {
         pData.ready = true;
         pData.card = cardInfo;
 
+        if (pData.deck) {
+            const deckCard = pData.deck.find(c => c.avatar === cardInfo.avatar && c.grade === cardInfo.grade && !c.used);
+            if (deckCard) deckCard.used = true;
+        }
+
         // Notify opponent that this player has picked a card (BLIND)
         socket.to(roomId).emit('opponent_picked');
 
@@ -547,9 +571,24 @@ io.on('connection', (socket) => {
         const p1Id = room.players[0];
         const p2Id = room.players[1];
 
-        // If not ready, the client will be forced to pick a random card upon receiving this signal
+        const forcePick = (pId) => {
+            const pData = room.playerData[pId];
+            if (!pData.ready && pData.deck) {
+                const avail = pData.deck.filter(c => !c.used);
+                if (avail.length > 0) {
+                    const pick = avail[Math.floor(Math.random() * avail.length)];
+                    pick.used = true;
+                    pData.card = pick;
+                    pData.ready = true;
+                }
+            }
+        };
+
+        // If not ready, server autonomously picks to prevent hanging logic if client disconnected/backgrounded
         if (!room.playerData[p1Id].ready || !room.playerData[p2Id].ready) {
-            io.to(roomId).emit('force_auto_pick');
+            forcePick(p1Id);
+            forcePick(p2Id);
+            resolveRound(roomId);
         }
     };
 
