@@ -1813,7 +1813,7 @@
 
                     <button class="diff-btn" style="border-color:#ff0000; color:#ff0000;" id="btnExpert">Expert
                         (숙련자)</button>
-                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
+                    <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 4선승제</div>
 
                     <button class="diff-btn" id="btnBackFromTutorial"
                         style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
@@ -1939,7 +1939,7 @@
                 <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
                 <ul>
                     <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
-                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 5번 이기면 최종 승리합니다.</li>
+                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
                     <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
                 </ul>
 
@@ -2987,7 +2987,7 @@
             document.getElementById('finalOverlay').style.display = 'none';
 
             if (currentMode === 'Expert') {
-                maxWins = 5;
+                maxWins = 4;
                 maxRounds = 7;
             } else {
                 maxWins = 3;
@@ -3070,7 +3070,7 @@
             document.getElementById('finalOverlay').style.display = 'none';
 
             if (mode === 'Expert') {
-                maxWins = 5;
+                maxWins = 4;
                 maxRounds = 7;
             } else {
                 maxWins = 3;

@@ -188,8 +188,12 @@ io.on('connection', (socket) => {
         // IF the match hasn't naturally ended. This prevents duplicate client requests.
         setTimeout(() => {
             if (rooms[roomId]) { // Check if match wasn't destroyed
-                // Match end condition checked defensively
-                if (room.round <= 5 && room.playerData[p1Id].matchWins < 3 && room.playerData[p2Id].matchWins < 3) {
+                const isExpert = (room.mode === 'Expert');
+                const maxRounds = isExpert ? 7 : 5;
+                const maxWins = isExpert ? 4 : 3;
+
+                // Match end condition checked defensively before automatically queuing the next turn
+                if (room.round <= maxRounds && room.playerData[p1Id].matchWins < maxWins && room.playerData[p2Id].matchWins < maxWins) {
                     startRound(roomId);
                 }
             }
