@@ -774,15 +774,13 @@
 
         .log-entry {
             background: rgba(255, 255, 255, 0.05);
-            padding: 8px 10px;
+            padding: 10px 14px;
             border-radius: 8px;
             border-left: 4px solid #666;
             font-size: 1.4rem;
-            line-height: 1.3;
+            line-height: 1.4;
             animation: slideInLeft 0.3s ease-out;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: keep-all;
             display: block;
             width: 100%;
         }
@@ -2694,7 +2692,10 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 const li = `<li class="log-entry ${lg.logClass}">
-         <strong>[Round ${lg.roundNum}]</strong> ${meName}(${pName} ${emo[lg.pCard.element]}) <strong>vs</strong> ${oppNameText}(${cName} ${emo[lg.cCard.element]}) ➔ <strong>${resText}</strong>
+         <div><strong>- Round ${lg.roundNum} -</strong></div>
+         <div>${meName}: <strong>${pName}</strong>( ${emo[lg.pCard.element]} ${t('el_' + lg.pCard.element.toLowerCase())} )</div>
+         <div>${oppNameText}: <strong>${cName}</strong>( ${emo[lg.cCard.element]} ${t('el_' + lg.cCard.element.toLowerCase())} )</div>
+         <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #555;">${t('log_res')} <br><strong>${resText}</strong></div>
       </li>`;
                 ul.insertAdjacentHTML('beforeend', li);
             });
@@ -2779,6 +2780,9 @@
                 pDomCard.style.transform = 'translateY(-30px)';
                 pDomCard.style.boxShadow = '0 0 20px #ffd700, 0 0 0 4px #ffd700'; // Golden Highlight
                 pDomCard.style.zIndex = '100';
+
+                // Add [전투 준비 완료] tag to my title to give visual feedback that the UI acknowledged the click
+                document.getElementById('playerTitle').innerHTML = `${document.getElementById('userDisplayName').innerText}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[전투 준비 완료]</span>`;
 
                 if (isTourneyMode && tourneyRoomId) {
                     pvpSocket.emit('submit_tourney_card', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, cardInfo: playerDeck[pIdx] });
@@ -3155,6 +3159,7 @@
             // Re-render opponent zone so DOM elements exist cleanly before animation kicks in
             render();
             document.getElementById('cpuTitle').innerText = pvpOppName + "님";
+            document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').innerText + "님";
 
             // Trigger visual sequence
             await playTurn(pIdx, cIdx);
@@ -3550,8 +3555,8 @@
                 });
 
                 pvpSocket.on('opponent_picked', () => {
-                    // Append [준비 완료] to the Cpu Title directly above their cards
-                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                    // Append [전투 준비 완료] to the Cpu Title directly above their cards
+                    document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#ff0055; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #ff0055">[전투 준비 완료]</span>`;
                 });
 
                 pvpSocket.on('force_auto_pick', () => {
