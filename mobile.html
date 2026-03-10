@@ -721,7 +721,7 @@
             padding: 10px 14px;
             border-radius: 8px;
             border-left: 4px solid #666;
-            font-size: 1.6rem;
+            font-size: 1.95rem;
             line-height: 1.4;
             animation: slideInLeft 0.3s ease-out;
             word-break: keep-all;
@@ -1676,10 +1676,12 @@
                 style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; height: 104px;">
                 <img id="roundImage" src="images/round1.png?v=3"
                     style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span id="headerPlayerName"
-                        data-i18n="ui_me">나</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div style="display: flex; align-items: center; gap: 10px; height: 100%;"><span id="headerCpuName"
-                        data-i18n="ui_enemy">상대방</span> <span id="cpuScoreUi" style="color:#ff0055">0</span></div>
+                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerPlayerName"
+                        data-i18n="ui_me" style="color:#00bfff">Player</span> <span id="playerScoreUi"
+                        style="color:#00ffd9">0</span></div>
+                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerCpuName"
+                        data-i18n="ui_enemy" style="color:#ff4444">Com</span> <span id="cpuScoreUi"
+                        style="color:#ff0055">0</span></div>
             </div>
 
             <!-- Right side Header Buttons perfectly centered over 590px chartPanel -->
@@ -2579,9 +2581,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -3167,10 +3169,10 @@
                         const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            title.innerHTML = `<img src="images/btn_win.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:324px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
+                            title.innerHTML = `<img src="images/btn_lose.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
                             startBgm('bgm_lose');
                         }
 
