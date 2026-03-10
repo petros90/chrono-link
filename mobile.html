@@ -1879,10 +1879,10 @@
                 <p id="tourneyRoomCount" style="color: #aaa; font-size: 1.5rem; margin-bottom: 20px;">참가자: 1 / 16 (최소
                     4명)</p>
 
-                <ul id="tourneyPlayerList"
-                    style="list-style: none; padding: 0; margin-bottom: 30px; max-height: 250px; overflow-y: auto; text-align: center;">
+                <div id="tourneyPlayerGrid"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
                     <!-- Players injected here -->
-                </ul>
+                </div>
 
                 <button class="diff-btn" id="btnStartTourney"
                     style="display: none; border-color: #00ffd9; color: #00ffd9; font-size: 2rem; margin-bottom: 15px;">🚀
@@ -3263,8 +3263,8 @@
             });
             document.getElementById('btnCreateTourney').addEventListener('click', () => {
                 if (pvpSocket && pvpSocket.connected) {
-                    const roomName = prompt("방 제목을 입력하세요:", document.getElementById('userDisplayName').innerText + "님의 방");
-                    if (roomName) pvpSocket.emit('create_tourney_room', { roomName: roomName, maxPlayers: 16, userName: document.getElementById('userDisplayName').innerText });
+                    const roomTitle = document.getElementById('userDisplayName').innerText + "님의 방";
+                    pvpSocket.emit('create_tourney_room', { roomName: roomTitle, maxPlayers: 16, userName: document.getElementById('userDisplayName').innerText });
                 }
             });
             document.getElementById('btnLeaveTourney').addEventListener('click', () => {
@@ -3316,14 +3316,32 @@
             const updateTourneyRoomUI = (room) => {
                 document.getElementById('tourneyRoomTitle').innerText = room.name;
                 document.getElementById('tourneyRoomCount').innerText = `참가자: ${room.players.length} / ${room.maxPlayers} (최소 4명)`;
-                const pList = document.getElementById('tourneyPlayerList');
-                pList.innerHTML = '';
-                room.players.forEach(p => {
-                    pList.innerHTML += `<li style="font-size: 1.8rem; color: ${p.status === 'ALIVE' ? '#fff' : '#555'}; margin-bottom: 5px;">${p.name} ${room.hostId === p.id ? '👑' : ''}</li>`;
-                });
+                const grid = document.getElementById('tourneyPlayerGrid');
+                grid.innerHTML = '';
+
+                for (let i = 0; i < 16; i++) {
+                    const p = room.players[i];
+                    if (p) {
+                        grid.innerHTML += `<div style="background: rgba(255, 215, 0, 0.1); border: 2px solid ${p.status === 'ALIVE' ? '#00ffd9' : '#555'}; border-radius: 8px; padding: 15px 5px; text-align: center; color: ${p.status === 'ALIVE' ? '#fff' : '#555'}; font-size: 1.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; justify-content: center; min-height: 55px;">
+                            ${p.name} ${room.hostId === p.id ? '👑' : ''}
+                        </div>`;
+                    } else {
+                        grid.innerHTML += `<div style="background: rgba(255, 255, 255, 0.05); border: 2px dashed #555; border-radius: 8px; height: 55px;"></div>`;
+                    }
+                }
 
                 if (room.hostId === pvpSocket.id) {
-                    document.getElementById('btnStartTourney').style.display = 'inline-block';
+                    const startBtn = document.getElementById('btnStartTourney');
+                    startBtn.style.display = 'inline-block';
+                    if (room.players.length >= 4) {
+                        startBtn.style.opacity = '1';
+                        startBtn.style.pointerEvents = 'auto';
+                        startBtn.innerText = '🚀 토너먼트 시작 (방장전용)';
+                    } else {
+                        startBtn.style.opacity = '0.5';
+                        startBtn.style.pointerEvents = 'none';
+                        startBtn.innerText = '인원 부족 (최소 4명)';
+                    }
                 } else {
                     document.getElementById('btnStartTourney').style.display = 'none';
                 }
