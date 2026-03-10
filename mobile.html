@@ -310,10 +310,10 @@
             margin-top: 20px;
             font-size: 1.2rem;
             font-family: 'Jua', sans-serif;
-            border: 2px solid #ff0055;
+            border: 2px solid #ff0000;
             border-radius: 8px;
             background: #222;
-            color: #ff0055;
+            color: #ff0000;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -721,7 +721,7 @@
             padding: 10px 14px;
             border-radius: 8px;
             border-left: 4px solid #666;
-            font-size: 1.95rem;
+            font-size: 2.34rem;
             line-height: 1.4;
             animation: slideInLeft 0.3s ease-out;
             word-break: keep-all;
@@ -733,7 +733,7 @@
         }
 
         .log-entry.lose {
-            border-left-color: #ff0055;
+            border-left-color: #ff0000;
             background: rgba(255, 0, 85, 0.05);
         }
 
@@ -909,7 +909,7 @@
         }
 
         .zone-title.cpu {
-            color: #ff0055;
+            color: #ff0000;
             text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
         }
 
@@ -983,7 +983,7 @@
         }
 
         .battle-label-static.c-label {
-            color: #ff0055;
+            color: #ff0000;
         }
 
         body.show-labels .battle-label-static {
@@ -1049,8 +1049,8 @@
         }
 
         .battle-label.c-label {
-            color: #ff0055;
-            text-shadow: 0 0 3px #ff0055, 0 0 6px #000;
+            color: #ff0000;
+            text-shadow: 0 0 3px #ff0000, 0 0 6px #000;
         }
 
         .battling .battle-label {
@@ -1233,13 +1233,13 @@
         }
 
         .card-mythos::before {
-            box-shadow: inset 0 0 0 0px #ff0055, 0 0 25px rgba(255, 0, 85, 0.9);
+            box-shadow: inset 0 0 0 0px #ff0000, 0 0 25px rgba(255, 0, 85, 0.9);
             animation: mythosPulse 2s infinite alternate;
         }
 
         @keyframes mythosPulse {
             0% {
-                box-shadow: inset 0 0 0 0px #ff0055, 0 0 15px rgba(255, 0, 85, 0.7);
+                box-shadow: inset 0 0 0 0px #ff0000, 0 0 15px rgba(255, 0, 85, 0.7);
             }
 
             100% {
@@ -1349,8 +1349,8 @@
         }
 
         .damage-lose {
-            color: #ff0055;
-            text-shadow: 0 0 15px #ff0055, 4px 4px 0 #000;
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000, 4px 4px 0 #000;
         }
 
         .damage-draw {
@@ -1677,11 +1677,9 @@
                 <img id="roundImage" src="images/round1.png?v=3"
                     style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
                 <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerPlayerName"
-                        data-i18n="ui_me" style="color:#00bfff">Player</span> <span id="playerScoreUi"
-                        style="color:#00ffd9">0</span></div>
+                        data-i18n="ui_me">Player</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
                 <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerCpuName"
-                        data-i18n="ui_enemy" style="color:#ff4444">Com</span> <span id="cpuScoreUi"
-                        style="color:#ff0055">0</span></div>
+                        data-i18n="ui_enemy">Com</span> <span id="cpuScoreUi" style="color:#ff0000">0</span></div>
             </div>
 
             <!-- Right side Header Buttons perfectly centered over 590px chartPanel -->
@@ -1740,7 +1738,7 @@
                     <button class="diff-btn" id="btnBeginner">Beginner (초보자)</button>
                     <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
 
-                    <button class="diff-btn" style="border-color:#ff0055; color:#ff0055;" id="btnExpert">Expert
+                    <button class="diff-btn" style="border-color:#ff0000; color:#ff0000;" id="btnExpert">Expert
                         (숙련자)</button>
                     <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 5선승제</div>
 
@@ -1751,7 +1749,7 @@
 
                 <!-- Section 4: PVP Sub Menu -->
                 <div id="pvpSection" style="display: none;">
-                    <h2 style="color: #ff0055;">PVP 매치</h2>
+                    <h2 style="color: #ff0000;">PVP 매치</h2>
                     <br>
                     <button class="diff-btn" id="btnPvpCustom"
                         style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
@@ -2476,7 +2474,7 @@
             let resultOverlay = '';
             if (isUsed && card.result) {
                 if (card.result === 'win') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#00ffd9; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">W</div>';
-                else if (card.result === 'lose') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#ff0055; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">L</div>';
+                else if (card.result === 'lose') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#ff0000; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">L</div>';
             }
 
             const bgColors = { 'Fire': 'ffcccc', 'Water': 'cceeff', 'Wood': 'ccffcc', 'Earth': 'ffeebb', 'Metal': 'ececec' };
@@ -2515,7 +2513,7 @@
                 const pName = t(lg.pCard.name);
                 const cName = t(lg.cCard.name);
                 const resText = lg.logClass === 'win' ? `<span style="color:#00ffd9">${t('log_p_win')} (+${lg.pts})</span>` :
-                    lg.logClass === 'lose' ? `<span style="color:#ff0055">${t('log_e_win')} (+${lg.pts})</span>` :
+                    lg.logClass === 'lose' ? `<span style="color:#ff0000">${t('log_e_win')} (+${lg.pts})</span>` :
                         `<span style="color:#aaa">${t('log_draw')}</span>`;
 
                 const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
@@ -2581,9 +2579,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -2930,7 +2928,7 @@
             // Start shrink
             timerBar.style.transition = `width ${timeLimit}s linear, background-color ${timeLimit}s linear`;
             timerBar.style.width = '0%';
-            timerBar.style.backgroundColor = '#ff0055';
+            timerBar.style.backgroundColor = '#ff0000';
         }
 
         async function resolvePvpRound(myCard, oppCard) {
@@ -3140,11 +3138,11 @@
                         const oppScore = data.scores[pvpOppId];
                         const meName = document.getElementById('userDisplayName').innerText;
 
-                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0055">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
+                        title.innerHTML = `<h1 style="color:#fff; font-size:4rem; font-family:'Jua',sans-serif;">매치 종료<br><span style="color:#00ffd9">${meName} ${myScore}</span> 대 <span style="color:#ff0000">${pvpOppName} ${oppScore}</span><br>재대결 하시겠습니까?</h1>`;
 
                         const rBtn = document.getElementById('restartBtn');
                         rBtn.innerHTML = `<button id="btnRematchAccept" style="font-size:3rem; padding:15px; background:#00ffd9; color:#000; border:none; border-radius:10px; margin:10px;">수락</button>
-                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0055; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
+                                          <button id="btnRematchDecline" style="font-size:3rem; padding:15px; background:#ff0000; color:#fff; border:none; border-radius:10px; margin:10px;">거절</button>`;
 
                         document.getElementById('btnRematchAccept').onclick = (e) => {
                             e.stopPropagation(); // Prevent #restartBtn parent from triggering resetGame()
@@ -3169,10 +3167,10 @@
                         const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            title.innerHTML = `<img src="images/btn_win.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:388px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0055; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0055;">완전 패배</h1>`;
+                            title.innerHTML = `<img src="images/btn_lose.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
                             startBgm('bgm_lose');
                         }
 
