@@ -715,6 +715,7 @@
             flex: 1;
             display: flex;
             flex-direction: row;
+            justify-content: center;
             width: 100%;
             overflow: hidden;
             margin-top: 200px;
@@ -734,8 +735,9 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 490px;
-            /* +100px expanded */
+            flex: 1 1 25%;
+            max-width: 450px;
+            min-width: 280px;
             background: transparent;
             border-right: none;
             display: flex;
@@ -746,8 +748,9 @@
         }
 
         #chartPanel {
-            flex: 0 0 490px;
-            /* +100px expanded */
+            flex: 1 1 25%;
+            max-width: 450px;
+            min-width: 280px;
             border-right: none;
             align-items: center;
         }
@@ -981,7 +984,9 @@
         }
 
         #gameBoard {
-            flex: 1;
+            flex: 2 1 50%;
+            max-width: 1600px;
+            /* Keep cards bounded on 57-inch monitors */
             display: flex;
             flex-direction: column;
             justify-content: center;
