@@ -2457,26 +2457,7 @@
             const usedStyle = (isUsed && card.result) ? 'filter: grayscale(100%); opacity: 0.8;' : '';
             const usedClass = isUsed ? 'used' : '';
             const click = (isPlayer && !isUsed && idx !== null) ? `onclick="playTurn(${idx})"` : '';
-
-            // Handle PVP Opponent's masked card visually using the core template
-            if (!isPlayer && card.pendingReveal) {
-                return `
-        <div class="card-slot" id="c-slot-${idx}">
-          <div class="card-wrapper" style="position:relative;">
-            <div class="card used" id="c-card-${idx}" style="background: linear-gradient(135deg, #333, #555);">
-              <div class="hologram-overlay"></div>
-              <span style="position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:4rem; color:#fff; font-family:'Jua',sans-serif;">?</span>
-              <div style="position:absolute;bottom:20%;left:0;right:0;text-align:center;color:#00ffd9;font-size:2rem;font-weight:bold;font-family:'Jua',sans-serif;">선택 완료</div>
-            </div>
-          </div>
-        </div>`;
-            }
-
-            let resultOverlay = '';
-            if (isUsed && card.result) {
-                if (card.result === 'win') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#00ffd9; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">W</div>';
-                else if (card.result === 'lose') resultOverlay = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8rem; color:#ff0000; z-index:20; font-family:\\\'Jua\\\',sans-serif; text-shadow:0 0 15px rgba(0,0,0,0.8);">L</div>';
-            }
+            // W/L result overlays deleted; relying purely on the grayscale effect
 
             const bgColors = { 'Fire': 'ffcccc', 'Water': 'cceeff', 'Wood': 'ccffcc', 'Earth': 'ffeebb', 'Metal': 'ececec' };
             const textColors = { 'Fire': 'ff0000', 'Water': '0066ff', 'Wood': '009900', 'Earth': 'aa6600', 'Metal': '555555' };
@@ -2487,7 +2468,6 @@
             return `
         <div class="card-slot" id="${isPlayer ? 'p' : 'c'}-slot-${idx}">
           <div class="card-wrapper" style="position:relative;">
-            ${resultOverlay}
             <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}" style="${usedStyle}">
               <div class="hologram-overlay"></div>
               <div class="card-header">
@@ -3108,12 +3088,8 @@
                     });
 
                     pvpSocket.on('opponent_picked', () => {
-                        // Find an available (unused) card to temporarily display as '?'
-                        const cIdx = cpuDeck.findIndex(c => !c.used && !c.pendingReveal);
-                        if (cIdx !== -1) {
-                            cpuDeck[cIdx].pendingReveal = true;
-                            render(); // Let the newly upgraded cardHTML natively render the ? card state cleanly
-                        }
+                        // Append [준비 완료] to the Cpu Nameplate to signal they are ready
+                        document.getElementById('headerCpuName').innerHTML = `${pvpOppName} <span style="color:#00ffd9; font-size:1.8rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
                     });
 
                     pvpSocket.on('force_auto_pick', () => {
@@ -3127,8 +3103,8 @@
                     });
 
                     pvpSocket.on('round_reveal', (data) => {
-                        // Clear any pending '?' visual state from opponent_picked
-                        cpuDeck.forEach(c => { c.pendingReveal = false; });
+                        // Clear the [준비 완료] tag from the nameplate
+                        document.getElementById('headerCpuName').innerText = pvpOppName;
                         resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
                     });
 
