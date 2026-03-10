@@ -1850,17 +1850,18 @@
             </div>
 
             <!-- Section 5: Tournament Room List -->
-            <div id="tourneySection" style="display: none;">
-                <h2 style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 2.5rem;">토너먼트
+            <div id="tourneySection" style="display: none; width: 600px; max-width: 90vw; margin: 0 auto;">
+                <h2
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 3rem; margin-bottom: 20px;">
+                    토너먼트
                     대기열
                 </h2>
-                <br>
                 <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
                     <button id="btnCreateTourney" class="diff-btn"
-                        style="font-size: 1.6rem; width: 45%; padding: 15px; border-color: #00ffd9; color: #00ffd9;">방
+                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; margin-bottom: 0;">방
                         만들기</button>
                     <button id="btnRefreshTourney" class="diff-btn"
-                        style="font-size: 1.6rem; width: 45%; padding: 15px; border-color: #aaa; color: #aaa;">새로고침</button>
+                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #aaa; color: #aaa; margin-bottom: 0;">새로고침</button>
                 </div>
 
                 <div id="tourneyRoomList"
@@ -1874,11 +1875,12 @@
             </div>
 
             <!-- Section 6: Inside Tournament Room -->
-            <div id="tourneyRoomSection" style="display: none; text-align: center;">
+            <div id="tourneyRoomSection"
+                style="display: none; width: 650px; max-width: 90vw; margin: 0 auto; text-align: center;">
                 <h2 id="tourneyRoomTitle"
-                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 2.5rem; margin-bottom: 15px;">방 제목
+                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 3rem; margin-bottom: 15px;">방 제목
                 </h2>
-                <p id="tourneyRoomCount" style="color: #aaa; font-size: 1.5rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
+                <p id="tourneyRoomCount" style="color: #aaa; font-size: 2rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
                     4명)</p>
 
                 <div id="tourneyPlayerGrid"
@@ -1886,12 +1888,14 @@
                     <!-- Players injected here -->
                 </div>
 
-                <button class="diff-btn" id="btnStartTourney"
-                    style="display: none; padding: 15px; border-color: #00ffd9; color: #00ffd9; font-size: 2rem; margin-bottom: 20px;">🚀
-                    토너먼트 시작 (방장전용)</button>
-                <button class="diff-btn" id="btnLeaveTourney"
-                    style="font-size: 1.5rem; padding: 10px; border-color:#ff0000; color:#ff0000; background:transparent;">방
-                    나가기</button>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
+                    <button class="diff-btn" id="btnStartTourney"
+                        style="display: none; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; font-size: 1.8rem; margin-bottom: 0;">🚀
+                        시작 (방장전용)</button>
+                    <button class="diff-btn" id="btnLeaveTourney"
+                        style="flex: 1; font-size: 1.8rem; padding: 15px; border-color:#ff0000; color:#ff0000; background:transparent; margin-bottom: 0;">방
+                        나가기</button>
+                </div>
             </div>
 
             <!-- Section 7: My Page (Formerly 5) -->
@@ -3405,10 +3409,16 @@
                     if (list) {
                         list.innerHTML = '';
                         rooms.forEach(r => {
-                            list.innerHTML += `<div style="border:1px solid #777; padding:10px; margin-bottom:10px; border-radius:5px;">
-                                <strong style="color:#00ffd9; font-size: 1.6rem;">${r.name}</strong> <span style="font-size: 1.2rem; color: #aaa;">[${r.curr}/${r.max}]</span>
-                                <span style="color:#aaa; float:right; font-size: 1.2rem;">${r.status}</span>
-                                <br><button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').innerText}' })" style="padding:10px 15px; margin-top:10px; background:#444; color:#fff; border:none; border-radius:5px; font-size: 1.3rem;">참가하기</button>
+                            list.innerHTML += `<div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid #777; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: rgba(0,0,0,0.6);">
+                                <div>
+                                    <strong style="color: #00ffd9; font-size: 2rem; display: block; margin-bottom: 5px;">${r.name}</strong>
+                                    <span style="font-size: 1.5rem; color: #aaa;">[${r.curr}/${r.max}]</span>
+                                    <span style="color: #ffd700; margin-left: 10px; font-size: 1.5rem;">${r.status}</span>
+                                </div>
+                                <button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').innerText}' })" 
+                                    style="padding: 15px 25px; background: #00ffd9; color: #000; border: none; border-radius: 8px; font-size: 1.8rem; font-family: 'Jua', sans-serif; cursor: pointer;">
+                                    참가하기
+                                </button>
                             </div>`;
                         });
                     }
