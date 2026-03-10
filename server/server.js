@@ -75,7 +75,8 @@ io.on('connection', (socket) => {
         room.players.push({ id: socket.id, name: data.userName, status: 'ALIVE' });
         socket.join(`tourney_${data.roomId}`);
 
-        io.to(`tourney_${data.roomId}`).emit('tourney_room_updated', room);
+        socket.emit('tourney_room_joined', room); // Triggers visual transition for the new joiner
+        io.to(`tourney_${data.roomId}`).emit('tourney_room_updated', room); // Updates everyone else
 
         io.emit('update_tourney_rooms', Object.values(tournamentRooms).map(r => ({
             id: r.id, hostName: r.hostName, name: r.name, curr: r.players.length, max: r.maxPlayers, status: r.status
