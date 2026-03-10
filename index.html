@@ -2549,6 +2549,10 @@
         let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1;
         let isBattling = false;
         let isPvpMode = false;
+        let isTourneyMode = false;
+        let tourneyRoomId = null;
+        let tourneyMatchKey = null;
+        let tourneyBracket = null;
         let pvpSocket = null;
         let pvpRoomId = null;
         let pvpMyId = null;
@@ -2784,7 +2788,7 @@
                 // Add [전투 준비 완료] tag to my title to give visual feedback that the UI acknowledged the click
                 document.getElementById('playerTitle').innerHTML = `${document.getElementById('userDisplayName').innerText}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[전투 준비 완료]</span>`;
 
-                if (isTourneyMode && tourneyRoomId) {
+                if (typeof isTourneyMode !== 'undefined' && isTourneyMode && tourneyRoomId) {
                     pvpSocket.emit('submit_tourney_card', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, cardInfo: playerDeck[pIdx] });
                 } else {
                     pvpSocket.emit('submit_card', { roomId: pvpRoomId, cardInfo: playerDeck[pIdx] });
