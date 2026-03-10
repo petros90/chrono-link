@@ -400,12 +400,21 @@ io.on('connection', (socket) => {
         const bracketMatch = room.bracket[rIdx][mIdx];
         if (bracketMatch.status === 'DONE') return; // Prevent duplicate end events
 
+        // Tiebreaker for Tournament Draw (Randomly force a winner to advance bracket)
+        if (winnerId === 'Draw') {
+            winnerId = Math.random() < 0.5 ? matchState.players[0] : matchState.players[1];
+        }
+
         matchState.playerData[winnerId].matchWins++;
 
         // Final evaluation on the server purely for bracket advancing
-        if (matchState.playerData[winnerId].matchWins >= 3) {
+        if (matchState.playerData[winnerId].matchWins >= 3 || matchState.round > 5) {
             bracketMatch.winner = room.players.find(p => p.id === winnerId);
             bracketMatch.status = 'DONE';
+
+            io.to(matchState.players[0]).emit('tourney_match_concluded');
+            io.to(matchState.players[1]).emit('tourney_match_concluded');
+
             delete room.matches[matchKey]; // Clean up memory
 
             checkAndAdvanceTournament(tourneyId);

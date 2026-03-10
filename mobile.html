@@ -734,8 +734,8 @@
 
         /* LEFT PANEL WIDER */
         #logPanel {
-            flex: 0 0 590px;
-            /* +200px expanded */
+            flex: 0 0 490px;
+            /* +100px expanded */
             background: transparent;
             border-right: none;
             display: flex;
@@ -746,8 +746,8 @@
         }
 
         #chartPanel {
-            flex: 0 0 590px;
-            /* +200px expanded */
+            flex: 0 0 490px;
+            /* +100px expanded */
             border-right: none;
             align-items: center;
         }
@@ -3030,7 +3030,13 @@
             render();
 
             if (round > maxRounds || pWin >= maxWins || cWin >= maxWins) {
-                if (isPvpMode) {
+                if (typeof isTourneyMode !== 'undefined' && isTourneyMode) {
+                    // Prevent duplicate tallying
+                    const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
+                    if (myWin === pvpMyId || (myWin === 'Draw' && pvpMyId < pvpOppId)) {
+                        pvpSocket.emit('tourney_match_end', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, winnerId: myWin });
+                    }
+                } else if (isPvpMode) {
                     // Prevent duplicate tallying by having only the "winner" report the match end.
                     // If it's a draw, only the "Host" (alphabetically first ID) reports it to prevent double draw.
                     const myWin = pWin > cWin ? pvpMyId : (cWin > pWin ? pvpOppId : 'Draw');
@@ -3325,6 +3331,8 @@
                 }
                 document.getElementById('pvpMatchOverlay').style.display = 'none';
                 document.getElementById('pvpSection').style.display = 'block';
+                isPvpMode = false;
+                if (typeof isTourneyMode !== 'undefined') isTourneyMode = false;
             });
 
             const updateTourneyRoomUI = (room) => {
@@ -3444,15 +3452,22 @@
                     document.getElementById('tourneyStatusText').innerText = "대진표가 생성되었습니다! 매치가 곧 시작됩니다.";
                     renderBracket(data.bracket);
                 });
-
                 pvpSocket.on('tourney_bracket_update', (data) => {
                     document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                     renderBracket(data.bracket);
                     setTimeout(() => {
-                        if (data.status === 'PLAYING') {
+                        // Only auto-hide the bracket if the player is actively back in a match
+                        if (data.status === 'PLAYING' && document.getElementById('mainLayout').style.display !== 'none') {
                             document.getElementById('tourneyBracketOverlay').style.display = 'none';
                         }
                     }, 4000);
+                });
+
+                // Triggered when a player's specific match finishes (win or lose)
+                pvpSocket.on('tourney_match_concluded', () => {
+                    document.getElementById('mainLayout').style.display = 'none';
+                    document.querySelector('.score-board').style.display = 'none';
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                 });
 
                 pvpSocket.on('tourney_match_found', (data) => {
@@ -3667,8 +3682,8 @@
                 auth.signOut();
             });
 
-            document.getElementById('btnBeginner').addEventListener('click', () => startGame('Beginner'));
-            document.getElementById('btnExpert').addEventListener('click', () => startGame('Expert'));
+            document.getElementById('btnBeginner').addEventListener('click', () => { isPvpMode = false; if (typeof isTourneyMode !== 'undefined') isTourneyMode = false; startGame('Beginner'); });
+            document.getElementById('btnExpert').addEventListener('click', () => { isPvpMode = false; if (typeof isTourneyMode !== 'undefined') isTourneyMode = false; startGame('Expert'); });
 
             document.getElementById('btnSubmitNickname').addEventListener('click', async () => {
                 const inputVal = document.getElementById('nicknameInput').value.trim();
