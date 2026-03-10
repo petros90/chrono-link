@@ -990,6 +990,20 @@
             opacity: 1;
         }
 
+        .zone-title {
+            font-size: 2.7rem;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Jua', sans-serif;
+            color: #00ffd9;
+            text-shadow: 0 0 10px #00ffd9;
+        }
+
+        .zone-title.cpu {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
         /* Clash Explosion Effect */
         .clash-effect {
             position: absolute;
@@ -2560,9 +2574,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -3088,8 +3102,8 @@
                     });
 
                     pvpSocket.on('opponent_picked', () => {
-                        // Append [준비 완료] to the Cpu Nameplate to signal they are ready
-                        document.getElementById('headerCpuName').innerHTML = `${pvpOppName} <span style="color:#00ffd9; font-size:1.8rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
+                        // Append [준비 완료] to the Cpu Title directly above their cards
+                        document.getElementById('cpuTitle').innerHTML = `${pvpOppName}님 <span style="color:#00ffd9; font-size:2.7rem; vertical-align:middle; text-shadow:0 0 5px #00ffd9">[준비 완료]</span>`;
                     });
 
                     pvpSocket.on('force_auto_pick', () => {
@@ -3103,8 +3117,8 @@
                     });
 
                     pvpSocket.on('round_reveal', (data) => {
-                        // Clear the [준비 완료] tag from the nameplate
-                        document.getElementById('headerCpuName').innerText = pvpOppName;
+                        // Clear the [준비 완료] tag from the cpuTitle
+                        document.getElementById('cpuTitle').innerText = pvpOppName + "님";
                         resolvePvpRound(data.results[pvpMyId], data.results[pvpOppId]);
                     });
 
@@ -3144,10 +3158,10 @@
                         const meName = document.getElementById('userDisplayName').innerText;
 
                         if (data.winnerId === pvpMyId) {
-                            title.innerHTML = `<img src="images/btn_win.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                            title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                             startBgm('bgm_win');
                         } else {
-                            title.innerHTML = `<img src="images/btn_lose.png" style="height:504px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
+                            title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
                             startBgm('bgm_lose');
                         }
 
