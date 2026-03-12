@@ -344,6 +344,10 @@ io.on('connection', (socket) => {
                         pick.used = true;
                         pData.card = pick;
                         pData.ready = true;
+                    } else {
+                        // Fallback preventing empty deck client crash
+                        pData.card = { avatar: "fire", grade: 1, power: 1 };
+                        pData.ready = true;
                     }
                 } else {
                     // Fallback to prevent null crashes if deck was missing
@@ -388,7 +392,12 @@ io.on('connection', (socket) => {
         if (!matchState) return;
 
         const pData = matchState.playerData[socket.id];
-        if (pData.ready) return;
+        if (!pData || pData.ready) return;
+
+        // Prevent empty card submission crashes
+        if (!cardInfo) {
+            cardInfo = { avatar: "fire", grade: 1, power: 1 };
+        }
 
         pData.ready = true;
         pData.card = cardInfo;
@@ -431,6 +440,30 @@ io.on('connection', (socket) => {
                 const updatedMatch = tournamentRooms[tourneyId].matches[matchKey];
                 if (updatedMatch.round <= 5 && updatedMatch.playerData[p1Id].matchWins < 3 && updatedMatch.playerData[p2Id].matchWins < 3) {
                     startTourneyRound(tourneyId, matchKey);
+                } else {
+                    // INFINITE HANG PREVENTION: If clients crashed and didn't report match_end
+                    setTimeout(() => {
+                        if (tournamentRooms[tourneyId] && tournamentRooms[tourneyId].matches[matchKey]) {
+                            const p1Wins = updatedMatch.playerData[p1Id].matchWins;
+                            const p2Wins = updatedMatch.playerData[p2Id].matchWins;
+                            let winnerId = p1Wins > p2Wins ? p1Id : (p2Wins > p1Wins ? p2Id : 'Draw');
+
+                            // Simulate client behavior to force end
+                            const [rIdx, mIdx] = matchKey.split('_').map(Number);
+                            const bracketMatch = tournamentRooms[tourneyId].bracket[rIdx][mIdx];
+                            if (bracketMatch.status !== 'DONE') {
+                                if (winnerId === 'Draw') {
+                                    winnerId = Math.random() < 0.5 ? p1Id : p2Id;
+                                }
+                                bracketMatch.winner = tournamentRooms[tourneyId].players.find(p => p.id === winnerId) || { id: winnerId, name: "알수없음" };
+                                bracketMatch.status = 'DONE';
+                                io.to(p1Id).emit('tourney_match_concluded', { winnerId: winnerId });
+                                io.to(p2Id).emit('tourney_match_concluded', { winnerId: winnerId });
+                                delete tournamentRooms[tourneyId].matches[matchKey];
+                                checkAndAdvanceTournament(tourneyId);
+                            }
+                        }
+                    }, 5000);
                 }
             }
         }, 6000);
