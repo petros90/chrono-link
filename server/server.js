@@ -212,16 +212,22 @@ io.on('connection', (socket) => {
         // Check for matches that are ready to play in the CURRENT round before moving deep
         for (let r = 0; r < bracket.length; r++) {
             const round = bracket[r];
+            let roundHasActiveMatches = false;
+
             for (let match of round) {
                 if (match.status === 'WAITING' && match.p1 && match.p2) {
                     startTourneyMatch(roomId, r, match.mId, match.p1, match.p2);
                     match.status = 'PLAYING';
+                    roundHasActiveMatches = true;
                     activeMatchesFound = true;
                 } else if (match.status === 'PLAYING') {
+                    roundHasActiveMatches = true;
                     activeMatchesFound = true;
                 }
             }
-            if (activeMatchesFound) break; // Execute one full round sequentially
+
+            // If the current round isn't finished yet, don't cascade into the next bracket layer
+            if (roundHasActiveMatches) break;
         }
 
         if (!activeMatchesFound) {
