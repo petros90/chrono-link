@@ -3,6 +3,14 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
+// GLOBAL CRASH PREVENTER: Absorbs all fatal Node.js logic errors without stopping the server.
+process.on('uncaughtException', (err) => {
+    console.error('CRITICAL UNCAUGHT EXCEPTION PREVENTED SERVER CRASH:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('CRITICAL UNHANDLED REJECTION PREVENTED SERVER CRASH:', reason);
+});
+
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
