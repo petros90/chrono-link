@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.72 (Round 2 Absolute Anti-Freeze)</div>
+                v1.73 (UX Timer Sync & Anti-Mispick)</div>
         </div>
 
         <div id="headerRow"
@@ -3054,8 +3054,11 @@
                     checkGameEnd();
                 }
             } else {
-                isBattling = false;
-                // PVP is now handled autonomously by server setTimeout
+                if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                    // PVP/Tourney: Remain locked (isBattling stays true) until the server explicitly responds with 'round_start' to prevent premature phantom clicks 
+                } else {
+                    isBattling = false;
+                }
             }
         }
 
