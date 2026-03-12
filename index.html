@@ -511,65 +511,77 @@
         /* Crack/Shatter Effect */
         @keyframes shatter-c {
             0% {
-                transform: scale(1.76) translateX(85%);
+                rotate: 0deg;
+                margin-left: 0px;
                 filter: grayscale(1);
             }
 
             20% {
-                transform: scale(1.76) translateX(90%) rotate(5deg);
+                rotate: 5deg;
+                margin-left: 10px;
                 filter: grayscale(1);
             }
 
             40% {
-                transform: scale(1.76) translateX(80%) rotate(-5deg);
+                rotate: -5deg;
+                margin-left: -10px;
                 filter: grayscale(1);
             }
 
             60% {
-                transform: scale(1.76) translateX(88%) rotate(3deg);
-                filter: grayscale(1);
+                rotate: 3deg;
+                margin-left: 10px;
+                filter: grayscale(1) opacity(0.5);
             }
 
             80% {
-                transform: scale(1.76) translateX(83%) rotate(-3deg);
-                filter: grayscale(1);
+                rotate: -3deg;
+                margin-left: -10px;
+                filter: grayscale(1) opacity(0.2);
             }
 
             100% {
-                transform: scale(1.76) translateX(85%);
-                filter: grayscale(1);
+                rotate: 0deg;
+                margin-left: 0px;
+                filter: grayscale(1) opacity(0);
             }
         }
 
         @keyframes shatter-p {
             0% {
-                transform: scale(1.76) translateX(-85%);
+                rotate: 0deg;
+                margin-left: 0px;
                 filter: grayscale(1);
             }
 
             20% {
-                transform: scale(1.76) translateX(-90%) rotate(5deg);
+                rotate: 5deg;
+                margin-left: -10px;
                 filter: grayscale(1);
             }
 
             40% {
-                transform: scale(1.76) translateX(-80%) rotate(-5deg);
+                rotate: -5deg;
+                margin-left: 10px;
                 filter: grayscale(1);
             }
 
             60% {
-                transform: scale(1.76) translateX(-88%) rotate(3deg);
-                filter: grayscale(1);
+                rotate: 3deg;
+                margin-left: -10px;
+                filter: grayscale(1) opacity(0.5);
             }
 
             80% {
-                transform: scale(1.76) translateX(-83%) rotate(-3deg);
-                filter: grayscale(1);
+                rotate: -3deg;
+                margin-left: 10px;
+                filter: grayscale(1) opacity(0.2);
             }
 
             100% {
-                transform: scale(1.76) translateX(-85%);
-                filter: grayscale(1);
+                rotate: 0deg;
+                margin-left: 0px;
+                filter: grayscale(1) opacity(0);
             }
         }
 
@@ -602,107 +614,14 @@
             pointer-events: none;
         }
 
-        /* Header */
-        #headerRow {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: transparent;
-            /* Changed from #000 to transparent to blend with body */
-            box-shadow: none;
-            z-index: 10;
-        }
+        /* Header moved inside appContainer */
 
-        #headerRow h1 {
-            font-size: 3rem;
-            color: #00ffd9;
-            text-shadow: 0 0 5px #00ffd9;
-            margin-right: 15px;
-        }
-
-        #startBtn {
-            padding: 8px 16px;
-            font-size: 24px;
-            border: 1px solid #00ffd9;
-            border-radius: 4px;
-            background: transparent;
-            color: #00ffd9;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Jua', sans-serif;
-            white-space: nowrap;
-        }
-
-        #startBtn:active {
-            background: #00ffd9;
-            color: #000;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            position: absolute;
-            right: 245px;
-            /* Exactly center over the 490px right #chartPanel */
-            transform: translateX(50%);
-            top: 40px;
-            /* Aligned vertically */
-        }
-
-        #settingsBtn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            padding: 8px 12px;
-            font-size: 24px;
-            border: 2px solid #00ffd9;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0, 255, 217, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        #settingsBtn:hover {
-            color: #00ffd9;
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
-        }
-
-        .score-board {
-            display: flex;
-            gap: 20px;
-            font-size: 1.6rem;
-            color: #aaa;
-            align-items: center;
-            /* Fix vertical alignment between text and round icon */
-            justify-content: center;
-            flex-wrap: wrap;
-            position: absolute;
-            left: 50%;
-            top: 20px;
-            /* Explicitly pull down from top edge to prevent cropping */
-            transform: translateX(-50%);
-        }
-
-        .score-board span {
-            color: #fff;
-            font-weight: bold;
-            font-size: 3.9rem;
-            /* Unified PC Size */
-            display: flex;
-            align-items: center;
-        }
-
-        /* --- BASE CONTAINER SCALING --- */
+        /* --- [전체 레이아웃] 베이스 컨테이너 --- */
         #appContainer {
             width: 2600px;
-            /* Reduced by 200px to accommodate narrower side panels */
+            /* pc버전 화면의 전체 기준 넓이 (이 수치 안에서 찌그러지지 않고 고정됨) */
+            height: 1400px;
+            /* 강제 높이 부여로 내부 요소가 창 크기에 의해 찌그러지는 현상 방지 */
             position: absolute;
             transform-origin: top left;
             display: flex;
@@ -711,17 +630,21 @@
             overflow: hidden;
         }
 
+        /* --- [전체 레이아웃] 하단 메인 화면 영역 통제 --- */
         #mainLayout {
             flex: 1;
+            /* 플렉스 비율 간섭 복구 */
             display: flex;
             flex-direction: row;
             width: 100%;
+            height: calc(100% - 160px);
+            /* 1400(전체) - 160(헤더) = 정확히 1240 유지 */
             overflow: hidden;
-            margin-top: 200px;
-            /* Push the entire gameboard and panels down as one unit */
+            margin-top: 0px;
+            /* [수정 포인트] 상단 스코어 보드와 아랫 부분 전체(전투로그, 카드판) 사이의 빈 공간 (여백) 높이 조절 */
         }
 
-        /* Side Panels */
+        /* --- [좌/우 패널 공통] 높이 및 여백 설정 --- */
         .side-panel {
             background: transparent;
             border-right: none;
@@ -731,13 +654,16 @@
             overflow-y: auto;
             padding: 15px;
             margin-top: 100px;
-            /* Push panels down exactly 100px relative to main board */
+            /* [수정 포인트] 패널(전투로그 / 오행상성)들을 위아래로 올리거나 내릴 때 이 값을 수정하세요 */
         }
 
-        /* LEFT PANEL WIDER */
+        /* --- [좌측 패널] 전투 로그 창 --- */
         #logPanel {
-            flex: 0 0 490px;
-            /* -100px shrunk */
+            flex: 1 1 25%;
+            /* 뷰포트 변경 시 비율 축소를 허용 */
+            max-width: 320px;
+            margin-left: 5%;
+            /* 오른쪽으로 화면 안쪽으로 밀기 */
             background: transparent;
             border-right: none;
             display: flex;
@@ -745,21 +671,33 @@
             padding: 15px;
             overflow-y: auto;
             border-left: none;
+            transform: scale(1.3);
+            transform-origin: top left;
         }
 
+        /* --- [우측 패널] 오행 상성 창 --- */
         #chartPanel {
-            flex: 0 0 490px;
-            /* -100px shrunk */
+            flex: 1 1 25%;
+            /* 뷰포트 변경 시 비율 축소를 허용 */
+            max-width: 320px;
+            margin-right: 5%;
+            /* 왼쪽으로 화면 안쪽으로 밀기 */
             border-right: none;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            transform: scale(1.3);
+            transform-origin: top right;
         }
 
+        /* --- 패널 상단 제목 (전투로그, 오행상성 글씨) --- */
         .side-panel h3 {
-            border-bottom: 1px solid #444;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 1.89rem;
+            /* 2.1rem -> 1.89rem (카드존 텍스트와 사이즈 동일하게 일치) */
+            /* [수정 포인트] 전투로그, 오행상성 제목 글자 크기를 조절하려면 여기를 수정하세요 */
         }
 
         /* Logs */
@@ -774,10 +712,11 @@
 
         .log-entry {
             background: rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
-            border-radius: 8px;
-            border-left: 4px solid #666;
-            font-size: 1.4rem;
+            padding: 6px 9px;
+            border-radius: 5px;
+            border-left: 3px solid #666;
+            font-size: 0.88rem;
+            /* 0.98rem -> 0.88rem (10% 추가 축소) */
             line-height: 1.4;
             animation: slideInLeft 0.3s ease-out;
             word-break: keep-all;
@@ -814,16 +753,17 @@
         /* Circular SVG Chart */
         .chart-container {
             position: relative;
-            width: 286px;
-            /* 220px + 30% */
-            height: 286px;
-            margin: 10px auto;
+            width: 180px;
+            /* 200px -> 180px (10% 추가 축소) */
+            height: 180px;
+            margin: 5px auto;
         }
 
         .node {
             position: absolute;
-            width: 48px;
-            height: 48px;
+            width: 30px;
+            /* 34px -> 30px */
+            height: 30px;
             border-radius: 50%;
             border: 2px solid transparent;
             background: #222;
@@ -844,54 +784,45 @@
         }
 
         .node .element-icon {
-            width: 32px;
-            height: 32px;
+            width: 20px;
+            /* 32px -> 20px (원 안에 들어가도록 축소) */
+            height: 20px;
             margin: 0;
             display: block;
         }
 
-        /* Circle Layout (R=100 centered at 143,143. Nodes are 48x48) */
+        /* Circle Layout (R=63 centered at 90,90. Nodes are 30x30) */
         #n-fire {
-            top: 19px;
-            /* 43 - 24 */
-            left: 119px;
-            /* 143 - 24 */
+            top: 12px;
+            left: 75px;
             border-color: #ff4444;
             color: #ff4444;
         }
 
         #n-earth {
-            top: 88px;
-            /* 112 - 24 */
-            left: 214px;
-            /* 238 - 24 */
+            top: 55px;
+            left: 135px;
             border-color: #dd8833;
             color: #dd8833;
         }
 
         #n-metal {
-            top: 200px;
-            /* 224 - 24 */
-            left: 178px;
-            /* 202 - 24 */
+            top: 126px;
+            left: 112px;
             border-color: #aaaaaa;
             color: #aaaaaa;
         }
 
         #n-water {
-            top: 200px;
-            /* 224 - 24 */
-            left: 60px;
-            /* 84 - 24 */
+            top: 126px;
+            left: 38px;
             border-color: #4488ff;
             color: #4488ff;
         }
 
         #n-wood {
-            top: 88px;
-            /* 112 - 24 */
-            left: 24px;
-            /* 48 - 24 */
+            top: 55px;
+            left: 15px;
             border-color: #22cc22;
             color: #22cc22;
         }
@@ -928,11 +859,12 @@
 
         .chart-text-row {
             display: grid;
-            grid-template-columns: 55px 50px 55px;
+            grid-template-columns: 34px 31px 34px;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 2.34rem;
+            font-size: 1.46rem;
+            /* 1.63rem -> 1.46rem (10% 추가 축소) */
         }
 
         .chart-text-row .win-tag {
@@ -985,16 +917,16 @@
         }
 
         #gameBoard {
-            flex: 1;
+            flex: 1 1 auto;
+            /* 여유 공간을 유연하게 활용 */
+            /* 좌우 패널이 쓰고 남은 중앙 텅 빈 공간을 모두 차지함 */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            /* Pack rows tightly into the center */
+            justify-content: flex-start;
+            /* 상단 정렬을 위해 center에서 변경 */
             align-items: center;
             position: relative;
-            gap: 10px;
-            /* Remove gap */
-            padding: 10px 0;
+            padding: 0px;
         }
 
         #battleZone {
@@ -1003,17 +935,22 @@
             align-items: center;
             position: relative;
             overflow: visible;
-            margin: 0;
-            min-height: 120px;
+            margin: 20px 0;
+            /* 카드가 20% 확대되었으므로 위아래 간격을 넓게 확보 (충돌 방지) */
+            min-height: 60px;
             padding: 0px;
-            /* Removed borders and background to fix [ ] visual issue */
+        }
+
+        #playerTitle {
+            margin-top: 0px;
+            /* 상대 카드 확대 여파로 겹치는 현상을 방지해 아래로 밀어냄 */
         }
 
         .card-zone {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             height: auto;
             min-height: 180px;
             padding: 10px;
@@ -1023,7 +960,8 @@
         /* Fixed Labels in Battle Zone */
         .battle-label-static {
             position: absolute;
-            font-size: 48px;
+            font-size: 4rem;
+            /* Massive font matching screenshot */
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000;
@@ -1049,9 +987,10 @@
         }
 
         .zone-title {
-            font-size: 2.7rem;
+            font-size: 1.89rem;
+            /* 2.7rem -> 1.89rem (30% 축소) */
             text-align: center;
-            margin: 10px 0;
+            margin: 7px 0;
             font-family: 'Jua', sans-serif;
             color: #00ffd9;
             text-shadow: 0 0 10px #00ffd9;
@@ -1098,13 +1037,14 @@
             animation: clashBoom 0.4s ease-out forwards;
         }
 
-        /* 배틀존 텍스트 레이블 (내 카드 / 상대 카드) */
         .battle-label {
             position: absolute;
-            top: -25px;
+            top: -15px;
+            /* Raised 15px above the card */
             left: 50%;
             transform: translateX(-50%);
-            font-size: 10px;
+            font-size: 1.54rem;
+            /* 2.2rem -> 1.54rem (30% 축소) */
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 4px #000, 0 0 8px #000;
@@ -1133,7 +1073,8 @@
         .card-slot {
             flex: 1 1 0;
             min-width: 90px;
-            max-width: 238px;
+            max-width: 138px;
+            /* 115px -> 138px (추가 20% 확대) */
             aspect-ratio: 140 / 198;
             height: auto;
             position: relative;
@@ -1188,25 +1129,28 @@
             background: rgba(0, 0, 0, 0.6);
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            padding: 6px 4px;
+            padding: 4px 3px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.2rem;
+            font-size: 0.84rem;
+            /* 0.7rem -> 0.84rem (20% 확대) */
             z-index: 2;
         }
 
         .card-grade {
             font-weight: bold;
-            margin-left: 10px;
-            font-size: 1.1rem;
+            margin-left: 7px;
+            font-size: 0.77rem;
+            /* 0.64rem -> 0.77rem (20% 확대) */
             letter-spacing: -0.3px;
             white-space: nowrap;
         }
 
         .card-element {
-            font-size: 2.2rem;
-            margin-right: 5px;
+            font-size: 1.54rem;
+            /* 1.28rem -> 1.54rem (20% 확대) */
+            margin-right: 4px;
         }
 
         .card-image-container {
@@ -1227,9 +1171,10 @@
         .card-footer {
             width: 100%;
             background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 100%);
-            padding: 8px 4px;
+            padding: 4px 2px;
             font-family: 'Jua';
-            font-size: 1.4rem;
+            font-size: 0.98rem;
+            /* 0.82rem -> 0.98rem (20% 확대) */
             z-index: 2;
             white-space: normal;
             word-wrap: break-word;
@@ -1239,8 +1184,16 @@
             justify-content: center;
         }
 
+        #playerZone .card-wrapper,
+        #computerZone .card-wrapper {
+            transform: scale(1.2);
+            transform-origin: top center;
+            margin: 0 10px;
+            /* 카드가 커진 만큼 좌우 간격을 살짝 벌려줌 */
+        }
+
         #playerZone .card-wrapper:hover {
-            transform: translateY(-20px) scale(1.05);
+            transform: translateY(-20px) scale(1.25);
             z-index: 10;
         }
 
@@ -1467,12 +1420,7 @@
             }
         }
 
-        /* Removed text styling variants as we now use images directly */
-        .final-win {}
-
-        .final-lose {}
-
-        .final-draw {}
+        /* Removed empty text styling variants to fix lints */
 
         #restartBtn {
             margin-top: 30px;
@@ -1493,29 +1441,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        @media (max-width: 1050px) {
-            .card-slot {
-                width: clamp(70px, 14vw, 144px);
-                height: auto;
-                aspect-ratio: 187/272;
-            }
-
-            .card {
-                width: clamp(70px, 14vw, 144px);
-                height: auto;
-                aspect-ratio: 187/272;
-            }
-
-            .card-footer {
-                font-size: 0.85rem;
-                padding: 4px 2px;
-            }
-
-            .card-grade {
-                font-size: 0.6rem;
-                letter-spacing: -0.5px;
-            }
-        }
 
         /* --- MOBILE-DEVICE ONLY JS-DETECTED MASSIVE SIZES --- */
         body.is-mobile .diff-box {
@@ -1738,30 +1663,54 @@
 <body>
     <!-- Global Scale Container -->
     <div id="appContainer">
+        <!-- GLOBAL VERSION TRACKING -->
+        <div id="gameVersionTag">
+            <div
+                style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
+                v1.6 (PVP & Layout Unified)</div>
+        </div>
 
-        <div id="headerRow" style="position: relative;">
-            <!-- Left side empty to balance flex, or can hold future items -->
-            <div></div>
+        <div id="headerRow"
+            style="width: 100%; height: 160px; display: flex; justify-content: center; padding-top: 40px; box-sizing: border-box; z-index: 1000;">
 
-            <!-- Centered Score Board with Flexbox (PC BASE +30%) -->
-            <div class="score-board"
-                style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%; height: 104px;">
-                <img id="roundImage" src="images/round1.png?v=3"
-                    style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain;">
-                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerPlayerName"
-                        data-i18n="ui_me">Player</span> <span id="playerScoreUi" style="color:#00ffd9">0</span></div>
-                <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;"><span id="headerCpuName"
-                        data-i18n="ui_enemy">Com</span> <span id="cpuScoreUi" style="color:#ff0000">0</span></div>
-            </div>
+            <!-- 중앙 고정 컨테이너: 이 박스 안에서 스코어와 버튼이 일체형으로 유지됨 -->
+            <div
+                style="position: relative; width: 100%; padding: 0 50px; height: 120px; display: flex; justify-content: center; align-items: center;">
 
-            <!-- Right side Header Buttons perfectly centered over 590px chartPanel -->
-            <div class="header-buttons">
-                <div id="userInfoBox" style="display: flex; align-items: center; gap: 10px;">
-                    <span id="userDisplayName" style="font-size: 2rem;">User Name</span>
-                    <button id="settingsBtn"
-                        style="position: static; padding: 10px 15px; font-size: 3rem; margin: 0 5px;">⚙️</button>
-                    <button id="btnLogout" data-i18n="btn_logout"
-                        style="padding: 10px 20px; font-size: 2rem;">로그아웃</button>
+                <!-- [수정 포인트] 상단 스코어 보드의 전체 위/아래 여백을 고치고 싶을 땐 위 줄의 margin-top: 40px 숫자를 고치세요 -->
+                <!-- [수정 포인트] 점수판 사이 간격이나 정렬을 바꿀 땐 아래 줄의 gap: 30px 등을 수정하세요 -->
+                <div class="score-board"
+                    style="display: flex; align-items: center; justify-content: center; gap: 30px; height: 104px; z-index: 2;">
+
+                    <!-- [수정 포인트] 라운드 박스 이미지 위치를 조금 위/아래로 내리려면 맨 끝에 있는 transform: translateY(-10px) 값을 고치세요 -->
+                    <img id="roundImage" src="images/round1.png?v=3"
+                        style="height: 104px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,170,0,0.5); object-fit: contain; transform: translateY(-10px);">
+
+                    <!-- [수정 포인트] Player 글씨 및 내 점수의 글자 크기를 조절하려면 아래 font-size: 3.5rem 부분의 숫자를 조절하세요 (예: 2rem, 5rem) -->
+                    <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;">
+                        <span id="headerPlayerName" data-i18n="ui_me"
+                            style="font-size: 3.5rem; font-weight: bold;">Player</span>
+                        <span id="playerScoreUi" style="color:#00ffd9; font-size: 3.5rem; font-weight: bold;">0</span>
+                    </div>
+
+                    <!-- [수정 포인트] Com 글씨 및 상대 점수의 글자 크기 조절 (위와 동일) -->
+                    <div style="display: flex; align-items: baseline; gap: 15px; height: 100%;">
+                        <span id="headerCpuName" data-i18n="ui_enemy"
+                            style="font-size: 3.5rem; font-weight: bold;">Com</span>
+                        <span id="cpuScoreUi" style="color:#ff0000; font-size: 3.5rem; font-weight: bold;">0</span>
+                    </div>
+                </div>
+
+                <!-- Right side Header Buttons perfectly centered relative to the inner fixed container -->
+                <div class="header-buttons"
+                    style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%);">
+                    <div id="userInfoBox" style="display: flex; align-items: center; gap: 10px;">
+                        <span id="userDisplayName" style="font-size: 2rem;">User Name</span>
+                        <button id="settingsBtn"
+                            style="position: static; padding: 10px 15px; font-size: 3rem; margin: 0 5px;">⚙️</button>
+                        <button id="btnLogout" data-i18n="btn_logout"
+                            style="padding: 10px 20px; font-size: 2rem;">로그아웃</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1788,10 +1737,15 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
                         <span data-i18n="btn_google_login">Google 로그인</span>
                     </button>
+                    <!-- GUEST LOGIN BYPASS BUTTON -->
+                    <button id="btnGuestLogin" style="margin-top: 15px; background: #444; border: 1px solid #888;">
+                        <span data-i18n="btn_guest_login" style="color: #ddd;">게스트로 시작하기 (테스트용)</span>
+                    </button>
                 </div>
 
                 <!-- Section 2: Main Menu -->
-                <div id="mainMenuSection" style="display: none;">
+                <div id="mainMenuSection"
+                    style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; text-align: center;">
                     <img src="images/chronolinklogo.png"
                         style="width: 100%; max-height: 240px; object-fit: contain; margin-bottom: 40px; transform: scale(1.2);"
                         alt="Chrono Link Logo">
@@ -1814,110 +1768,128 @@
                 </div>
 
                 <!-- Section 3: Tutorial Sub Menu -->
-                <div id="tutorialSection" style="display: none;">
+                <div id="tutorialSection"
+                    style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; text-align: center;">
                     <h2 data-i18n="ui_diff_title">난이도 선택</h2>
-                    <button class="diff-btn" id="btnBeginner">Beginner (초보자)</button>
+                    <button class="diff-btn" id="btnBeginner"
+                        style="margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px);">Beginner
+                        (초보자)</button>
                     <div class="diff-desc" data-i18n="ui_diff_beginner">5장 덱 / 3선승제</div>
 
-                    <button class="diff-btn" style="border-color:#ff0000; color:#ff0000;" id="btnExpert">Expert
+                    <button class="diff-btn"
+                        style="border-color:#ff0000; color:#ff0000; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px);"
+                        id="btnExpert">Expert
                         (숙련자)</button>
                     <div class="diff-desc" data-i18n="ui_diff_expert">7장 덱 (기본 5 + 랜덤 2) / 4선승제</div>
 
                     <button class="diff-btn" id="btnBackFromTutorial"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
                 </div>
 
                 <!-- Section 4: PVP Sub Menu -->
-                <div id="pvpSection" style="display: none;">
-                    <h2 style="color: #ff0000;">PVP 매치</h2>
-                    <br>
+                <div id="pvpSection"
+                    style="display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 800px; text-align: center; min-height: 550px; padding-top: 20px;">
+                    <h2 style="color: #ff0000; font-size: 3rem; margin-bottom: 20px; font-family: 'Jua', sans-serif;">
+                        PVP 매치</h2>
                     <button class="diff-btn" id="btnPvpCustom"
-                        style="border-color:#aaa; color:#aaa; font-size: 2rem;">나만의 덱 (My Cards)<br><span
-                            style="font-size: 1.2rem; color: #777;">상점 기능 준비 중...</span></button>
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">나만의
+                        덱 (My Cards)<br><span style="font-size: 1.2rem; color: #777;">상점 기능 준비 중...</span></button>
                     <button class="diff-btn" id="btnPvpRandomBeginner"
-                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-top: 0px; margin-bottom: 15px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">⚔️
+                        랜덤 덱
                         매칭<br>
                         <span style="font-size: 1.5rem; color: #fff;">Beginner (초보자 - 5장)</span>
                     </button>
                     <button class="diff-btn" id="btnPvpRandomExpert"
-                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-bottom: 10px;">⚔️ 랜덤 덱
+                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-top: 0px; margin-bottom: 15px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">⚔️
+                        랜덤 덱
                         매칭<br>
                         <span style="font-size: 1.5rem; color: #fff;">Expert (숙련자 - 7장)</span>
                     </button>
 
                     <button class="diff-btn" id="btnBackFromPvp"
-                        style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
+                        style="font-size: 1.5rem; padding: 10px; margin-top: auto; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); border-color:#555; background:transparent;">↩️
                         뒤로 가기</button>
                 </div>
 
-            </div>
-
-            <!-- Section 5: Tournament Room List -->
-            <div id="tourneySection" style="display: none; width: 600px; max-width: 90vw; margin: 0 auto;">
-                <h2
-                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 3rem; margin-bottom: 20px;">
-                    토너먼트
-                    대기열
-                </h2>
-                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
+                <!-- Section 5: Tournament Room List -->
+                <div id="tourneySection"
+                    style="display: none; width: 100%; max-width: 800px; margin: 0 auto; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; min-height: 550px; padding-top: 20px;">
+                    <h2
+                        style="color: #ffd700; text-shadow: 0 0 10px #ffd700; text-align: center; font-size: 3rem; margin-bottom: 20px;">
+                        토너먼트
+                        대기열
+                    </h2>
+                    <button class="diff-btn" id="btnTourneySpectate"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">관전
+                        모드 (Spectate)<br><span style="font-size: 1.2rem; color: #777;">관전 기능 준비 중...</span></button>
                     <button id="btnCreateTourney" class="diff-btn"
-                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; margin-bottom: 0;">방
-                        만들기</button>
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-top: 0px; margin-bottom: 15px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">🔥
+                        방 만들기<br><span style="font-size: 1.5rem; color: #fff;">Create Room</span></button>
                     <button id="btnRefreshTourney" class="diff-btn"
-                        style="font-size: 1.8rem; flex: 1; padding: 15px; border-color: #aaa; color: #aaa; margin-bottom: 0;">새로고침</button>
+                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">🔄
+                        새로고침<br><span style="font-size: 1.5rem; color: #fff;">Refresh List</span></button>
+
+                    <div id="tourneyRoomList"
+                        style="max-height: 400px; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); border: 1px solid #555; border-radius: 10px; padding: 10px;">
+                        <!-- JS injects tourney-room-item here -->
+                    </div>
+
+                    <button class="diff-btn" id="btnBackFromTourney"
+                        style="font-size: 1.5rem; padding: 10px; margin-top: auto; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); border-color:#555; background:transparent;">↩️
+                        메인으로</button>
                 </div>
 
-                <div id="tourneyRoomList"
-                    style="max-height: 400px; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); border: 1px solid #555; border-radius: 10px; padding: 10px;">
-                    <!-- JS injects tourney-room-item here -->
+                <!-- Section 6: Inside Tournament Room -->
+                <div id="tourneyRoomSection"
+                    style="display: none; width: 650px; max-width: 90%; margin: 0 auto; text-align: center; flex-direction: column; align-items: center; justify-content: center;">
+                    <h2 id="tourneyRoomTitle"
+                        style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 3rem; margin-bottom: 15px;">방
+                        제목
+                    </h2>
+                    <p id="tourneyRoomCount" style="color: #aaa; font-size: 2rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
+                        4명)</p>
+
+                    <div id="tourneyPlayerGrid"
+                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; width: 100%;">
+                        <!-- Players injected here -->
+                    </div>
+
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
+                        <button class="diff-btn" id="btnStartTourney"
+                            style="display: none; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; font-size: 1.8rem; margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 5px; transform: translateX(0px) translateY(0px);">🚀
+                            시작 (방장전용)</button>
+                        <button class="diff-btn" id="btnLeaveTourney"
+                            style="flex: 1; font-size: 1.8rem; padding: 15px; border-color:#ff0000; color:#ff0000; background:transparent; margin-top: 0px; margin-bottom: 0px; margin-left: 5px; margin-right: 0px; transform: translateX(0px) translateY(0px);">방
+                            나가기</button>
+                    </div>
                 </div>
 
-                <button class="diff-btn" id="btnBackFromTourney"
-                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
-                    메인으로</button>
-            </div>
+                <!-- Section 7: My Page (Formerly 5) -->
+                <div id="myPageSection"
+                    style="display: none; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 800px; text-align: center; min-height: 550px; padding-top: 20px;">
+                    <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px; font-family: 'Jua', sans-serif;">
+                        마이페이지
+                    </h2>
 
-            <!-- Section 6: Inside Tournament Room -->
-            <div id="tourneyRoomSection"
-                style="display: none; width: 650px; max-width: 90vw; margin: 0 auto; text-align: center;">
-                <h2 id="tourneyRoomTitle"
-                    style="color: #ffd700; text-shadow: 0 0 10px #ffd700; font-size: 3rem; margin-bottom: 15px;">방 제목
-                </h2>
-                <p id="tourneyRoomCount" style="color: #aaa; font-size: 2rem; margin-bottom: 30px;">참가자: 1 / 16 (최소
-                    4명)</p>
-
-                <div id="tourneyPlayerGrid"
-                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; width: 100%;">
-                    <!-- Players injected here -->
+                    <button class="diff-btn" id="btnMyStats"
+                        style="border-color:#aaa; color:#aaa; font-size: 2rem; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">나의
+                        전적 (My Stats)<br><span style="font-size: 1.2rem; color: #777;">전적 기능 준비 중...</span></button>
+                    <button class="diff-btn" id="btnChangeNickname"
+                        style="border-color:#00ffd9; color:#00ffd9; font-size: 2.2rem; margin-top: 0px; margin-bottom: 15px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">✏️
+                        닉네임 설정<br><span style="font-size: 1.5rem; color: #fff;">Change Nickname</span></button>
+                    <button class="diff-btn" id="btnDeckSettings"
+                        style="border-color:#ff0000; color:#ff0000; font-size: 2.2rem; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;">🃏
+                        <button class="diff-btn" id="btnBackFromMyPage"
+                            style="font-size: 1.5rem; padding: 10px; margin-top: auto; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); border-color:#555; background:transparent;">↩️
+                            뒤로 가기</button>
                 </div>
-
-                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
-                    <button class="diff-btn" id="btnStartTourney"
-                        style="display: none; flex: 1; padding: 15px; border-color: #00ffd9; color: #00ffd9; font-size: 1.8rem; margin-bottom: 0;">🚀
-                        시작 (방장전용)</button>
-                    <button class="diff-btn" id="btnLeaveTourney"
-                        style="flex: 1; font-size: 1.8rem; padding: 15px; border-color:#ff0000; color:#ff0000; background:transparent; margin-bottom: 0;">방
-                        나가기</button>
-                </div>
-            </div>
-
-            <!-- Section 7: My Page (Formerly 5) -->
-            <div id="myPageSection" style="display: none;">
-                <h2 style="color: #00ffd9; font-size: 3rem; margin-bottom: 20px;">마이페이지</h2>
-                <br>
-                <button class="diff-btn" id="btnChangeNickname"
-                    style="border-color:#00ffd9; color:#00ffd9; margin-bottom: 20px;">✏️ 닉네임 설정</button>
-                <button class="diff-btn" id="btnDeckSettings" style="border-color:#aaa; color:#aaa; font-size: 2rem;">🃏
-                    카드 덱 셋팅<br><span style="font-size: 1.2rem; color: #777;">준비 중입니다...</span></button>
-
-                <button class="diff-btn" id="btnBackFromMyPage"
-                    style="font-size: 1.5rem; padding: 10px; margin-top: 20px; border-color:#555; background:transparent;">↩️
-                    뒤로 가기</button>
-            </div>
+            </div> <!-- End of .diff-box -->
 
             <!-- Section 6: Nickname Registration -->
-            <div id="nicknameSection" style="display: none;">
+            <div id="nicknameSection"
+                style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; text-align: center;">
                 <h2 style="font-size: 3rem; margin-bottom: 20px; color: #00ffd9; font-family: 'Jua', sans-serif;">
                     닉네임 등록</h2>
                 <p style="font-size: 1.5rem; color: #ddd; margin-bottom: 10px; font-family: 'Gowun Dodum', sans-serif;">
@@ -1933,261 +1905,267 @@
                     style="font-size: 1.3rem; margin-bottom: 20px; color: #ff5555; font-family: 'Gowun Dodum', sans-serif; min-height: 25px;">
                 </div>
 
-                <button class="diff-btn" id="btnSubmitNickname" style="border-color:#00ffd9; color:#00ffd9;">중복 확인 및
+                <button class="diff-btn" id="btnSubmitNickname"
+                    style="border-color:#00ffd9; color:#00ffd9; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px);">중복
+                    확인 및
                     등록</button>
                 <button class="diff-btn" id="btnBackFromNickname"
-                    style="font-size: 1.5rem; padding: 10px; margin-top: 10px; border-color:#555; background:transparent;">↩️
+                    style="font-size: 1.5rem; padding: 10px; margin-top: 10px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; transform: translateX(0px) translateY(0px); border-color:#555; background:transparent;">↩️
                     취소</button>
             </div>
-        </div>
-    </div>
+        </div> <!-- End of lobbyOverlay -->
 
-    <!-- PVP Matchmaking Spinner Overlay -->
-    <div id="pvpMatchOverlay">
-        <div id="pvpMatchSpinner"></div>
-        <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
-            중...</h2>
-        <p
-            style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
-            (잠시만 기다려 주세요)
-        </p>
-        <button id="btnCancelMatch"
-            style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
-            매칭 취소
-        </button>
-    </div>
-
-    <!-- Tournament Bracket Overlay -->
-    <div id="tourneyBracketOverlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center;">
-        <h2
-            style="color: #ffd700; font-size: 3.5rem; margin-bottom: 30px; text-shadow: 0 0 20px #ffd700; font-family: 'Jua', sans-serif;">
-            🏆 토너먼트 대진표</h2>
-        <div id="bracketContainer"
-            style="display: flex; flex-direction: row; gap: 40px; max-width: 95%; max-height: 60vh; overflow: auto; padding: 20px; align-items: center;">
-            <!-- Bracket dynamically drawn here -->
-        </div>
-        <p id="tourneyStatusText"
-            style="color: #00ffd9; font-size: 2rem; margin-top: 30px; font-family: 'Jua', sans-serif; animation: blink 1.5s infinite;">
-            대기 중...</p>
-    </div>
-
-    <!-- Settings Overlay -->
-    <div id="settingsOverlay">
-        <div class="settings-box">
-            <h2 data-i18n="ui_settings_title">설정</h2>
-            <div class="toggle-row">
-                <span data-i18n="ui_lang">언어 / Language</span>
-                <div class="slider-container" style="justify-content: flex-end;">
-                    <button class="toggle-btn active" id="btnLangKo"
-                        style="width:50px; padding:6px; font-size:1rem;">KR</button>
-                    <button class="toggle-btn" id="btnLangEn"
-                        style="width:50px; padding:6px; font-size:1rem;">EN</button>
-                </div>
-            </div>
-            <div class="toggle-row">
-                <span data-i18n="ui_bgm">배경음악</span>
-                <div class="slider-container">
-                    <input type="range" id="bgmSlider" min="0" max="100" value="100">
-                    <div class="vol-text" id="bgmText">100%</div>
-                </div>
-            </div>
-            <div class="toggle-row">
-                <span data-i18n="ui_sfx">효과음</span>
-                <div class="slider-container">
-                    <input type="range" id="sfxSlider" min="0" max="100" value="100">
-                    <span class="vol-text" id="sfxVolText">100%</span>
-                </div>
-            </div>
-            <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
-        </div>
-    </div>
-
-    <!-- Rulebook Overlay -->
-    <div id="rulebookOverlay">
-        <div class="rulebook-box">
-            <h2 data-i18n="rulebook_title">게임 규칙</h2>
-
-            <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
-            <ul>
-                <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
-                <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
-                <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
-            </ul>
-
-            <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
-            <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
-            <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
-                <b>카드 등급(계급)</b>을 비교합니다.
+        <!-- PVP Matchmaking Spinner Overlay -->
+        <div id="pvpMatchOverlay">
+            <div id="pvpMatchSpinner"></div>
+            <h2 style="color: #00ffd9; font-size: 3.5rem; font-family: 'Jua', sans-serif; letter-spacing: 2px;">상대방을 찾는
+                중...</h2>
+            <p
+                style="color: #aaa; font-size: 1.5rem; margin-top: 15px; margin-bottom: 40px; font-family: 'Gowun Dodum', sans-serif;">
+                (잠시만 기다려 주세요)
             </p>
-            <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
-                상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
-
-            <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
-            <ul>
-                <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
-                        src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
-                        이깁니다.</span></li>
-                <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
-                    <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
-                        이깁니다.</span>
-                </li>
-                <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
-                    <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
-                </li>
-                <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
-                        src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
-                        이깁니다.</span></li>
-                <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
-                    <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
-                </li>
-            </ul>
-
-            <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
-            <ol>
-                <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
-                        영웅</span></li>
-                <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
-                        영웅</span></li>
-                <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
-                        영웅</span></li>
-                <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
-                        영웅</span></li>
-                <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
-                        존재</span></li>
-            </ol>
-
-            <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
-        </div>
-    </div>
-
-    <div id="mainLayout">
-        <div class="side-panel" id="logPanel">
-            <!-- User requested complete removal of the in-game Logo here -->
-            <h3 data-i18n="ui_log_title">전투 로그</h3>
-            <ul class="log-list" id="roundLog"></ul>
-        </div>
-
-        <!-- Center Panel: Game Board -->
-        <div id="gameBoard" style="position: relative;">
-            <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck">상대 카드</h2>
-            <div id="computerZone"></div>
-
-            <!-- 20s Turn Timer Bar for PVP -->
-            <div id="turnTimerBarContainer">
-                <div id="turnTimerBar"></div>
-            </div>
-
-            <div id="battleZone">
-                <div id="clashEffect" class="clash-effect"></div>
-                <!-- Static labels remain invisible until battle mode -->
-                <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드</div>
-                <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드</div>
-            </div>
-            <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드</h2>
-            <div id="playerZone"></div>
-        </div>
-
-        <div class="side-panel" id="chartPanel">
-            <h3 data-i18n="ui_element_table">오행 상성</h3>
-            <div class="chart-container">
-                <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
-                <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
-                <svg id="chartSvg">
-                    <defs>
-                        <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                            orient="auto">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
-                        </marker>
-                        <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                            orient="auto">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
-                        </marker>
-                        <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                            orient="auto">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
-                        </marker>
-                        <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                            orient="auto">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
-                        </marker>
-                        <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                            orient="auto">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
-                        </marker>
-                    </defs>
-                    <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
-
-                    <!-- F to M -->
-                    <line x1="152" y1="70" x2="193" y2="197" stroke="#ff4444" marker-end="url(#arrow-fire)" />
-
-                    <!-- M to Wo -->
-                    <line x1="179" y1="208" x2="71" y2="128" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
-
-                    <!-- Wo to E -->
-                    <line x1="76" y1="112" x2="210" y2="112" stroke="#22cc22" marker-end="url(#arrow-wood)" />
-
-                    <!-- E to Wa -->
-                    <line x1="215" y1="128" x2="107" y2="208" stroke="#dd8833" marker-end="url(#arrow-earth)" />
-
-                    <!-- Wa to F -->
-                    <line x1="93" y1="197" x2="134" y2="70" stroke="#4488ff" marker-end="url(#arrow-water)" />
-                </svg>
-
-                <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
-                <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
-                <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
-                <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
-                <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
-            </div>
-
-            <div class="chart-text-list">
-                <div class="chart-text-row">
-                    <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                    <span class="arrow-tag">➔</span>
-                    <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                </div>
-                <div class="chart-text-row">
-                    <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
-                    <span class="arrow-tag">➔</span>
-                    <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                </div>
-                <div class="chart-text-row">
-                    <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
-                    <span class="arrow-tag">➔</span>
-                    <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                </div>
-                <div class="chart-text-row">
-                    <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
-                    <span class="arrow-tag">➔</span>
-                    <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
-                </div>
-                <div class="chart-text-row">
-                    <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
-                    <span class="arrow-tag">➔</span>
-                    <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
-                </div>
-            </div>
-
-            <!-- Relocated Restart Button with 100px explicit margin-top and 20% scale up -->
-            <button id="headerRestartBtn"
-                style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 100px auto 0 auto; width: 100%; max-width: 156px; transform: scale(1.2);">
-                <img src="images/btn_restart.png?v=3" alt="Restart"
-                    style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
+            <button id="btnCancelMatch"
+                style="padding: 15px 30px; font-size: 2rem; border-radius: 8px; border: 2px solid #ff5555; background: #222; color: #ff5555; cursor: pointer; font-family: 'Jua', sans-serif;">
+                매칭 취소
             </button>
         </div>
-    </div>
 
-    <div id="finalOverlay">
-        <div class="final-box" id="finalTitle">승리!</div>
-        <button id="restartBtn">
-            <img src="images/btn_restart.png?v=3" alt="Restart">
-        </button>
-    </div>
+        <!-- Tournament Bracket Overlay -->
+        <div id="tourneyBracketOverlay"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center;">
+            <h2
+                style="color: #ffd700; font-size: 3.5rem; margin-bottom: 30px; text-shadow: 0 0 20px #ffd700; font-family: 'Jua', sans-serif;">
+                🏆 토너먼트 대진표</h2>
+            <div id="bracketContainer"
+                style="display: flex; flex-direction: row; gap: 40px; max-width: 95%; max-height: 60vh; overflow: auto; padding: 20px; align-items: center;">
+                <!-- Bracket dynamically drawn here -->
+            </div>
+            <p id="tourneyStatusText"
+                style="color: #00ffd9; font-size: 2rem; margin-top: 30px; font-family: 'Jua', sans-serif; animation: blink 1.5s infinite;">
+                대기 중...</p>
+        </div>
 
-    <!-- Removed floating settingsBtn to merge into header-buttons above -->
+        <!-- Settings Overlay -->
+        <div id="settingsOverlay">
+            <div class="settings-box">
+                <h2 data-i18n="ui_settings_title">설정</h2>
+                <div class="toggle-row">
+                    <span data-i18n="ui_lang">언어 / Language</span>
+                    <div class="slider-container" style="justify-content: flex-end;">
+                        <button class="toggle-btn active" id="btnLangKo"
+                            style="width:50px; padding:6px; font-size:1rem;">KR</button>
+                        <button class="toggle-btn" id="btnLangEn"
+                            style="width:50px; padding:6px; font-size:1rem;">EN</button>
+                    </div>
+                </div>
+                <div class="toggle-row">
+                    <span data-i18n="ui_bgm">배경음악</span>
+                    <div class="slider-container">
+                        <input type="range" id="bgmSlider" min="0" max="100" value="100">
+                        <div class="vol-text" id="bgmText">100%</div>
+                    </div>
+                </div>
+                <div class="toggle-row">
+                    <span data-i18n="ui_sfx">효과음</span>
+                    <div class="slider-container">
+                        <input type="range" id="sfxSlider" min="0" max="100" value="100">
+                        <span class="vol-text" id="sfxVolText">100%</span>
+                    </div>
+                </div>
+                <button class="close-settings" id="closeSettingsBtn" data-i18n="btn_close">닫기</button>
+            </div>
+        </div>
 
-    <!-- End Global Scale Container -->
+        <!-- Rulebook Overlay -->
+        <div id="rulebookOverlay">
+            <div class="rulebook-box">
+                <h2 data-i18n="rulebook_title">게임 규칙</h2>
+
+                <h3 data-i18n="rulebook_h1">1. 승리 조건</h3>
+                <ul>
+                    <li data-i18n="rulebook_v1">Beginner 모드: 총 5라운드 진행, 먼저 3번 이기면 최종 승리합니다.</li>
+                    <li data-i18n="rulebook_v2">Expert 모드: 총 7라운드 진행, 먼저 4번 이기면 최종 승리합니다.</li>
+                    <li data-i18n="rulebook_v3">동점(무승부)이 발생할 경우, 해당 라운드의 점수는 '이월'되어 다음 라운드 승자가 모두 가져갑니다!</li>
+                </ul>
+
+                <h3 data-i18n="rulebook_h2">2. 전투 방식</h3>
+                <p data-i18n="rulebook_b1">당신의 덱에 있는 카드 중 하나를 선택하면, 상대방도 무작위 카드를 내어 맞붙습니다.</p>
+                <p data-i18n="rulebook_b2">우선 <b>오행 상성</b>을 먼저 비교하며, 상성에서 유리하면 무조건 승리합니다. 만약 상성이 같거나 서로 영향을 주지 않는다면
+                    <b>카드 등급(계급)</b>을 비교합니다.
+                </p>
+                <p data-i18n="rulebook_b3">단, 상성상 유리하더라도 상대 카드의 등급이 <b>3계급 이상</b> 높다면 압도적인 힘의 차이로 인해 상성이 무시되고 패배합니다! (즉,
+                    상성이 유리하면 최대 2등급 더 높은 상대방까지는 거뜬히 이길 수 있습니다!)</p>
+
+                <h3 data-i18n="rulebook_h3">3. 오행 상성</h3>
+                <ul>
+                    <li><img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_w">목(Tree)은</span> <img
+                            src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ea">토(Earth)를
+                            이깁니다.</span></li>
+                    <li><img src="이모지/earth.png" class="element-icon"> <span data-i18n="rule_el_ei">토(Earth)는</span>
+                        <img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wa">수(Water)를
+                            이깁니다.</span>
+                    </li>
+                    <li><img src="이모지/water.png" class="element-icon"> <span data-i18n="rule_el_wi">수(Water)는</span>
+                        <img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fa">화(Fire)를 이깁니다.</span>
+                    </li>
+                    <li><img src="이모지/fire.png" class="element-icon"> <span data-i18n="rule_el_fi">화(Fire)는</span> <img
+                            src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_ma">금(Metal)을
+                            이깁니다.</span></li>
+                    <li><img src="이모지/steel.png" class="element-icon"> <span data-i18n="rule_el_mi">금(Metal)은</span>
+                        <img src="이모지/wood.png" class="element-icon"> <span data-i18n="rule_el_wo">목(Tree)을 이깁니다.</span>
+                    </li>
+                </ul>
+
+                <h3 data-i18n="rulebook_h4">4. 등급 비교 (낮은 순 -> 높은 순)</h3>
+                <ol>
+                    <li><span style="color:#aaaaaa">Origin (오리진 - 회색)</span> : <span data-i18n="rule_g1">평범한 인간
+                            영웅</span></li>
+                    <li><span style="color:#55aaff">Hero (히어로 - 파란색)</span> : <span data-i18n="rule_g2">뛰어난 업적을 남긴
+                            영웅</span></li>
+                    <li><span style="color:#d077ff">Epic (에픽 - 보라색)</span> : <span data-i18n="rule_g3">역사를 바꾼 전설의
+                            영웅</span></li>
+                    <li><span style="color:#ffaa00">Legendary (레전더리 - 황금색)</span> : <span data-i18n="rule_g4">신화 반열에 오른
+                            영웅</span></li>
+                    <li><span style="color:#ff3377">Mythos (미소스 - 붉은색)</span> : <span data-i18n="rule_g5">신 또는 신적인
+                            존재</span></li>
+                </ol>
+
+                <button class="close-settings" id="closeRulebookBtn" data-i18n="btn_close">닫기</button>
+            </div>
+        </div>
+
+
+        <div id="mainLayout">
+            <div class="side-panel" id="logPanel">
+                <!-- User requested complete removal of the in-game Logo here -->
+                <h3 data-i18n="ui_log_title">전투 로그</h3>
+                <ul class="log-list" id="roundLog"></ul>
+            </div>
+
+            <!-- Center Panel: Game Board -->
+            <div id="gameBoard" style="position: relative; transform: scale(1.3); transform-origin: top center;">
+                <h2 id="gameBoardTitle" class="zone-title"
+                    style="text-align: center; color: #fff; font-size: 1.89rem; margin-top: 90px; margin-bottom: 20px; font-family: 'Jua', sans-serif;">
+                    카드존</h2>
+                <h2 class="zone-title cpu" id="cpuTitle" data-i18n="ui_cpu_deck" style="margin-top:0px;">상대 카드존</h2>
+                <div id="computerZone"></div>
+
+                <!-- 20s Turn Timer Bar for PVP -->
+                <div id="turnTimerBarContainer">
+                    <div id="turnTimerBar"></div>
+                </div>
+
+                <div id="battleZone">
+                    <div id="clashEffect" class="clash-effect"></div>
+                    <!-- Static labels remain invisible until battle mode -->
+                    <div class="battle-label-static p-label" data-i18n="ui_player_deck">내 카드존</div>
+                    <div class="battle-label-static c-label" data-i18n="ui_cpu_deck">상대 카드존</div>
+                </div>
+                <h2 class="zone-title player" id="playerTitle" data-i18n="ui_player_deck">내 카드존</h2>
+                <div id="playerZone"></div>
+            </div>
+
+            <div class="side-panel" id="chartPanel" style="position: relative;">
+
+                <h3 data-i18n="ui_element_table">오행 상성</h3>
+                <div class="chart-container">
+                    <!-- SVG Arrows explicitly placed to target the border of the 50x50 circles (Radius 25) -->
+                    <!-- Nodes at approx: F(110,35), E(185,95), M(160,180), Wa(60,180), Wo(35,95) -->
+                    <svg id="chartSvg">
+                        <defs>
+                            <marker id="arrow-fire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                                markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff4444" />
+                            </marker>
+                            <marker id="arrow-metal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" height="6"
+                                orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaaaaa" />
+                            </marker>
+                            <marker id="arrow-wood" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" height="6"
+                                orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#22cc22" />
+                            </marker>
+                            <marker id="arrow-earth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" height="6"
+                                orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#dd8833" />
+                            </marker>
+                            <marker id="arrow-water" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" height="6"
+                                orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4488ff" />
+                            </marker>
+                        </defs>
+                        <!-- Chart mathematically modeled as Perfect Regular Pentagon (Radius 100px around center 143,143) -->
+
+                        <!-- F to M -->
+                        <line x1="97" y1="42" x2="122" y2="124" stroke="#ff4444" marker-end="url(#arrow-fire)" />
+
+                        <!-- M to Wo -->
+                        <line x1="117" y1="135" x2="42" y2="82" stroke="#aaaaaa" marker-end="url(#arrow-metal)" />
+
+                        <!-- Wo to E -->
+                        <line x1="45" y1="70" x2="135" y2="70" stroke="#22cc22" marker-end="url(#arrow-wood)" />
+
+                        <!-- E to Wa -->
+                        <line x1="140" y1="82" x2="63" y2="135" stroke="#dd8833" marker-end="url(#arrow-earth)" />
+
+                        <!-- Wa to F -->
+                        <line x1="58" y1="124" x2="83" y2="42" stroke="#4488ff" marker-end="url(#arrow-water)" />
+                    </svg>
+
+                    <div class="node" id="n-fire"><span><img src="이모지/fire.png" class="element-icon"></span></div>
+                    <div class="node" id="n-earth"><span><img src="이모지/earth.png" class="element-icon"></span></div>
+                    <div class="node" id="n-metal"><span><img src="이모지/steel.png" class="element-icon"></span></div>
+                    <div class="node" id="n-water"><span><img src="이모지/water.png" class="element-icon"></span></div>
+                    <div class="node" id="n-wood"><span><img src="이모지/wood.png" class="element-icon"></span></div>
+                </div>
+
+                <div class="chart-text-list">
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/steel.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/wood.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/earth.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/water.png" class="element-icon"></span>
+                    </div>
+                    <div class="chart-text-row">
+                        <span class="win-tag"><img src="이모지/water.png" class="element-icon"></span>
+                        <span class="arrow-tag">➔</span>
+                        <span class="lose-tag"><img src="이모지/fire.png" class="element-icon"></span>
+                    </div>
+                </div>
+
+                <!-- Relocated Restart Button with 80px explicit margin-top (moved up 20px) and 20% scale up -->
+                <button id="headerRestartBtn"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 40px auto 0 auto; width: 100%; max-width: 156px; transform: scale(0.84);">
+                    <img src="images/btn_restart.png?v=3" alt="Restart"
+                        style="width: 100%; border-radius: 8px; filter: drop-shadow(0 0 10px rgba(0,255,217,0.3)); transition: transform 0.2s;">
+                </button>
+            </div>
+        </div>
+
+        <div id="finalOverlay">
+            <div class="final-box" id="finalTitle">승리!</div>
+            <button id="restartBtn">
+                <img src="images/btn_restart.png?v=3" alt="Restart">
+            </button>
+        </div>
+
+        <!-- Removed floating settingsBtn to merge into header-buttons above -->
+
+        <!-- End Global Scale Container -->
     </div>
 
     <script>
@@ -2310,6 +2288,31 @@
 
         let lobbySocket = null;
 
+        function connectLobbySocket(userName) {
+            document.getElementById('onlineUserPanel').style.display = 'flex';
+            if (!lobbySocket) {
+                lobbySocket = io('https://chrono-link.onrender.com'); // Production URL
+
+                lobbySocket.on('connect', () => {
+                    lobbySocket.emit('lobby_login', { name: userName });
+                });
+
+                lobbySocket.on('update_user_list', (users) => {
+                    const ul = document.getElementById('onlineUserList');
+                    ul.innerHTML = '';
+                    if (users.length === 0) {
+                        ul.innerHTML = '<li style="color:#777; justify-content:center;">접속자가 없습니다.</li>';
+                    } else {
+                        users.forEach(name => {
+                            const li = document.createElement('li');
+                            li.innerText = name;
+                            ul.appendChild(li);
+                        });
+                    }
+                });
+            }
+        }
+
         // Check Auth State
         auth.onAuthStateChanged(user => {
             const loginSection = document.getElementById('loginSection');
@@ -2364,29 +2367,7 @@
                     }
 
                     // Proceed to establish Lobby Socket after naming is locked in
-                    document.getElementById('onlineUserPanel').style.display = 'flex';
-                    if (!lobbySocket) {
-                        // lobbySocket = io('http://localhost:3000'); // Testing
-                        lobbySocket = io('https://chrono-link.onrender.com'); // Production URL
-
-                        lobbySocket.on('connect', () => {
-                            lobbySocket.emit('lobby_login', { name: nameSpan.innerText });
-                        });
-
-                        lobbySocket.on('update_user_list', (users) => {
-                            const ul = document.getElementById('onlineUserList');
-                            ul.innerHTML = '';
-                            if (users.length === 0) {
-                                ul.innerHTML = '<li style="color:#777; justify-content:center;">접속자가 없습니다.</li>';
-                            } else {
-                                users.forEach(name => {
-                                    const li = document.createElement('li');
-                                    li.innerText = name;
-                                    ul.appendChild(li);
-                                });
-                            }
-                        });
-                    }
+                    connectLobbySocket(nameSpan.innerText);
 
                 };
                 fetchProfile();
@@ -2755,9 +2736,9 @@
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
-                    title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_win.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else if (cWin > pWin) {
-                    title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
+                    title.innerHTML = `<img src="images/btn_lose.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:4rem; font-family:'Jua',sans-serif;"><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 } else {
                     title.innerHTML = `<h1 style="color:#aaa; font-size:4rem; font-family:'Jua',sans-serif;">무승부<br><span style="font-size:3rem">스코어: ${pWin} 대 ${cWin}</span></h1>`;
                 }
@@ -2827,58 +2808,56 @@
             const bz = document.getElementById('battleZone');
             const gb = document.getElementById('gameBoard');
 
-            // Calculate center of battle zone purely via logical offsets inside the container
-            const localCenterX = gb.offsetLeft + bz.offsetLeft + (bz.offsetWidth / 2);
-            const localCenterY = gb.offsetTop + bz.offsetTop + (bz.offsetHeight / 2);
+            // Use absolute horizontal center of the game for perfect alignment with header
+            const localCenterX = 2600 / 2; // Hard fixed 1300px (appContainer width)
+
+            // Calculate precise vertical center exactly between Computer and Player card zones
+            const compZone = document.getElementById('computerZone');
+            const playerZone = document.getElementById('playerZone');
+            const compBottom = gb.offsetTop + compZone.offsetTop + compZone.offsetHeight;
+            const playTop = gb.offsetTop + playerZone.offsetTop;
+            const localCenterY = ((compBottom + playTop) / 2) + 100; // 배틀존 전체적으로 200 -> 100으로 줄여 100픽셀 위로 정렬
 
             const appContainer = document.getElementById('appContainer');
             const appBox = appContainer.getBoundingClientRect();
 
-            const currentScale = window.currentAppScale || 1;
-
-            // Fix: In mobile forced landscape mode, getBoundingClientRect returns visually rotated sizes 
-            // which breaks our offset calculation. Use a robust fallback if it drops below zero or errors out.
-            let pLocalX = (pRect.left - appBox.left) / currentScale;
-            let pLocalY = (pRect.top - appBox.top) / currentScale;
-            let cLocalX = (cRect.left - appBox.left) / currentScale;
-            let cLocalY = (cRect.top - appBox.top) / currentScale;
-
-            // If the math spins out because of CSS rotation on mobile body, snap to safe hardcoded deck positions
-            if (pLocalX < 0 || cLocalX < 0) {
-                pLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
-                pLocalY = gb.offsetTop + gb.offsetHeight - 300;
-                cLocalX = gb.offsetLeft + (gb.offsetWidth / 2) - 100;
-                cLocalY = gb.offsetTop + 100;
-            }
-
-            appContainer.appendChild(pDomCard);
-            pDomCard.style.top = pLocalY + 'px';
-            pDomCard.style.left = pLocalX + 'px';
-
-            appContainer.appendChild(cDomCard);
-            cDomCard.style.top = cLocalY + 'px';
-            cDomCard.style.left = cLocalX + 'px';
-
             const isMobileBattle = document.body.classList.contains('is-mobile');
-            const baseW = isMobileBattle ? 191 * 1.3 : 191; // ~248
-            const baseH = isMobileBattle ? 271 * 1.3 : 271; // ~352
-            const clashOffset = baseW * 1.76 * 0.85; // dynamically calculate offset distance
+            // Force precise internal extra sizing at the HTML layout base for desktop as well
+            const baseW = isMobileBattle ? 156 * 1.3 : 156 * 1.3;
+            const baseH = isMobileBattle ? 220 * 1.3 : 220 * 1.3;
+            const battleScale = 2.2; // 기존 1.7배에서 30% 추가 확대 (1.7 * 1.3 = 2.21) -> 약 2.2로 적용
+            const centerOffset = (baseW * 1.3) + 150; // 기본 대기 위치 간격 300px 추가 확대 (양옆 150px씩)
 
             // Dynamically position static labels matching expected card visual shifts to fix alignment bugs
             const pLabel = document.querySelector('.p-label');
             const cLabel = document.querySelector('.c-label');
+
+            pLabel.innerText = document.getElementById('headerPlayerName').innerText;
+            cLabel.innerText = document.getElementById('headerCpuName').innerText;
+
+            pLabel.style.fontSize = '4rem';
+            cLabel.style.fontSize = '4rem';
+            pLabel.style.margin = '0';
+            cLabel.style.margin = '0';
+
             appContainer.appendChild(pLabel);
             appContainer.appendChild(cLabel);
             appContainer.appendChild(clashEffect);
 
-            pLabel.style.left = (localCenterX - clashOffset) + 'px';
-            pLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
+            pLabel.style.left = (localCenterX - centerOffset) + 'px';
+            pLabel.style.top = (localCenterY - (baseH * battleScale / 2) - 80) + 'px';
+            pLabel.style.transform = 'translate(-50%, -50%)';
+            pLabel.style.textAlign = 'center';
 
-            cLabel.style.left = (localCenterX + clashOffset) + 'px';
-            cLabel.style.top = (localCenterY - (clashOffset + 5)) + 'px';
+            cLabel.style.left = (localCenterX + centerOffset) + 'px';
+            cLabel.style.top = (localCenterY - (baseH * battleScale / 2) - 80) + 'px';
+            cLabel.style.transform = 'translate(-50%, -50%)';
+            cLabel.style.textAlign = 'center';
 
+            // Base clash effect directly on true center
             clashEffect.style.left = localCenterX + 'px';
             clashEffect.style.top = localCenterY + 'px';
+            clashEffect.style.transform = 'translate(-50%, -50%)';
 
             // Enter focus mode
             document.body.classList.add('battling-mode');
@@ -2894,45 +2873,47 @@
             cDomCard.style.width = baseW + 'px';
             cDomCard.style.height = baseH + 'px';
 
-            await sleep(50);
+            // Center mathematically using true layout center plus exact centerOffset
+            const cardTopY = localCenterY - (baseH / 2) + 20;
 
-            // Add smooth flight transition
-            pDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            cDomCard.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            // instantly appear in battle zone without flying
+            appContainer.appendChild(pDomCard);
+            appContainer.appendChild(cDomCard);
+            pDomCard.style.transition = 'none';
+            cDomCard.style.transition = 'none';
 
-            // Align their base position to exact center
-            const centerLeft = localCenterX - (baseW / 2);
-            const centerTop = localCenterY - (baseH / 2);
-            pDomCard.style.top = centerTop + 'px';
-            pDomCard.style.left = centerLeft + 'px';
-            cDomCard.style.top = centerTop + 'px';
-            cDomCard.style.left = centerLeft + 'px';
+            pDomCard.style.top = cardTopY + 'px';
+            pDomCard.style.left = localCenterX + 'px';
+            cDomCard.style.top = cardTopY + 'px';
+            cDomCard.style.left = localCenterX + 'px';
 
-            // Push them apart instantly and scale up for battle zone
-            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+            // Resting state perfectly aligned to centerOffset (p: left, c: right)
+            pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+            cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
 
             // Show static labels
             document.body.classList.add('show-labels');
 
-            // Wait for transform to complete visually and allow match-up view duration
-            await sleep(1500);
+            // Wait for matchup view duration: reduced from 1500 to 100 to start battle immediately
+            await sleep(100);
+
+            // Dynamic clash distance to just touch edges
+            const hitDist = (baseW * battleScale) / 2; // 스케일 증폭(1.7)된 카드의 정확히 반쪽 넓이만큼 떨어진 곳에서 멈춤 (테두리만 닿음)
 
             // Multi-Hit: 3 Times
             for (let hit = 1; hit <= 3; hit++) {
-                // Pull back before striking
+                // Pull back before striking (P moves left, C moves right)
                 pDomCard.style.transition = 'all 0.3s ease-out';
                 cDomCard.style.transition = 'all 0.3s ease-out';
-                pDomCard.style.transform = 'scale(1.76) translateX(-110%)';
-                cDomCard.style.transform = 'scale(1.76) translateX(110%)';
+                pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+                cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
                 await sleep(350);
 
-                // Clash forward forcefully into the center
+                // Clash forward forcefully. Ensure they only go up to hitDist from center
                 pDomCard.style.transition = 'all 0.1s ease-in';
                 cDomCard.style.transition = 'all 0.1s ease-in';
-                // Stop without overlapping (50% translation perfectly touches their inner edges!)
-                pDomCard.style.transform = 'scale(1.76) translateX(-50%)';
-                cDomCard.style.transform = 'scale(1.76) translateX(50%)';
+                pDomCard.style.transform = `translate(calc(-50% - ${hitDist}px), 0) scale(${battleScale})`;
+                cDomCard.style.transform = `translate(calc(-50% + ${hitDist}px), 0) scale(${battleScale})`;
 
                 await sleep(100);
 
@@ -2952,11 +2933,11 @@
 
             await sleep(150);
 
-            // Return to battle zone starting positions before showing effects
+            // Return to battle zone starting positions (resting properly at centerOffset)
             pDomCard.style.transition = 'all 0.4s ease-out';
             cDomCard.style.transition = 'all 0.4s ease-out';
-            pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-            cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+            pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+            cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
 
             await sleep(400);
 
@@ -2977,8 +2958,13 @@
                 cDomCard.style.zIndex = '90';
                 pDomCard.style.zIndex = '110';
 
-                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+                // 먼저 원래 시작 위치(대기 자리)로 뒤로 뺌
+                pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+                cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
+
+                await sleep(300); // 0.3초간 물러날 시간 부여
+
+                // 물러난 원래 자리에서 이펙트 폭발
                 cDomCard.style.animation = 'shatter-c 0.6s forwards';
                 pDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,215,0,0.8)) brightness(1.2)';
             } else if (r === 'B') {
@@ -2990,8 +2976,13 @@
                 pDomCard.style.zIndex = '90';
                 cDomCard.style.zIndex = '110';
 
-                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+                // 먼저 원래 시작 위치(대기 자리)로 뒤로 뺌
+                pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+                cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
+
+                await sleep(300); // 0.3초간 물러날 시간 부여
+
+                // 물러난 원래 자리에서 이펙트 폭발
                 pDomCard.style.animation = 'shatter-p 0.6s forwards';
                 cDomCard.style.filter = 'drop-shadow(0 0 40px rgba(255,0,85,0.8)) brightness(1.2)';
             } else {
@@ -3000,8 +2991,8 @@
                 playSound('draw');
                 pDomCard.style.filter = 'brightness(0.6)';
                 cDomCard.style.filter = 'brightness(0.6)';
-                pDomCard.style.transform = 'scale(1.76) translateX(-85%)';
-                cDomCard.style.transform = 'scale(1.76) translateX(85%)';
+                pDomCard.style.transform = `translate(calc(-50% - ${centerOffset}px), 0) scale(${battleScale})`;
+                cDomCard.style.transform = `translate(calc(-50% + ${centerOffset}px), 0) scale(${battleScale})`;
             }
 
             log(pCardData, cCardData, logClass, pts, round);
@@ -3078,6 +3069,8 @@
             // Reveal game elements
             document.getElementById('mainLayout').style.display = 'flex';
             document.querySelector('.score-board').style.display = 'flex';
+            document.getElementById('headerRow').style.visibility = 'visible';
+            document.getElementById('myPageSection').style.display = 'none';
 
             if (currentMode === 'Expert') {
                 maxWins = 4;
@@ -3184,6 +3177,8 @@
             // Reveal game elements
             document.getElementById('mainLayout').style.display = 'flex';
             document.querySelector('.score-board').style.display = 'flex';
+            document.getElementById('headerRow').style.visibility = 'visible';
+            document.getElementById('myPageSection').style.display = 'none';
 
             if (mode === 'Expert') {
                 maxWins = 4;
@@ -3221,12 +3216,13 @@
             // Hide game elements to prevent bleed-through
             document.getElementById('mainLayout').style.display = 'none';
             document.querySelector('.score-board').style.display = 'none';
+            document.getElementById('headerRow').style.visibility = 'hidden';
 
             document.getElementById('lobbyOverlay').style.display = 'flex';
 
             // Reset to main menu view conditionally if logged in (auth listener handles login gate)
             if (auth.currentUser) {
-                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('mainMenuSection').style.display = 'flex';
                 document.getElementById('tutorialSection').style.display = 'none';
                 document.getElementById('pvpSection').style.display = 'none';
             }
@@ -3258,28 +3254,28 @@
 
             document.getElementById('btnMenuTutorial').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('tutorialSection').style.display = 'block';
+                document.getElementById('tutorialSection').style.display = 'flex';
             });
 
             document.getElementById('btnMenuPvp').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('pvpSection').style.display = 'block';
+                document.getElementById('pvpSection').style.display = 'flex';
             });
 
             document.getElementById('btnBackFromTutorial').addEventListener('click', () => {
                 document.getElementById('tutorialSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('mainMenuSection').style.display = 'flex';
             });
 
             document.getElementById('btnBackFromPvp').addEventListener('click', () => {
                 document.getElementById('pvpSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('mainMenuSection').style.display = 'flex';
             });
 
             // Tournament Menu Handlers
             document.getElementById('btnMenuTourney').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('tourneySection').style.display = 'block';
+                document.getElementById('tourneySection').style.display = 'flex';
                 if (!pvpSocket) {
                     initPvpSocket(() => pvpSocket.emit('get_tourney_rooms'));
                 } else {
@@ -3288,7 +3284,7 @@
             });
             document.getElementById('btnBackFromTourney').addEventListener('click', () => {
                 document.getElementById('tourneySection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('mainMenuSection').style.display = 'flex';
             });
             document.getElementById('btnRefreshTourney').addEventListener('click', () => {
                 if (pvpSocket && pvpSocket.connected) pvpSocket.emit('get_tourney_rooms');
@@ -3304,7 +3300,7 @@
                     pvpSocket.emit('leave_tourney_room');
                     tourneyRoomId = null; // Clear tourneyRoomId
                     document.getElementById('tourneyRoomSection').style.display = 'none';
-                    document.getElementById('tourneySection').style.display = 'block';
+                    document.getElementById('tourneySection').style.display = 'flex';
                     pvpSocket.emit('get_tourney_rooms');
                 }
             });
@@ -3317,22 +3313,22 @@
             // My Page Handlers
             document.getElementById('btnMenuMyPage').addEventListener('click', () => {
                 document.getElementById('mainMenuSection').style.display = 'none';
-                document.getElementById('myPageSection').style.display = 'block';
+                document.getElementById('myPageSection').style.display = 'flex';
             });
             document.getElementById('btnBackFromMyPage').addEventListener('click', () => {
                 document.getElementById('myPageSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'block';
+                document.getElementById('mainMenuSection').style.display = 'flex';
             });
 
             // Nickname UI Handlers
             document.getElementById('btnChangeNickname').addEventListener('click', () => {
                 document.getElementById('myPageSection').style.display = 'none';
-                document.getElementById('nicknameSection').style.display = 'block';
+                document.getElementById('nicknameSection').style.display = 'flex';
                 document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
             });
             document.getElementById('btnBackFromNickname').addEventListener('click', () => {
                 document.getElementById('nicknameSection').style.display = 'none';
-                document.getElementById('myPageSection').style.display = 'block';
+                document.getElementById('myPageSection').style.display = 'flex';
             });
 
             document.getElementById('btnPvpCustom').addEventListener('click', () => alert("PVP 나만의 덱 모드는 준비 중입니다!"));
@@ -3343,7 +3339,7 @@
                     pvpSocket.emit('cancel_queue');
                 }
                 document.getElementById('pvpMatchOverlay').style.display = 'none';
-                document.getElementById('pvpSection').style.display = 'block';
+                document.getElementById('pvpSection').style.display = 'flex';
                 isPvpMode = false;
                 if (typeof isTourneyMode !== 'undefined') isTourneyMode = false;
             });
@@ -3451,7 +3447,7 @@
                     tourneyRoomId = room.id;
                     isTourneyMode = true;
                     document.getElementById('tourneySection').style.display = 'none';
-                    document.getElementById('tourneyRoomSection').style.display = 'block';
+                    document.getElementById('tourneyRoomSection').style.display = 'flex';
                     updateTourneyRoomUI(room);
                 });
 
@@ -3616,10 +3612,10 @@
                     const meName = document.getElementById('userDisplayName').innerText;
 
                     if (data.winnerId === pvpMyId) {
-                        title.innerHTML = `<img src="images/btn_win.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                        title.innerHTML = `<img src="images/btn_win.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
                         startBgm('bgm_win');
                     } else {
-                        title.innerHTML = `<img src="images/btn_lose.png" style="height:655px; flex-shrink:0; margin-bottom:20px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
+                        title.innerHTML = `<img src="images/btn_lose.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
                         startBgm('bgm_lose');
                     }
 
@@ -3696,6 +3692,21 @@
                 });
             });
 
+            // Guest Login Bypass
+            document.getElementById('btnGuestLogin').addEventListener('click', () => {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('mainMenuSection').style.display = 'flex';
+                document.getElementById('tutorialSection').style.display = 'none';
+                document.getElementById('pvpSection').style.display = 'none';
+                document.getElementById('userInfoBox').style.display = 'flex';
+                document.getElementById('userDisplayName').innerText = 'Guest';
+                // Hide the logout button since there is no firebase session to clear
+                document.getElementById('btnLogout').style.display = 'none';
+
+                // Connect to lobby for guest
+                connectLobbySocket('Guest');
+            });
+
             document.getElementById('btnLogout').addEventListener('click', () => {
                 auth.signOut();
             });
@@ -3769,7 +3780,7 @@
 
                     setTimeout(() => {
                         document.getElementById('nicknameSection').style.display = 'none';
-                        document.getElementById('myPageSection').style.display = 'block';
+                        document.getElementById('myPageSection').style.display = 'flex';
                         btn.disabled = false;
                         btn.innerText = "중복 확인 및 등록";
                         feedback.innerText = "";
@@ -3794,7 +3805,7 @@
                         document.getElementById('userDisplayName').innerText = inputVal;
 
                         document.getElementById('nicknameSection').style.display = 'none';
-                        document.getElementById('myPageSection').style.display = 'block';
+                        document.getElementById('myPageSection').style.display = 'flex';
                         btn.disabled = false;
                         btn.innerText = "중복 확인 및 등록";
                         feedback.innerText = "";
@@ -3821,8 +3832,8 @@
                 document.body.style.height = '100%';
             }
 
-            // Vertical bounds must be at least 1250 to comfortably fit the enlarged player cards, Scoreboard, and padding!
-            const BASE_HEIGHT = 1250;
+            // Vertical bounds must be at least 1400 to comfortably fit the enlarged player cards, Scoreboard, and padding!
+            const BASE_HEIGHT = 1400;
             const BASE_WIDTH = 2600;
             const MathScale = Math.min(logicalWidth / BASE_WIDTH, logicalHeight / BASE_HEIGHT);
 
