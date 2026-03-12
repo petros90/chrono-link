@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.63 (PVP Disconn Fix)</div>
+                v1.64 (Mobile PVP Fix)</div>
         </div>
 
         <div id="headerRow"
@@ -2372,7 +2372,7 @@
                     }
 
                     // Proceed to establish Lobby Socket after naming is locked in
-                    connectLobbySocket(nameSpan.innerText);
+                    connectLobbySocket(nameSpan.textContent);
 
                 };
                 fetchProfile();
@@ -2707,9 +2707,9 @@
             cpuDeck.forEach((c, i) => cZone.innerHTML += cardHTML(c, false, i));
 
             if (typeof isPvpMode !== 'undefined' && isPvpMode) {
-                document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').innerText;
+                document.getElementById('playerTitle').innerText = document.getElementById('userDisplayName').textContent;
                 document.getElementById('cpuTitle').innerText = pvpOppName;
-                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = document.getElementById('userDisplayName').innerText;
+                if (document.getElementById('headerPlayerName')) document.getElementById('headerPlayerName').innerText = document.getElementById('userDisplayName').textContent;
                 if (document.getElementById('headerCpuName')) document.getElementById('headerCpuName').innerText = pvpOppName;
             } else {
                 document.getElementById('playerTitle').innerText = t('ui_me');
@@ -2737,7 +2737,7 @@
                 const overlay = document.getElementById('finalOverlay');
                 const title = document.getElementById('finalTitle');
 
-                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').innerText : t('ui_me');
+                const meName = (typeof isPvpMode !== 'undefined' && isPvpMode) ? document.getElementById('userDisplayName').textContent : t('ui_me');
                 const oppNameText = (typeof isPvpMode !== 'undefined' && isPvpMode) ? pvpOppName : t('ui_enemy');
 
                 if (pWin > cWin) {
@@ -3335,7 +3335,7 @@
             document.getElementById('btnChangeNickname').addEventListener('click', () => {
                 document.getElementById('myPageSection').style.display = 'none';
                 document.getElementById('nicknameSection').style.display = 'flex';
-                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').innerText;
+                document.getElementById('nicknameInput').value = document.getElementById('userDisplayName').textContent;
             });
             document.getElementById('btnBackFromNickname').addEventListener('click', () => {
                 document.getElementById('nicknameSection').style.display = 'none';
@@ -3443,7 +3443,7 @@
                                     <span style="font-size: 1.5rem; color: #aaa;">[${r.curr}/${r.max}]</span>
                                     <span style="color: #ffd700; margin-left: 10px; font-size: 1.5rem;">${r.status}</span>
                                 </div>
-                                <button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').innerText}' })" 
+                                <button onclick="if(pvpSocket) pvpSocket.emit('join_tourney_room', { roomId: '${r.id}', userName: '${document.getElementById('userDisplayName').textContent}' })" 
                                     style="padding: 15px 25px; background: #00ffd9; color: #000; border: none; border-radius: 8px; font-size: 1.8rem; font-family: 'Jua', sans-serif; cursor: pointer;">
                                     참가하기
                                 </button>
@@ -3664,10 +3664,10 @@
 
                 if (!pvpSocket) {
                     initPvpSocket(() => {
-                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
+                        pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').textContent, mode: mode });
                     });
                 } else {
-                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').innerText, mode: mode });
+                    pvpSocket.emit('join_queue', { name: document.getElementById('userDisplayName').textContent, mode: mode });
                 }
             };
 
