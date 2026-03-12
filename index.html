@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.64 (Mobile PVP Fix)</div>
+                v1.65 (Tournament Logic)</div>
         </div>
 
         <div id="headerRow"
@@ -3302,8 +3302,8 @@
             });
             document.getElementById('btnCreateTourney').addEventListener('click', () => {
                 if (pvpSocket && pvpSocket.connected) {
-                    const roomTitle = document.getElementById('userDisplayName').innerText + "님의 방";
-                    pvpSocket.emit('create_tourney_room', { roomName: roomTitle, maxPlayers: 16, userName: document.getElementById('userDisplayName').innerText });
+                    const roomTitle = document.getElementById('userDisplayName').textContent + "님의 방";
+                    pvpSocket.emit('create_tourney_room', { roomName: roomTitle, maxPlayers: 16, userName: document.getElementById('userDisplayName').textContent });
                 }
             });
             document.getElementById('btnLeaveTourney').addEventListener('click', () => {
@@ -3484,10 +3484,16 @@
                 });
 
                 // Triggered when a player's specific match finishes (win or lose)
-                pvpSocket.on('tourney_match_concluded', () => {
+                pvpSocket.on('tourney_match_concluded', (data) => {
                     document.getElementById('mainLayout').style.display = 'none';
                     document.querySelector('.score-board').style.display = 'none';
-                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+
+                    if (data && data.winnerId !== pvpMyId) {
+                        alert("토너먼트 매치에서 패배하였습니다. 메인 메뉴로 이동합니다.");
+                        location.reload();
+                    } else {
+                        document.getElementById('tourneyBracketOverlay').style.display = 'flex';
+                    }
                 });
 
                 pvpSocket.on('tourney_match_found', (data) => {
@@ -3539,7 +3545,20 @@
                     document.getElementById('finalOverlay').style.display = 'none';
                     document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                     renderBracket(data.bracket);
-                    document.getElementById('tourneyStatusText').innerText = `🎉 최종 우승: ${data.winner.name} 🎉\n\n(새로고침을 통해 로비로 나갈 수 있습니다.)`;
+
+                    if (data.winner.id === pvpMyId) {
+                        document.getElementById('tourneyBracketOverlay').style.display = 'none';
+                        document.getElementById('finalOverlay').style.display = 'flex';
+                        document.getElementById('finalTitle').innerHTML = `
+                            <img src="images/btn_win.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Victory"><br>
+                            <h1 style="color:#ffd700; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ffd700;">🏆 토너먼트 최종 우승 🏆</h1>
+                        `;
+                        startBgm('bgm_win');
+                        document.getElementById('restartBtn').innerHTML = `<button id="btnPvpTourneyExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#ffd700; color:#000; cursor:pointer;">메인 메뉴로 돌아가기</button>`;
+                        document.getElementById('btnPvpTourneyExit').onclick = () => location.reload();
+                    } else {
+                        document.getElementById('tourneyStatusText').innerText = `🎉 최종 우승: ${data.winner.name} 🎉\n\n(새로고침을 통해 로비로 나갈 수 있습니다.)`;
+                    }
                     tourneyRoomId = null;
                 });
 

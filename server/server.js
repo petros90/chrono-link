@@ -424,20 +424,16 @@ io.on('connection', (socket) => {
             winnerId = Math.random() < 0.5 ? matchState.players[0] : matchState.players[1];
         }
 
-        matchState.playerData[winnerId].matchWins++;
+        // Conclude the match immediately as tournament matches are best-of-1-match
+        bracketMatch.winner = room.players.find(p => p.id === winnerId);
+        bracketMatch.status = 'DONE';
 
-        // Final evaluation on the server purely for bracket advancing
-        if (matchState.playerData[winnerId].matchWins >= 3 || matchState.round > 5) {
-            bracketMatch.winner = room.players.find(p => p.id === winnerId);
-            bracketMatch.status = 'DONE';
+        io.to(matchState.players[0]).emit('tourney_match_concluded', { winnerId: winnerId });
+        io.to(matchState.players[1]).emit('tourney_match_concluded', { winnerId: winnerId });
 
-            io.to(matchState.players[0]).emit('tourney_match_concluded');
-            io.to(matchState.players[1]).emit('tourney_match_concluded');
+        delete room.matches[matchKey]; // Clean up memory
 
-            delete room.matches[matchKey]; // Clean up memory
-
-            checkAndAdvanceTournament(tourneyId);
-        }
+        checkAndAdvanceTournament(tourneyId);
     });
 
     // JOIN QUEUE FOR RANDOM MATCH
@@ -710,9 +706,9 @@ io.on('connection', (socket) => {
             if (room.players.includes(socket.id)) {
                 const remainingPlayerId = room.players.find(id => id !== socket.id);
                 if (remainingPlayerId) {
-                    io.to(remainingPlayerId).emit('complete_victory', { 
-                        winnerId: remainingPlayerId, 
-                        reason: '상대방이 접속을 종료하여 게임에서 승리했습니다!' 
+                    io.to(remainingPlayerId).emit('complete_victory', {
+                        winnerId: remainingPlayerId,
+                        reason: '상대방이 접속을 종료하여 게임에서 승리했습니다!'
                     });
                 }
                 delete rooms[roomId];
