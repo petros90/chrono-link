@@ -142,6 +142,11 @@ io.on('connection', (socket) => {
                     if (needsAdvance) {
                         checkAndAdvanceTournament(roomId);
                     }
+
+                    // Ghost Room Garbage Collection: If all players have left an active tourney, delete the room
+                    if (room.players.every(p => p.status === 'LEFT')) {
+                        delete tournamentRooms[roomId];
+                    }
                 }
 
                 io.emit('update_tourney_rooms', Object.values(tournamentRooms).map(r => ({
