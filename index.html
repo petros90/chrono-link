@@ -105,15 +105,15 @@
             right: 40px;
             top: 40px;
             bottom: 40px;
-            width: 500px;
-            background: rgba(10, 10, 20, 0.85);
-            border: 2px solid #333;
+            width: 300px;
+            background: rgba(10, 10, 20, 0.95);
+            border: 2px solid #00ffd9;
             border-radius: 15px;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            z-index: 250;
+            box-shadow: 0 0 20px rgba(0, 255, 217, 0.6);
+            z-index: 9999;
         }
 
         #onlineUserPanel h3 {
@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.6 (PVP & Layout Unified)</div>
+                v1.61 (PVP & UI Fixes)</div>
         </div>
 
         <div id="headerRow"
@@ -2303,7 +2303,7 @@
                 lobbySocket.on('update_user_list', (users) => {
                     const ul = document.getElementById('onlineUserList');
                     ul.innerHTML = '';
-                    if (users.length === 0) {
+                    if (!users || users.length === 0) {
                         ul.innerHTML = '<li style="color:#777; justify-content:center;">접속자가 없습니다.</li>';
                     } else {
                         users.forEach(name => {
@@ -3486,7 +3486,7 @@
                     tourneyMatchKey = data.matchKey;
                     pvpMyId = data.myId;
                     pvpOppId = data.oppId;
-                    pvpOppName = data.oppName;
+                    pvpOppName = data.oppName || "알수없음";
 
                     document.getElementById('tourneyBracketOverlay').style.display = 'none';
                     isPvpMode = true;
@@ -3540,7 +3540,7 @@
                     pvpRoomId = data.roomId;
                     pvpMyId = data.myId;
                     pvpOppId = data.oppId;
-                    pvpOppName = data.oppName;
+                    pvpOppName = data.oppName || "알수없음";
                     currentMode = data.mode; // Re-sync the mode agreed upon by the server
 
                     document.getElementById('pvpMatchOverlay').style.display = 'none';
