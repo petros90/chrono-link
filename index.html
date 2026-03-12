@@ -1330,6 +1330,10 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
         }
 
+        .card.battling .locked-overlay {
+            display: none !important;
+        }
+
         /* Damage popups */
         .damage-popup {
             position: absolute;
@@ -1682,7 +1686,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.75 (Visual Card Lock)</div>
+                v1.76 (Visual Card Lock Hotfix)</div>
         </div>
 
         <div id="headerRow"
@@ -2792,6 +2796,7 @@
                 if (audioCtx.state === 'suspended') audioCtx.resume();
 
                 const pDomCard = document.getElementById(`p-card-${pIdx}`);
+                pDomCard.classList.add('battling'); // Hide local lock overlay during wait
                 pDomCard.style.transform = 'translateY(-30px)';
                 pDomCard.style.boxShadow = '0 0 20px #ffd700, 0 0 0 4px #ffd700'; // Golden Highlight
                 pDomCard.style.zIndex = '100';
