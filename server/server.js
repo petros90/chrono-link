@@ -322,6 +322,7 @@ io.on('connection', (socket) => {
         matchState.playerData[matchState.players[0]].card = null;
         matchState.playerData[matchState.players[1]].ready = false;
         matchState.playerData[matchState.players[1]].card = null;
+        matchState.resolving = false;
 
         io.to(matchState.players[0]).emit('tourney_round_start', { round: matchState.round, timeLimit: 20 });
         io.to(matchState.players[1]).emit('tourney_round_start', { round: matchState.round, timeLimit: 20 });
@@ -432,6 +433,9 @@ io.on('connection', (socket) => {
         const matchState = room.matches[matchKey];
         if (!matchState) return;
 
+        if (matchState.resolving) return;
+        matchState.resolving = true;
+
         const p1Id = matchState.players[0];
         const p2Id = matchState.players[1];
 
@@ -491,7 +495,7 @@ io.on('connection', (socket) => {
                     }, 5000);
                 }
             }
-        }, 6000);
+        }, 8000);
     };
 
     socket.on('tourney_match_end', ({ tourneyId, matchKey, winnerId }) => {

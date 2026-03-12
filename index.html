@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.71 (Round 2 Stalemate Fix)</div>
+                v1.72 (Round 2 Absolute Anti-Freeze)</div>
         </div>
 
         <div id="headerRow"
@@ -3143,10 +3143,6 @@
             document.getElementById('cpuTitle').innerText = pvpOppName + "님";
 
             await playTurn(pIdx, cIdx);
-
-            if (pWin >= maxWins) {
-                pvpSocket.emit('tourney_match_end', { tourneyId: tourneyRoomId, matchKey: tourneyMatchKey, winnerId: pvpMyId });
-            }
         }
 
         async function resolvePvpRound(myCard, oppCard) {
@@ -3535,6 +3531,9 @@
                 });
 
                 pvpSocket.on('tourney_round_start', (data) => {
+                    // Critical Failsafe: Force-unlock UI regardless of any trailing animations from the previous round
+                    isBattling = false;
+                    pvpTurnSubmitted = false;
                     round = data.round;
                     startPvpTurn(data.timeLimit);
                 });
