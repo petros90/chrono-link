@@ -1598,15 +1598,16 @@
 
         /* 20 Second Turn Timer Bar */
         #turnTimerBarContainer {
-            width: 100%;
-            height: 8px;
+            width: 60%;
+            height: 10px;
             background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 5px;
             overflow: hidden;
             position: absolute;
-            top: 45%;
-            left: 0;
-            transform: translateY(-50%);
+            top: 40px;
+            /* 카드존 텍스트(margin-top: 90px) 위에 배치 */
+            left: 50%;
+            transform: translateX(-50%);
             display: none;
             /* Only visible in PVP mode during a turn */
             z-index: 10;
@@ -1736,10 +1737,6 @@
                     <button id="btnGoogleLogin">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg">
                         <span data-i18n="btn_google_login">Google 로그인</span>
-                    </button>
-                    <!-- GUEST LOGIN BYPASS BUTTON -->
-                    <button id="btnGuestLogin" style="margin-top: 15px; background: #444; border: 1px solid #888;">
-                        <span data-i18n="btn_guest_login" style="color: #ddd;">게스트로 시작하기 (테스트용)</span>
                     </button>
                 </div>
 
@@ -2256,6 +2253,11 @@
             currentLang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
+                if (typeof isPvpMode !== 'undefined' && isPvpMode) {
+                    if (['headerPlayerName', 'headerCpuName', 'playerTitle', 'cpuTitle'].includes(el.id)) {
+                        return; // do not overwrite names with default "Player"/"Com" in PVP
+                    }
+                }
                 if (i18n[lang][key]) el.innerHTML = i18n[lang][key]; // innerHTML correctly parses the formatting if any
             });
             document.getElementById('btnLangKo').classList.toggle('active', lang === 'ko');
@@ -3692,20 +3694,7 @@
                 });
             });
 
-            // Guest Login Bypass
-            document.getElementById('btnGuestLogin').addEventListener('click', () => {
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('mainMenuSection').style.display = 'flex';
-                document.getElementById('tutorialSection').style.display = 'none';
-                document.getElementById('pvpSection').style.display = 'none';
-                document.getElementById('userInfoBox').style.display = 'flex';
-                document.getElementById('userDisplayName').innerText = 'Guest';
-                // Hide the logout button since there is no firebase session to clear
-                document.getElementById('btnLogout').style.display = 'none';
 
-                // Connect to lobby for guest
-                connectLobbySocket('Guest');
-            });
 
             document.getElementById('btnLogout').addEventListener('click', () => {
                 auth.signOut();
