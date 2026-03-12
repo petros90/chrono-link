@@ -106,18 +106,33 @@ io.on('connection', (socket) => {
                     io.to(`tourney_${roomId}`).emit('tourney_room_updated', room);
 
                     // Auto-forfeit any currently active match
+                    let needsAdvance = false;
                     if (room.bracket) {
-                        for (const roundArr of room.bracket) {
-                            for (const match of roundArr) {
-                                if (match.status === 'PLAYING' && match.p1 && match.p2) {
+                        for (let r = 0; r < room.bracket.length; r++) {
+                            const roundArr = room.bracket[r];
+                            for (let m = 0; m < roundArr.length; m++) {
+                                const match = roundArr[m];
+                                if (match.winner === null && match.p1 && match.p2) {
                                     if (match.p1.id === sockId || match.p2.id === sockId) {
-                                        match.winner = match.p1.id === sockId ? match.p2 : match.p1;
+                                        const winner = match.p1.id === sockId ? match.p2 : match.p1;
+                                        match.winner = winner;
                                         match.status = 'DONE';
-                                        checkAndAdvanceTournament(roomId);
+                                        needsAdvance = true;
+
+                                        const matchKey = `${r}_${m}`;
+                                        if (room.matches && room.matches[matchKey]) {
+                                            const mState = room.matches[matchKey];
+                                            clearTimeout(mState.timer);
+                                            io.to(winner.id).emit('tourney_match_concluded', { winnerId: winner.id });
+                                            delete room.matches[matchKey];
+                                        }
                                     }
                                 }
                             }
                         }
+                    }
+                    if (needsAdvance) {
+                        checkAndAdvanceTournament(roomId);
                     }
                 }
 
@@ -321,12 +336,18 @@ io.on('connection', (socket) => {
 
         const forcePick = (pId) => {
             const pData = matchState.playerData[pId];
-            if (!pData.ready && pData.deck) {
-                const avail = pData.deck.filter(c => !c.used);
-                if (avail.length > 0) {
-                    const pick = avail[Math.floor(Math.random() * avail.length)];
-                    pick.used = true;
-                    pData.card = pick;
+            if (!pData.ready) {
+                if (pData.deck && pData.deck.length > 0) {
+                    const avail = pData.deck.filter(c => !c.used);
+                    if (avail.length > 0) {
+                        const pick = avail[Math.floor(Math.random() * avail.length)];
+                        pick.used = true;
+                        pData.card = pick;
+                        pData.ready = true;
+                    }
+                } else {
+                    // Fallback to prevent null crashes if deck was missing
+                    pData.card = { avatar: "fire", grade: 1, power: 1 };
                     pData.ready = true;
                 }
             }
