@@ -1203,6 +1203,19 @@
             pointer-events: none;
         }
 
+        .locked-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            z-index: 5;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
         .placeholder {
             border: 2px dashed #444;
             background: transparent;
@@ -1669,7 +1682,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.74 (First-Win Tiebreaker Rule)</div>
+                v1.75 (Visual Card Lock)</div>
         </div>
 
         <div id="headerRow"
@@ -2647,10 +2660,13 @@
             const tc = textColors[card.element];
             const imgUrl = card.image ? card.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(card.avatar)}&background=${bg}&color=${tc}&size=450&font-size=0.4&bold=true`;
 
+            const lockedHTML = (isPlayer && (isBattling || pvpTurnSubmitted) && !isUsed) ? `<div class="locked-overlay">🔒</div>` : '';
+
             return `
         <div class="card-slot" id="${isPlayer ? 'p' : 'c'}-slot-${idx}">
           <div class="card-wrapper" style="position:relative;">
             <div class="card card-${card.grade.toLowerCase()} ${usedClass}" ${click} id="${isPlayer ? 'p' : 'c'}-card-${idx}" style="${usedStyle}">
+              ${lockedHTML}
               <div class="hologram-overlay"></div>
               <div class="card-header">
                 <span class="card-grade">${card.grade}</span>
@@ -2771,6 +2787,7 @@
             if (isPvpMode && manualCIdx === null) {
                 if (isBattling || playerDeck[pIdx].used || pvpTurnSubmitted) return;
                 pvpTurnSubmitted = true;
+                render(); // Instantly show padlock overlay on remaining cards
                 playSound('select');
                 if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -2792,6 +2809,7 @@
 
             if (isBattling || playerDeck[pIdx].used) return;
             isBattling = true;
+            render(); // Instantly show padlock overlay on remaining cards for Single Player mode
             playSound('select');
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
