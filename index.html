@@ -1686,7 +1686,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.76 (Visual Card Lock Hotfix)</div>
+                v1.77 (Battle Freeze Hotfix)</div>
         </div>
 
         <div id="headerRow"
@@ -2550,7 +2550,7 @@
             'Origin': ['만적', '그라쿠스', '에릭슨', '잭더리퍼', '임호텝', '형가', '아마쿠사', '필리피데스']
         };
 
-        let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1;
+        let playerDeck = [], cpuDeck = [], pWin = 0, cWin = 0, round = 1, rollover = 1, firstWinnerID = null;
         let isBattling = false;
         let isPvpMode = false;
         let isTourneyMode = false;
