@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.67 (Ghost Match Fix)</div>
+                v1.68 (Zero-Crash Edition)</div>
         </div>
 
         <div id="headerRow"
@@ -3393,6 +3393,8 @@
                 const container = document.getElementById('bracketContainer');
                 container.innerHTML = '';
 
+                let finalWinner = null;
+
                 bracket.forEach((round, rIndex) => {
                     let colHtml = `<div style="display: flex; flex-direction: column; gap: 20px; align-items: center; min-width: 150px;">
                                       <h3 style="color:#aaa; font-size:1.5rem; text-align:center;">Round ${rIndex + 1}</h3>`;
@@ -3414,14 +3416,26 @@
                                         <div style="font-size: 1rem; color:#555; margin: 5px 0;">vs</div>
                                         <div style="font-size: 1.5rem; ${p2Style}">${p2Name}</div>
                                     </div>`;
+
+                        if (rIndex === bracket.length - 1 && match.status === 'DONE' && match.winner) {
+                            finalWinner = match.winner.name;
+                        }
                     });
                     colHtml += `</div>`;
 
-                    if (rIndex < bracket.length - 1) {
-                        colHtml += `<div style="display: flex; align-items: center; color: #555; font-size: 2rem;">▶</div>`;
-                    }
+                    colHtml += `<div style="display: flex; align-items: center; color: #555; font-size: 2rem;">▶</div>`;
+
                     container.innerHTML += colHtml;
                 });
+
+                // Append Final Champion Node
+                container.innerHTML += `
+                    <div style="display: flex; flex-direction: column; gap: 20px; align-items: center; min-width: 150px;">
+                        <h3 style="color:#ffd700; text-shadow:0 0 5px #ffd700; font-size:1.5rem; text-align:center;">🏆 우승 🏆</h3>
+                        <div style="background: rgba(0,0,0,0.8); border: 2px solid #ffd700; border-radius: 8px; padding: 20px 10px; width: 100%; text-align: center; box-shadow: 0 0 15px #ffd700;">
+                            <div style="font-size: 1.8rem; color:#ffd700; font-weight:bold;">${finalWinner ? finalWinner : '???'}</div>
+                        </div>
+                    </div>`;
             };
 
             const initPvpSocket = (onConnectCallback = null) => {
@@ -3473,14 +3487,13 @@
                     renderBracket(data.bracket);
                 });
                 pvpSocket.on('tourney_bracket_update', (data) => {
-                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                     renderBracket(data.bracket);
-                    setTimeout(() => {
-                        // Only auto-hide the bracket if the player is actively back in a match
-                        if (data.status === 'PLAYING' && document.getElementById('mainLayout').style.display !== 'none') {
-                            document.getElementById('tourneyBracketOverlay').style.display = 'none';
-                        }
-                    }, 4000);
+                    if (document.getElementById('mainLayout').style.display !== 'none') {
+                        // Suppress pulling up the bracket view while actively in a match
+                        return;
+                    }
+
+                    document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                 });
 
                 // Triggered when a player's specific match finishes (win or lose)
@@ -3543,19 +3556,17 @@
 
                 pvpSocket.on('tourney_finished', (data) => {
                     document.getElementById('finalOverlay').style.display = 'none';
+                    document.getElementById('mainLayout').style.display = 'none';
+                    document.querySelector('.score-board').style.display = 'none';
                     document.getElementById('tourneyBracketOverlay').style.display = 'flex';
                     renderBracket(data.bracket);
 
                     if (data.winner.id === pvpMyId) {
-                        document.getElementById('tourneyBracketOverlay').style.display = 'none';
-                        document.getElementById('finalOverlay').style.display = 'flex';
-                        document.getElementById('finalTitle').innerHTML = `
-                            <img src="images/btn_win.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Victory"><br>
-                            <h1 style="color:#ffd700; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ffd700;">🏆 토너먼트 최종 우승 🏆</h1>
-                        `;
-                        startBgm('bgm_win');
-                        document.getElementById('restartBtn').innerHTML = `<button id="btnPvpTourneyExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#ffd700; color:#000; cursor:pointer;">메인 메뉴로 돌아가기</button>`;
-                        document.getElementById('btnPvpTourneyExit').onclick = () => location.reload();
+                        document.getElementById('tourneyStatusText').innerText = `🏆 토너먼트 최종 우승 🏆`;
+                        setTimeout(() => {
+                            alert("토너먼트에서 우승하셨습니다!");
+                            location.reload();
+                        }, 500); // 0.5s delay to let the bracket render first
                     } else {
                         document.getElementById('tourneyStatusText').innerText = `🎉 최종 우승: ${data.winner.name} 🎉\n\n(새로고침을 통해 로비로 나갈 수 있습니다.)`;
                     }

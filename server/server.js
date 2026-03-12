@@ -446,17 +446,25 @@ io.on('connection', (socket) => {
         const bracketMatch = room.bracket[rIdx][mIdx];
         if (bracketMatch.status === 'DONE') return; // Prevent duplicate end events
 
-        // Tiebreaker for Tournament Draw (Randomly force a winner to advance bracket)
-        if (winnerId === 'Draw') {
-            winnerId = Math.random() < 0.5 ? matchState.players[0] : matchState.players[1];
+        // Tiebreaker for Tournament Draw (Randomly force a winner to advance bracket safely)
+        let resolvedWinnerId = winnerId;
+        if (resolvedWinnerId === 'Draw') {
+            resolvedWinnerId = Math.random() < 0.5 ? matchState.players[0] : matchState.players[1];
         }
 
-        // Conclude the match immediately as tournament matches are best-of-1-match
-        bracketMatch.winner = room.players.find(p => p.id === winnerId);
+        const validWinnerObj = room.players.find(p => p.id === resolvedWinnerId);
+
+        // Fallback: if player object is totally lost due to disconnects before resolution
+        if (!validWinnerObj) {
+            bracketMatch.winner = { id: resolvedWinnerId, name: "알수없음" };
+        } else {
+            bracketMatch.winner = validWinnerObj;
+        }
+
         bracketMatch.status = 'DONE';
 
-        io.to(matchState.players[0]).emit('tourney_match_concluded', { winnerId: winnerId });
-        io.to(matchState.players[1]).emit('tourney_match_concluded', { winnerId: winnerId });
+        io.to(matchState.players[0]).emit('tourney_match_concluded', { winnerId: resolvedWinnerId });
+        io.to(matchState.players[1]).emit('tourney_match_concluded', { winnerId: resolvedWinnerId });
 
         delete room.matches[matchKey]; // Clean up memory
 
