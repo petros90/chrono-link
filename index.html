@@ -105,7 +105,7 @@
             right: 40px;
             top: 40px;
             bottom: 40px;
-            width: 360px;
+            width: 450px;
             background: rgba(10, 10, 20, 0.95);
             border: 2px solid #00ffd9;
             border-radius: 15px;
@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.62 (PVP & UI Fixes)</div>
+                v1.63 (PVP Disconn Fix)</div>
         </div>
 
         <div id="headerRow"
@@ -1722,8 +1722,7 @@
             <div id="onlineUserPanel" style="display: none;">
                 <h3 style="white-space: nowrap;">접속 중인 플레이어</h3>
                 <ul id="onlineUserList">
-                    <li style="color:#777; text-align:center; margin-top: 20px; word-break: keep-all;">서버 연결 중이며 최대 50초가
-                        소요될 수 있습니다...</li>
+                    <li style="color:#777; text-align:center; margin-top: 20px;">서버 시작 중... (최장 1분 대기)</li>
                 </ul>
             </div>
 
@@ -3232,6 +3231,12 @@
                 document.getElementById('tutorialSection').style.display = 'none';
                 document.getElementById('pvpSection').style.display = 'none';
             }
+
+            // Abort ongoing PVP socket logic forcefully so the remaining opponent is awarded victory
+            if (typeof isPvpMode !== 'undefined' && isPvpMode && typeof pvpSocket !== 'undefined' && pvpSocket !== null) {
+                pvpSocket.disconnect();
+                pvpSocket = null;
+            }
             startBgm('bgm_lobby');
         }
 
@@ -3615,23 +3620,27 @@
                 pvpSocket.on('complete_victory', (data) => {
                     document.getElementById('finalOverlay').style.display = 'flex';
                     const title = document.getElementById('finalTitle');
-                    const meName = document.getElementById('userDisplayName').innerText;
 
                     if (data.winnerId === pvpMyId) {
                         title.innerHTML = `<img src="images/btn_win.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Victory"><br><h1 style="color:#00ffd9; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #00ffd9;">완전 승리!</h1>`;
+                        if (data.reason) title.innerHTML += `<br><p style="color:#00ffd9; font-size:2rem; line-height:1.5; font-family:'Jua',sans-serif;">${data.reason}</p>`;
                         startBgm('bgm_win');
                     } else {
                         title.innerHTML = `<img src="images/btn_lose.png" style="height:327px; flex-shrink:0; margin-bottom:10px;" alt="Defeat"><br><h1 style="color:#ff0000; font-size:6rem; font-family:'Jua',sans-serif; text-shadow:0 0 40px #ff0000;">완전 패배</h1>`;
+                        if (data.reason) title.innerHTML += `<br><p style="color:#aaa; font-size:2rem; line-height:1.5; font-family:'Jua',sans-serif;">${data.reason}</p>`;
                         startBgm('bgm_lose');
                     }
 
+                    // Terminate the socket connection to prevent ghosts receiving re-match commands
+                    if (pvpSocket) { pvpSocket.disconnect(); pvpSocket = null; }
+
                     const rBtn = document.getElementById('restartBtn');
-                    rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; cursor:pointer;">로비로 돌아가기</button>`;
+                    rBtn.innerHTML = `<button id="btnPvpExit" style="font-size:3rem; padding: 20px; border-radius:10px; border:none; background:#aaa; color:#fff; cursor:pointer;">메인 메뉴로 돌아가기</button>`;
                     document.getElementById('btnPvpExit').onclick = () => location.reload();
                 });
 
                 pvpSocket.on('room_closed', (data) => {
-                    alert("PVP 매치 종료: " + data.reason);
+                    alert("매치 종료: " + data.reason);
                     location.reload();
                 });
             };

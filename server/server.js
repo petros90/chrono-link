@@ -446,8 +446,9 @@ io.on('connection', (socket) => {
         if (waitingQueue.find(p => p.id === socket.id)) return;
 
         const mode = userData.mode || 'Beginner'; // Default to Beginner if missing
-        console.log(`${socket.id} (${userData.name}) joined queue for [${mode}]`);
-        waitingQueue.push({ id: socket.id, name: userData.name, mode: mode, socket: socket });
+        const pName = userData.name || "알수없음";
+        console.log(`${socket.id} (${pName}) joined queue for [${mode}]`);
+        waitingQueue.push({ id: socket.id, name: pName, mode: mode, socket: socket });
 
         // Find another player in the queue with the SAME mode
         const myIndex = waitingQueue.findIndex(p => p.id === socket.id);
@@ -707,7 +708,13 @@ io.on('connection', (socket) => {
         for (const roomId in rooms) {
             const room = rooms[roomId];
             if (room.players.includes(socket.id)) {
-                io.to(roomId).emit('room_closed', { reason: 'Opponent disconnected.' });
+                const remainingPlayerId = room.players.find(id => id !== socket.id);
+                if (remainingPlayerId) {
+                    io.to(remainingPlayerId).emit('complete_victory', { 
+                        winnerId: remainingPlayerId, 
+                        reason: '상대방이 접속을 종료하여 게임에서 승리했습니다!' 
+                    });
+                }
                 delete rooms[roomId];
             }
         }
