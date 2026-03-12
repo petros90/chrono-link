@@ -1669,7 +1669,7 @@
         <div id="gameVersionTag">
             <div
                 style="color: #ffd700; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; position: absolute; left: 15px; top: 15px; z-index: 10000; text-shadow: 1px 1px 2px #000;">
-                v1.70 (Ironclad Server Edition)</div>
+                v1.71 (Round 2 Stalemate Fix)</div>
         </div>
 
         <div id="headerRow"
@@ -3134,6 +3134,10 @@
             if (cIdx === -1) cIdx = cpuDeck.findIndex(c => c.avatar === oppCard.avatar && c.grade === oppCard.grade);
 
             if (cpuDeck[cIdx]) cpuDeck[cIdx].used = false; // Bypass local duplicate check lock
+
+            // Reset interaction locks to ensure animation trigger can proceed
+            isBattling = false;
+            pvpTurnSubmitted = false;
 
             render();
             document.getElementById('cpuTitle').innerText = pvpOppName + "님";

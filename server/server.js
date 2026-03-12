@@ -438,6 +438,23 @@ io.on('connection', (socket) => {
         const p1Card = matchState.playerData[p1Id].card;
         const p2Card = matchState.playerData[p2Id].card;
 
+        // --- Calculate server-side matchWins based on Game Rules ---
+        const grades = ['5', '4', '3', '2', '1'];
+        const beats = { 'Fire': 'Metal', 'Metal': 'Wood', 'Wood': 'Earth', 'Earth': 'Water', 'Water': 'Fire' };
+
+        const compareCards = (a, b) => {
+            const ai = grades.indexOf(a.grade), bi = grades.indexOf(b.grade);
+            if (a.element === b.element) return ai < bi ? 'A' : ai > bi ? 'B' : 'Draw';
+            const aB = (beats[a.element] === b.element), bB = (beats[b.element] === a.element), d = Math.abs(ai - bi);
+            if (aB || bB) { if (d >= 3) return ai < bi ? 'A' : 'B'; return aB ? 'A' : 'B'; }
+            return ai < bi ? 'A' : ai > bi ? 'B' : 'Draw';
+        };
+
+        const result = compareCards(p1Card, p2Card);
+        if (result === 'A') matchState.playerData[p1Id].matchWins++;
+        else if (result === 'B') matchState.playerData[p2Id].matchWins++;
+        // -----------------------------------------------------------
+
         io.to(p1Id).emit('tourney_round_reveal', { results: { [p1Id]: p1Card, [p2Id]: p2Card } });
         io.to(p2Id).emit('tourney_round_reveal', { results: { [p1Id]: p1Card, [p2Id]: p2Card } });
 
